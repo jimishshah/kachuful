@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import GameTemplate from "../templates/game-template";
 
+const socket = new WebSocket(
+  "wss://dnzhfv2njk.execute-api.eu-west-1.amazonaws.com/dev"
+);
 const currentUserId = 1;
 const users = [
   {
@@ -97,6 +100,25 @@ function Game() {
     currentLevel,
     onEveryonePlayed,
   };
+
+  useEffect(() => {
+    socket.onopen = function (event) {
+      socket.send(
+        JSON.stringify({
+          message: "my first message",
+          action: "message",
+        })
+      );
+
+      socket.onmessage = function (event) {
+        console.log(event.data);
+      };
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, []);
   return <GameTemplate {...props} />;
 }
 
