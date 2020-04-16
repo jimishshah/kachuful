@@ -1,2 +1,3 @@
-export const websocketLink =
-  "wss://dnzhfv2njk.execute-api.eu-west-1.amazonaws.com/dev";
+export const websocketLink = "ws://localhost:3001";
+// export const websocketLink =
+//   "wss://dnzhfv2njk.execute-api.eu-west-1.amazonaws.com/dev";

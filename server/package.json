@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-offline": "^6.1.4",
+    "serverless-webpack": "^5.3.1",
+    "webpack": "^4.42.1"
+  },
+  "dependencies": {
+    "dynamodb": "^1.2.1",
+    "install": "^0.13.0",
+    "sls": "^0.1.0"
+  }
+}
