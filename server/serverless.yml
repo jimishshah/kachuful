@@ -7,6 +7,7 @@ provider:
   region: eu-west-1
   environment:
     tableName: ${self:custom.tableName}
+    IS_OFFLINE: true
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -46,6 +47,11 @@ functions:
     events:
       - websocket:
           route: message
+  websocket-sendName:
+    handler: lambdas/websockets/send-name.handler
+    events:
+      - websocket:
+          route: sendName
   # websocket-message:
   #   handler: lambdas/websockets/distribute-cards.handler
   #   events:

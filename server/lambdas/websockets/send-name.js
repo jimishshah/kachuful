@@ -13,15 +13,14 @@ exports.handler = async (event) => {
 
   try {
     const record = await Dynamo.get(connectionID, tableName);
-    const { messages, domainName, stage } = record;
+    const { domainName, stage } = record;
 
-    messages.push(body.message);
+    const { playerName } = body.message;
 
     const data = {
       ...record,
-      messages,
+      playerName,
     };
-
     await Dynamo.write(data, tableName);
 
     try {
@@ -35,6 +34,23 @@ exports.handler = async (event) => {
     } catch (e) {
       console.log(e);
     }
+
+    // const records = await Dynamo.scan(tableName, "tableId", "1234567890");
+    // const allConnectionIds = records.Items.map(
+    //   ({ ID: connectionID }) => connectionID
+    // );
+
+    // //send connected users list to all the users
+    // const messages = records.Items.map(
+    //   ({ ID: connectionID, domainName, stage }) =>
+    //     WebSocket.send({
+    //       domainName,
+    //       stage,
+    //       connectionID,
+    //       message: JSON.stringify({ allConnectionIds }),
+    //     })
+    // );
+    // await Promise.all(messages);
 
     return Responses._200({ message: "got a message" });
   } catch (error) {

@@ -60,5 +60,15 @@ const Dynamo = {
 
     return documentClient.delete(params).promise();
   },
+
+  async scan(TableName, columnId, columnValue) {
+    const params = {
+      TableName,
+      FilterExpression: `${columnId} = :columnValue`,
+      ExpressionAttributeValues: { ":columnValue": columnValue },
+    };
+
+    return documentClient.scan(params).promise();
+  },
 };
 module.exports = Dynamo;
