@@ -6,6 +6,7 @@ import { ThemeProvider } from "emotion-theming";
 import Game from "./pages/game";
 import styled from "@emotion/styled";
 import { StylesProvider } from "@material-ui/core/styles";
+import Home from "./pages/home";
 
 const defaultTheme = createMuiTheme();
 
@@ -36,6 +37,9 @@ function App() {
               <Switch>
                 <Route path="/game">
                   <Game />
+                </Route>
+                <Route path="/">
+                  <Home />
                 </Route>
               </Switch>
             </div>

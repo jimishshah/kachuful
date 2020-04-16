@@ -9,6 +9,7 @@ import SpadeLogo from "../svg/spade.svg";
 import HeartLogo from "../svg/heart.svg";
 import Divider from "@material-ui/core/Divider";
 import Badge from "@material-ui/core/Badge";
+import Button from "@material-ui/core/Button";
 
 const cardColours = {
   club: ClubLogo,
@@ -38,6 +39,7 @@ function GameTemplate({
   users,
   currentLevel,
   onEveryonePlayed,
+  leaveTheTable,
 }) {
   const userIds = users.map(({ userId }) => userId);
   return (
@@ -101,6 +103,9 @@ function GameTemplate({
           )
         )}
       </StyledGrid>
+      <Button variant="contained" color="primary" onClick={leaveTheTable}>
+        Leave the Table
+      </Button>
     </>
   );
 }

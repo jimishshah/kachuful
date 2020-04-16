@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import GameTemplate from "../templates/game-template";
+import socket from "../socket";
+import { useHistory } from "react-router-dom";
 
-const socket = new WebSocket(
-  "wss://dnzhfv2njk.execute-api.eu-west-1.amazonaws.com/dev"
-);
 const currentUserId = 1;
 const users = [
   {
@@ -94,31 +93,19 @@ const currentLevel = {
 };
 function Game() {
   const onEveryonePlayed = () => {};
+  const history = useHistory();
+  const leaveTheTable = async () => {
+    const ws = await socket.getInstance();
+    ws.close();
+    history.push("/");
+  };
   const props = {
     currentUserId,
     users,
     currentLevel,
     onEveryonePlayed,
+    leaveTheTable,
   };
-
-  useEffect(() => {
-    socket.onopen = function (event) {
-      socket.send(
-        JSON.stringify({
-          message: "my first message",
-          action: "message",
-        })
-      );
-
-      socket.onmessage = function (event) {
-        console.log(event.data);
-      };
-    };
-
-    return () => {
-      socket.close();
-    };
-  }, []);
   return <GameTemplate {...props} />;
 }
 
