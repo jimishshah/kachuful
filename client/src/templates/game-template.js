@@ -40,6 +40,7 @@ function GameTemplate({
   currentLevel,
   onEveryonePlayed,
   leaveTheTable,
+  sendMessage,
 }) {
   const userIds = users.map(({ userId }) => userId);
   return (
@@ -105,6 +106,9 @@ function GameTemplate({
       </StyledGrid>
       <Button variant="contained" color="primary" onClick={leaveTheTable}>
         Leave the Table
+      </Button>
+      <Button variant="contained" color="primary" onClick={sendMessage}>
+        Send message
       </Button>
     </>
   );

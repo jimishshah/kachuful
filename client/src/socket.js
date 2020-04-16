@@ -19,6 +19,10 @@ const socket = (function () {
       }
       return instance;
     },
+
+    hasInstance: function () {
+      return instance ? true : false;
+    },
   };
 })();
 

@@ -99,12 +99,33 @@ function Game() {
     ws.close();
     history.push("/");
   };
+
+  useEffect(() => {
+    if (!socket.hasInstance()) {
+      history.push("/");
+    }
+  }, []);
+
+  const sendMessage = async () => {
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        message: "my first message",
+        action: "message",
+      })
+    );
+    ws.onmessage = function (event) {
+      console.log(event.data);
+    };
+  };
+
   const props = {
     currentUserId,
     users,
     currentLevel,
     onEveryonePlayed,
     leaveTheTable,
+    sendMessage,
   };
   return <GameTemplate {...props} />;
 }
