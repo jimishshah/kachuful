@@ -37,6 +37,31 @@ functions:
     events:
       - websocket:
           route: message
+  websocket-message:
+    handler: lambdas/websockets/distribute-cards.handler
+    events:
+      - websocket:
+          route: distribute-cards
+  websocket-message:
+    handler: lambdas/websockets/bid-wins.handler
+    events:
+      - websocket:
+          route: bid-wins
+  websocket-message:
+    handler: lambdas/websockets/throw-card.handler
+    events:
+      - websocket:
+          route: throw-card
+  websocket-message:
+    handler: lambdas/websockets/finish-round.handler
+    events:
+      - websocket:
+          route: finish-round
+  websocket-message:
+    handler: lambdas/websockets/finish-level.handler
+    events:
+      - websocket:
+          route: finish-level
 
 resources:
   Resources:
