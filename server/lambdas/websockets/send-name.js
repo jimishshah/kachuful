@@ -5,8 +5,6 @@ const WebSocket = require("../common/web-socket-message");
 const tableName = process.env.tableName;
 
 exports.handler = async (event) => {
-  console.log("event", event);
-
   const { connectionId: connectionID } = event.requestContext;
 
   const body = JSON.parse(event.body);
@@ -30,22 +28,20 @@ exports.handler = async (event) => {
     }));
 
     //send connected users list to all the users
-    try {
-      const messages = records.Items.map(
-        ({ ID: connectionID, domainName, stage }) =>
-          WebSocket.send({
-            domainName,
-            stage,
-            connectionID,
-            message: JSON.stringify({ players, action: "sendPlayers" }),
-          })
-      );
-      await Promise.all(messages);
-    } catch (e) {
-      console.log(e);
-    }
+    const messages = records.Items.map(
+      ({ ID: connectionID, domainName, stage }) =>
+        WebSocket.send({
+          domainName,
+          stage,
+          connectionID,
+          message: JSON.stringify({ players, action: "sendPlayers" }),
+        })
+    );
+    await Promise.all(messages);
+    console.log(`${playerName} added`);
     return Responses._200({ message: "got a message" });
   } catch (error) {
+    console.log(error);
     return Responses._400({ message: "message could not be received" });
   }
 };
