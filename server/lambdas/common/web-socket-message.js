@@ -1,7 +1,10 @@
 const AWS = require("aws-sdk");
+const isLocal = require("./is-local");
 
 const create = (domainName, stage) => {
-  const endpoint = `${domainName}/${stage}`;
+  const endpoint = isLocal()
+    ? `http://${domainName}:3001`
+    : `${domainName}/${stage}`;
   return new AWS.ApiGatewayManagementApi({
     apiVersion: "2018-11-29",
     endpoint,

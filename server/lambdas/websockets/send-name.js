@@ -30,17 +30,20 @@ exports.handler = async (event) => {
     }));
 
     //send connected users list to all the users
-    const messages = records.Items.map(
-      ({ ID: connectionID, domainName, stage }) =>
-        WebSocket.send({
-          domainName,
-          stage,
-          connectionID,
-          message: JSON.stringify({ players, action: "sendPlayers" }),
-        })
-    );
-    await Promise.all(messages);
-
+    try {
+      const messages = records.Items.map(
+        ({ ID: connectionID, domainName, stage }) =>
+          WebSocket.send({
+            domainName,
+            stage,
+            connectionID,
+            message: JSON.stringify({ players, action: "sendPlayers" }),
+          })
+      );
+      await Promise.all(messages);
+    } catch (e) {
+      console.log(e);
+    }
     return Responses._200({ message: "got a message" });
   } catch (error) {
     return Responses._400({ message: "message could not be received" });

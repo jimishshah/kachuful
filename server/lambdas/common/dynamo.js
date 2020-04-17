@@ -1,7 +1,7 @@
 const AWS = require("aws-sdk");
+const isLocal = require("./is-local");
 let options = {};
-console.log("++++++++++", process.env, "_+++++++++++");
-if (process.env.USER === "shahj07") {
+if (isLocal()) {
   options = {
     region: "localhost",
     endpoint: "http://localhost:8000",
