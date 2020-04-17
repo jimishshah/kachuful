@@ -1,6 +1,7 @@
 const AWS = require("aws-sdk");
 let options = {};
-if (process.env.IS_OFFLINE) {
+console.log("++++++++++", process.env, "_+++++++++++");
+if (process.env.USER === "shahj07") {
   options = {
     region: "localhost",
     endpoint: "http://localhost:8000",

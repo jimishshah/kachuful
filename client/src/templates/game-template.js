@@ -42,29 +42,29 @@ function GameTemplate({
   leaveTheTable,
   sendMessage,
 }) {
-  const userIds = users.map(({ userId }) => userId);
+  const userIds = users.map(({ connectionID: userId }) => userId);
   return (
     <>
       <StyledGrid container spacing={3}>
         <StyledGrid item xs={3}>
           <StyledGrid container spacing={3}>
-            {users.map(({ name, userId }) => (
+            {users.map(({ playerName: name, connectionID: userId }) => (
               <StyledGrid item xs key={userId}>
-                <Badge
+                {/* <Badge
                   color="primary"
                   badgeContent={`
                     ${currentLevel.users[userId].wins.currentWins}/${currentLevel.users[userId].wins.expectedWins}
                   `}
                   showZero
-                >
-                  <Avatar>{name.slice(0, 2).toUpperCase()}</Avatar>
-                </Badge>
+                > */}
+                <Avatar>{name.slice(0, 2).toUpperCase()}</Avatar>
+                {/* </Badge> */}
               </StyledGrid>
             ))}
           </StyledGrid>
         </StyledGrid>
         <StyledGrid item xs={9}>
-          <StyledGrid container spacing={3}>
+          {/* <StyledGrid container spacing={3}>
             {userIds.map((userId) => (
               <StyledGrid item xs key={userId}>
                 <StyledPaper>
@@ -88,14 +88,14 @@ function GameTemplate({
                 </StyledPaper>
               </StyledGrid>
             ))}
-          </StyledGrid>
+          </StyledGrid> */}
         </StyledGrid>
       </StyledGrid>
       <StyledDivder />
-      <StyledGrid container spacing={4}>
+      {/* <StyledGrid container spacing={4}>
         {currentLevel.users[currentUserId].cardsInHand.map(
           ({ number, type }) => (
-            <StyledGrid item xs>
+            <StyledGrid item xs key={number}>
               <StyledPaper>
                 {number}
                 <img src={cardColours[type]} alt="club" />
@@ -103,7 +103,7 @@ function GameTemplate({
             </StyledGrid>
           )
         )}
-      </StyledGrid>
+      </StyledGrid> */}
       <Button variant="contained" color="primary" onClick={leaveTheTable}>
         Leave the Table
       </Button>

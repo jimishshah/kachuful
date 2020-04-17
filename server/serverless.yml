@@ -93,6 +93,10 @@ resources:
         BillingMode: PAY_PER_REQUEST
 
 plugins:
-  - serverless-webpack
   - serverless-offline
   - serverless-dynamodb-local
+
+package:
+  exclude:
+    - node_modules/**
+    - .dynamodb/**

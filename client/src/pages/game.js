@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import GameTemplate from "../templates/game-template";
 import socket from "../socket";
 import { useHistory } from "react-router-dom";
@@ -93,6 +93,8 @@ const currentLevel = {
 };
 function Game() {
   const onEveryonePlayed = () => {};
+  const [users, setUsers] = useState([]);
+  console.log(users, "users");
   const history = useHistory();
   const leaveTheTable = async () => {
     const ws = await socket.getInstance();
@@ -104,6 +106,12 @@ function Game() {
     if (!socket.hasInstance()) {
       history.push("/");
     }
+    socket.getInstance().then((ws) => {
+      ws.onmessage = function (event) {
+        const { players } = JSON.parse(event.data);
+        setUsers(players);
+      };
+    });
   }, [history]);
 
   const sendMessage = async () => {
@@ -114,9 +122,6 @@ function Game() {
         action: "message",
       })
     );
-    ws.onmessage = function (event) {
-      console.log(event.data);
-    };
   };
 
   const props = {
