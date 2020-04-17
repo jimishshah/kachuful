@@ -49,7 +49,7 @@ function GameTemplate({
         <StyledGrid item xs={3}>
           <StyledGrid container spacing={3}>
             {users.map(({ name, userId }) => (
-              <StyledGrid item xs>
+              <StyledGrid item xs key={userId}>
                 <Badge
                   color="primary"
                   badgeContent={`
@@ -66,7 +66,7 @@ function GameTemplate({
         <StyledGrid item xs={9}>
           <StyledGrid container spacing={3}>
             {userIds.map((userId) => (
-              <StyledGrid item xs>
+              <StyledGrid item xs key={userId}>
                 <StyledPaper>
                   {currentLevel.users[userId].cardThrown ? (
                     <>

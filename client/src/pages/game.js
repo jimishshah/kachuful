@@ -104,7 +104,7 @@ function Game() {
     if (!socket.hasInstance()) {
       history.push("/");
     }
-  }, []);
+  }, [history]);
 
   const sendMessage = async () => {
     const ws = await socket.getInstance();
