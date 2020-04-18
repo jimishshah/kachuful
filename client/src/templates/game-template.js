@@ -65,6 +65,7 @@ function GameTemplate({
             {renderCardsInHand(currentUser)}
           </StyledGrid>
           {renderButtons(leaveTheTable, sendMessage, distributeCards)}
+          {renderCard("", currentUser.lastTrumpColour)} Trump colour
         </>
       ) : (
         "Loading....."
@@ -79,9 +80,9 @@ function renderButtons(leaveTheTable, sendMessage, distributeCards) {
       <Button variant="contained" color="primary" onClick={leaveTheTable}>
         Leave the Table
       </Button>
-      <Button variant="contained" color="primary" onClick={sendMessage}>
+      {/* <Button variant="contained" color="primary" onClick={sendMessage}>
         Send message
-      </Button>
+      </Button> */}
       <Button variant="contained" color="primary" onClick={distributeCards}>
         Distribute Cards
       </Button>
@@ -91,17 +92,10 @@ function renderButtons(leaveTheTable, sendMessage, distributeCards) {
 
 function renderCardsThrownInCurrentRound(users) {
   return users.map((user) => (
-    <StyledGrid item xs key={user.connectionID}>
-      <StyledPaper>
-        {user.cardThrown ? (
-          <>
-            <strong>{user.cardThrown.number}</strong>
-            <img src={cardColours[user.cardThrown.type]} alt="club" />
-          </>
-        ) : (
-          `Waiting card from ${user.playerName}`
-        )}
-      </StyledPaper>
+    <StyledGrid item xs key={user.ID}>
+      {user.cardThrown
+        ? renderCard(user.cardThrown.number, user.cardThrown.type)
+        : `Waiting card from ${user.playerName}`}
     </StyledGrid>
   ));
 }
@@ -109,28 +103,34 @@ function renderCardsThrownInCurrentRound(users) {
 function renderCardsInHand(currentUser) {
   return currentUser.cardsInHand.map(({ number, type }) => (
     <StyledGrid item xs key={number}>
-      <StyledPaper>
-        {number}
-        <img src={cardColours[type]} alt="club" />
-      </StyledPaper>
+      {renderCard(number, type)}
     </StyledGrid>
   ));
 }
 
+function renderCard(text, type) {
+  return (
+    <StyledPaper>
+      <strong>{text}</strong>
+      <img src={cardColours[type]} alt={type} />
+    </StyledPaper>
+  );
+}
+
 function renderUsers(users) {
-  return users.map((user) => (
-    <StyledGrid item xs key={user.connectionID}>
-      <Badge
-        color="primary"
-        badgeContent={`
-          ${user.wins.currentWins}/${user.wins.expectedWins}
-        `}
-        showZero
-      >
-        <Avatar>{user.playerName.slice(0, 2).toUpperCase()}</Avatar>
-      </Badge>
-    </StyledGrid>
-  ));
+  return users.map((user) => {
+    const badgeText =
+      user.wins.expectedWins === 99
+        ? "..."
+        : `${user.wins.currentWins}/${user.wins.expectedWins}`;
+    return (
+      <StyledGrid item xs key={user.ID}>
+        <Badge color="primary" badgeContent={badgeText} showZero>
+          <Avatar>{user.playerName.slice(0, 2).toUpperCase()}</Avatar>
+        </Badge>
+      </StyledGrid>
+    );
+  });
 }
 
 export default GameTemplate;
