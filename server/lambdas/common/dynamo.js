@@ -65,8 +65,8 @@ const Dynamo = {
   async scan(TableName, columnId, columnValue) {
     const params = {
       TableName,
-      FilterExpression: `${columnId} = :columnValue`,
-      ExpressionAttributeValues: { ":columnValue": columnValue },
+      FilterExpression: `${columnId} = :columnValue and playerName <> :null`,
+      ExpressionAttributeValues: { ":columnValue": columnValue, ":null": null },
     };
 
     return documentClient.scan(params).promise();

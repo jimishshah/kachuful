@@ -52,11 +52,11 @@ functions:
     events:
       - websocket:
           route: sendName
-  # websocket-message:
-  #   handler: lambdas/websockets/distribute-cards.handler
-  #   events:
-  #     - websocket:
-  #         route: distribute-cards
+  websocket-distributeCards:
+    handler: lambdas/websockets/distribute-cards.handler
+    events:
+      - websocket:
+          route: distributeCards
   # websocket-message:
   #   handler: lambdas/websockets/bid-wins.handler
   #   events:

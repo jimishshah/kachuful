@@ -38,85 +38,99 @@ function GameTemplate({
   currentUserId,
   users,
   currentLevel,
-  onEveryonePlayed,
   leaveTheTable,
   sendMessage,
+  distributeCards,
 }) {
-  const userIds = users.map(({ connectionID: userId }) => userId);
+  const [currentUser] = users.filter((user) => user.ID === currentUserId);
+
   return (
     <>
-      <StyledGrid container spacing={3}>
-        <StyledGrid item xs={3}>
+      {currentUser ? (
+        <>
           <StyledGrid container spacing={3}>
-            {users.map(({ playerName: name, connectionID: userId }) => (
-              <StyledGrid item xs key={userId}>
-                {/* <Badge
-                  color="primary"
-                  badgeContent={`
-                    ${currentLevel.users[userId].wins.currentWins}/${currentLevel.users[userId].wins.expectedWins}
-                  `}
-                  showZero
-                > */}
-                <Avatar>{name.slice(0, 2).toUpperCase()}</Avatar>
-                {/* </Badge> */}
+            <StyledGrid item xs={3}>
+              <StyledGrid container spacing={3}>
+                {renderUsers(users, currentLevel)}
               </StyledGrid>
-            ))}
-          </StyledGrid>
-        </StyledGrid>
-        <StyledGrid item xs={9}>
-          {/* <StyledGrid container spacing={3}>
-            {userIds.map((userId) => (
-              <StyledGrid item xs key={userId}>
-                <StyledPaper>
-                  {currentLevel.users[userId].cardThrown ? (
-                    <>
-                      <strong>
-                        {currentLevel.users[userId].cardThrown.number}
-                      </strong>
-                      <img
-                        src={
-                          cardColours[
-                            currentLevel.users[userId].cardThrown.type
-                          ]
-                        }
-                        alt="club"
-                      />
-                    </>
-                  ) : (
-                    `Waiting card from ${getName(userId, users)}`
-                  )}
-                </StyledPaper>
-              </StyledGrid>
-            ))}
-          </StyledGrid> */}
-        </StyledGrid>
-      </StyledGrid>
-      <StyledDivder />
-      {/* <StyledGrid container spacing={4}>
-        {currentLevel.users[currentUserId].cardsInHand.map(
-          ({ number, type }) => (
-            <StyledGrid item xs key={number}>
-              <StyledPaper>
-                {number}
-                <img src={cardColours[type]} alt="club" />
-              </StyledPaper>
             </StyledGrid>
-          )
-        )}
-      </StyledGrid> */}
+            <StyledGrid item xs={9}>
+              <StyledGrid container spacing={3}>
+                {renderCardsThrownInCurrentRound(users)}
+              </StyledGrid>
+            </StyledGrid>
+          </StyledGrid>
+          <StyledDivder />
+          <StyledGrid container spacing={4}>
+            {renderCardsInHand(currentUser)}
+          </StyledGrid>
+          {renderButtons(leaveTheTable, sendMessage, distributeCards)}
+        </>
+      ) : (
+        "Loading....."
+      )}
+    </>
+  );
+}
+
+function renderButtons(leaveTheTable, sendMessage, distributeCards) {
+  return (
+    <>
       <Button variant="contained" color="primary" onClick={leaveTheTable}>
         Leave the Table
       </Button>
       <Button variant="contained" color="primary" onClick={sendMessage}>
         Send message
       </Button>
+      <Button variant="contained" color="primary" onClick={distributeCards}>
+        Distribute Cards
+      </Button>
     </>
   );
 }
 
-function getName(userId, users) {
-  const user = users.find((user) => user.userId === userId);
-  return user.name;
+function renderCardsThrownInCurrentRound(users) {
+  return users.map((user) => (
+    <StyledGrid item xs key={user.connectionID}>
+      <StyledPaper>
+        {user.cardThrown ? (
+          <>
+            <strong>{user.cardThrown.number}</strong>
+            <img src={cardColours[user.cardThrown.type]} alt="club" />
+          </>
+        ) : (
+          `Waiting card from ${user.playerName}`
+        )}
+      </StyledPaper>
+    </StyledGrid>
+  ));
+}
+
+function renderCardsInHand(currentUser) {
+  return currentUser.cardsInHand.map(({ number, type }) => (
+    <StyledGrid item xs key={number}>
+      <StyledPaper>
+        {number}
+        <img src={cardColours[type]} alt="club" />
+      </StyledPaper>
+    </StyledGrid>
+  ));
+}
+
+function renderUsers(users) {
+  return users.map((user) => (
+    <StyledGrid item xs key={user.connectionID}>
+      <Badge
+        color="primary"
+        badgeContent={`
+          ${user.wins.currentWins}/${user.wins.expectedWins}
+        `}
+        showZero
+      >
+        <Avatar>{user.playerName.slice(0, 2).toUpperCase()}</Avatar>
+      </Badge>
+    </StyledGrid>
+  ));
 }
 
 export default GameTemplate;

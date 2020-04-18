@@ -22,10 +22,7 @@ exports.handler = async (event) => {
     await Dynamo.write(data, tableName);
 
     const records = await Dynamo.scan(tableName, "tableId", "1234567890");
-    const players = records.Items.map(({ playerName, ID: connectionID }) => ({
-      playerName,
-      connectionID,
-    }));
+    const players = records.Items.map((player) => player);
 
     //send connected users list to all the users
     const messages = records.Items.map(

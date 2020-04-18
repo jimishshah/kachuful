@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { useHistory } from "react-router-dom";
 import socket from "../socket";
-function Home() {
+function Home({ assignConnectionId }) {
   const history = useHistory();
   const [playerName, setPlayerName] = useState("");
   const joinTheTable = async () => {
@@ -26,6 +26,15 @@ function Home() {
     );
     history.push("/game");
   };
+
+  useEffect(() => {
+    socket.getInstance().then((ws) => {
+      ws.onmessage = function (event) {
+        const { connectionID } = JSON.parse(event.data);
+        assignConnectionId(connectionID);
+      };
+    });
+  }, []);
   return (
     <>
       <TextField

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createMuiTheme } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -15,6 +15,16 @@ const StyledContainer = styled(Container)`
 `;
 
 function App() {
+  const [connectionId, setConnectionId] = useState();
+
+  const assignConnectionId = (assignedConnectionId) => {
+    setConnectionId(assignedConnectionId);
+  };
+
+  const props = {
+    connectionId,
+    assignConnectionId,
+  };
   return (
     <ThemeProvider theme={defaultTheme}>
       <StylesProvider injectFirst>
@@ -36,10 +46,10 @@ function App() {
             renders the first one that matches the current URL. */}
               <Switch>
                 <Route path="/game">
-                  <Game />
+                  <Game {...props} />
                 </Route>
                 <Route path="/">
-                  <Home />
+                  <Home {...props} />
                 </Route>
               </Switch>
             </div>
