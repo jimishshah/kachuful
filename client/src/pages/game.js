@@ -44,6 +44,16 @@ function Game({ connectionId: currentUserId }) {
     );
   };
 
+  const bidWins = async (myBid) => {
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "bidWins",
+        message: { myBid },
+      })
+    );
+  };
+
   const props = {
     currentUserId,
     users,
@@ -51,6 +61,7 @@ function Game({ connectionId: currentUserId }) {
     leaveTheTable,
     sendMessage,
     distributeCards,
+    bidWins,
   };
   return <GameTemplate {...props} />;
 }

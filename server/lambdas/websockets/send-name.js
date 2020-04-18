@@ -11,7 +11,6 @@ exports.handler = async (event) => {
 
   try {
     const record = await Dynamo.get(connectionID, tableName);
-    const { domainName, stage } = record;
 
     const { playerName } = body.message;
 

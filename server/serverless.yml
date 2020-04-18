@@ -57,11 +57,11 @@ functions:
     events:
       - websocket:
           route: distributeCards
-  # websocket-message:
-  #   handler: lambdas/websockets/bid-wins.handler
-  #   events:
-  #     - websocket:
-  #         route: bid-wins
+  websocket-bid-wins:
+    handler: lambdas/websockets/bid-wins.handler
+    events:
+      - websocket:
+          route: bidWins
   # websocket-message:
   #   handler: lambdas/websockets/throw-card.handler
   #   events:

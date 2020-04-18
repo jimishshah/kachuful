@@ -10,6 +10,7 @@ import HeartLogo from "../svg/heart.svg";
 import Divider from "@material-ui/core/Divider";
 import Badge from "@material-ui/core/Badge";
 import Button from "@material-ui/core/Button";
+import BidWin from "../organisms/bid-win";
 
 const cardColours = {
   club: ClubLogo,
@@ -41,6 +42,7 @@ function GameTemplate({
   leaveTheTable,
   sendMessage,
   distributeCards,
+  bidWins,
 }) {
   const [currentUser] = users.filter((user) => user.ID === currentUserId);
 
@@ -66,6 +68,7 @@ function GameTemplate({
           </StyledGrid>
           {renderButtons(leaveTheTable, sendMessage, distributeCards)}
           {renderCard("", currentUser.lastTrumpColour)} Trump colour
+          <BidWin bidWins={bidWins} />
         </>
       ) : (
         "Loading....."

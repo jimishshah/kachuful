@@ -7,16 +7,6 @@ function Home({ assignConnectionId }) {
   const history = useHistory();
   const [playerName, setPlayerName] = useState("");
   const joinTheTable = async () => {
-    //   socket.send(
-    //     JSON.stringify({
-    //       message: "my first message",
-    //       action: "message",
-    //     })
-    //   );
-    //   socket.onmessage = function (event) {
-    //     history.push("/game");
-    //   };
-    // };
     const ws = await socket.getInstance();
     ws.send(
       JSON.stringify({
@@ -34,12 +24,13 @@ function Home({ assignConnectionId }) {
         assignConnectionId(connectionID);
       };
     });
+    // eslint-disable-next-line
   }, []);
   return (
     <>
       <TextField
         id="standard-basic"
-        label="Standard"
+        label="Enter you name"
         onChange={(e) => setPlayerName(e.target.value)}
       />
       <Button variant="contained" color="primary" onClick={joinTheTable}>
