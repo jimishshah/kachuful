@@ -1,8 +1,8 @@
-const userMock = [
+export const userMock = [
   {
     playerName: "Jimish",
     avatarLink: "",
-    connectionID: 1,
+    ID: 1,
     cardThrown: { type: "club", number: "2" },
     cardsInHand: [
       { type: "club", number: "J" },
@@ -16,7 +16,7 @@ const userMock = [
   {
     playerName: "Sujana",
     avatarLink: "",
-    connectionID: 2,
+    ID: 2,
     cardsInHand: [
       { type: "club", number: "J" },
       { type: "club", number: "K" },
@@ -29,7 +29,7 @@ const userMock = [
   {
     playerName: "Hardik",
     avatarLink: "",
-    connectionID: 3,
+    ID: 3,
     cardThrown: { type: "heart", number: "2" },
     cardsInHand: [
       { type: "club", number: "J" },
@@ -43,7 +43,7 @@ const userMock = [
   {
     playerName: "Hiren",
     avatarLink: "",
-    connectionID: 4,
+    ID: 4,
     cardThrown: { type: "diamond", number: "2" },
     cardsInHand: [
       { type: "club", number: "J" },
@@ -57,7 +57,7 @@ const userMock = [
   {
     playerName: "Malav",
     avatarLink: "",
-    connectionID: 5,
+    ID: 5,
     cardThrown: { type: "spade", number: "2" },
     cardsInHand: [
       { type: "club", number: "J" },
@@ -71,7 +71,7 @@ const userMock = [
   {
     playerName: "Meghana",
     avatarLink: "",
-    connectionID: 6,
+    ID: 6,
     cardThrown: { type: "spade", number: "K" },
     cardsInHand: [
       { type: "club", number: "J" },

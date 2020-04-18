@@ -7,6 +7,7 @@ import Game from "./pages/game";
 import styled from "@emotion/styled";
 import { StylesProvider } from "@material-ui/core/styles";
 import Home from "./pages/home";
+import GameMock from "./pages/game-mock";
 
 const defaultTheme = createMuiTheme();
 
@@ -45,6 +46,9 @@ function App() {
               {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
               <Switch>
+                <Route path="/game-mock">
+                  <GameMock {...props} />
+                </Route>
                 <Route path="/game">
                   <Game {...props} />
                 </Route>
