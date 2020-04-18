@@ -41,9 +41,10 @@ jest.mock("../../../server/lambdas/common/web-socket-message", () => ({
 
 test("should distribute non duplicate cards, correct number of cards and set correct trump colour to the players", async () => {
   await distributeCardsHandler();
-  const { message: data } = WebSocket.send.mock.calls[0][0];
-  const playerDetails = JSON.parse(data);
-  const [player1, player2, player3] = playerDetails.players;
+
+  const player1 = Dynamo.write.mock.calls[0][0];
+  const player2 = Dynamo.write.mock.calls[1][0];
+  const player3 = Dynamo.write.mock.calls[2][0];
 
   // test it distributes correct number of cards
   expect(player1.lastLevel).toEqual(8);

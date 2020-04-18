@@ -1,17 +1,15 @@
 const Responses = require("../common/api-responses");
 const Dynamo = require("../common/dynamo");
 const WebSocket = require("../common/web-socket-message");
+const updatePlayers = require("../common/update-players");
 
 const tableName = process.env.tableName;
 
 exports.handler = async (event) => {
-  const { connectionId: connectionID } = event.requestContext;
-
-  const body = JSON.parse(event.body);
-
   try {
+    const { connectionId: connectionID } = event.requestContext;
+    const body = JSON.parse(event.body);
     const record = await Dynamo.get(connectionID, tableName);
-
     const { myBid } = body.message;
 
     const data = {
@@ -22,21 +20,7 @@ exports.handler = async (event) => {
       },
     };
     await Dynamo.write(data, tableName);
-
-    const records = await Dynamo.scan(tableName, "tableId", "1234567890");
-    const players = records.Items.map((player) => player);
-
-    //send connected users list to all the users
-    const messages = records.Items.map(
-      ({ ID: connectionID, domainName, stage }) =>
-        WebSocket.send({
-          domainName,
-          stage,
-          connectionID,
-          message: JSON.stringify({ players, action: "sendPlayersBids" }),
-        })
-    );
-    await Promise.all(messages);
+    await updatePlayers();
     console.log(`${myBid} Bid added`);
     return Responses._200({ message: "got a message" });
   } catch (error) {

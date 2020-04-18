@@ -1,6 +1,6 @@
 const Dynamo = require("../common/dynamo");
-const WebSocket = require("../common/web-socket-message");
 const { getCardsDeck } = require("../../helpers/cards-deck");
+const updatePlayers = require("../common/update-players");
 
 const tableName = process.env.tableName;
 
@@ -8,19 +8,10 @@ exports.handler = async () => {
   const records = await Dynamo.scan(tableName, "tableId", "1234567890");
 
   const { players } = getPlayers(records);
-  //send connected users list to all the users
-  const messages = records.Items.map(
-    ({ ID: connectionID, domainName, stage }) =>
-      WebSocket.send({
-        domainName,
-        stage,
-        connectionID,
-        message: JSON.stringify({ players, action: "sendPlayers" }),
-      })
-  );
-  await Promise.all(messages);
   const writeToDB = players.map((player) => Dynamo.write(player, tableName));
   await Promise.all(writeToDB);
+
+  await updatePlayers();
 };
 
 function getPlayers(records) {
