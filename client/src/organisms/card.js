@@ -20,7 +20,7 @@ const StyledPaper = styled(Paper)`
   width: ${({ theme }) => theme.spacing(6)}px;
 `;
 
-function Card({ text, type, onClick }) {
+function Card({ text, type, onClick = () => {} }) {
   const clickHandler = () => {
     onClick({ type, number: text });
   };
