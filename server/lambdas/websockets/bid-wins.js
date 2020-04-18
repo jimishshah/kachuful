@@ -1,6 +1,5 @@
 const Responses = require("../common/api-responses");
 const Dynamo = require("../common/dynamo");
-const WebSocket = require("../common/web-socket-message");
 const updatePlayers = require("../common/update-players");
 
 const tableName = process.env.tableName;

@@ -53,6 +53,15 @@ function Game({ connectionId: currentUserId }) {
       })
     );
   };
+  const throwCard = async (cardThrown) => {
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "throwCard",
+        message: { cardThrown },
+      })
+    );
+  };
 
   const props = {
     currentUserId,
@@ -62,6 +71,7 @@ function Game({ connectionId: currentUserId }) {
     sendMessage,
     distributeCards,
     bidWins,
+    throwCard,
   };
   return <GameTemplate {...props} />;
 }

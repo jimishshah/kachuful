@@ -1,30 +1,12 @@
 import React from "react";
 import styled from "@emotion/styled";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
-import ClubLogo from "../svg/club.svg";
-import DiamondLogo from "../svg/diamond.svg";
-import SpadeLogo from "../svg/spade.svg";
-import HeartLogo from "../svg/heart.svg";
 import Divider from "@material-ui/core/Divider";
 import Badge from "@material-ui/core/Badge";
 import Button from "@material-ui/core/Button";
 import BidWin from "../organisms/bid-win";
-
-const cardColours = {
-  club: ClubLogo,
-  diamond: DiamondLogo,
-  spade: SpadeLogo,
-  heart: HeartLogo,
-};
-
-const StyledPaper = styled(Paper)`
-  padding: ${({ theme }) => theme.spacing(1)}px;
-  color: ${({ theme }) => theme.palette.text.secondary};
-  text-align: center;
-  width: ${({ theme }) => theme.spacing(6)}px;
-`;
+import Card from "../organisms/card";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
@@ -43,6 +25,7 @@ function GameTemplate({
   sendMessage,
   distributeCards,
   bidWins,
+  throwCard,
 }) {
   const [currentUser] = users.filter((user) => user.ID === currentUserId);
 
@@ -64,10 +47,11 @@ function GameTemplate({
           </StyledGrid>
           <StyledDivder />
           <StyledGrid container spacing={4}>
-            {renderCardsInHand(currentUser)}
+            {renderCardsInHand(currentUser, throwCard)}
           </StyledGrid>
           {renderButtons(leaveTheTable, sendMessage, distributeCards)}
-          {renderCard("", currentUser.lastTrumpColour)} Trump colour
+          <Card text="" type={currentUser.lastTrumpColour} />
+          Trump colour
           <BidWin bidWins={bidWins} />
         </>
       ) : (
@@ -96,28 +80,21 @@ function renderButtons(leaveTheTable, sendMessage, distributeCards) {
 function renderCardsThrownInCurrentRound(users) {
   return users.map((user) => (
     <StyledGrid item xs key={user.ID}>
-      {user.cardThrown
-        ? renderCard(user.cardThrown.number, user.cardThrown.type)
-        : `Waiting card from ${user.playerName}`}
+      {user.cardThrown ? (
+        <Card text={user.cardThrown.number} type={user.cardThrown.type} />
+      ) : (
+        `Waiting card from ${user.playerName}`
+      )}
     </StyledGrid>
   ));
 }
 
-function renderCardsInHand(currentUser) {
+function renderCardsInHand(currentUser, throwCard) {
   return currentUser.cardsInHand.map(({ number, type }) => (
     <StyledGrid item xs key={number}>
-      {renderCard(number, type)}
+      <Card text={number} type={type} onClick={throwCard} />
     </StyledGrid>
   ));
-}
-
-function renderCard(text, type) {
-  return (
-    <StyledPaper>
-      <strong>{text}</strong>
-      <img src={cardColours[type]} alt={type} />
-    </StyledPaper>
-  );
 }
 
 function renderUsers(users) {

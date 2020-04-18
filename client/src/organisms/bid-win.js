@@ -18,7 +18,6 @@ function BidWin({ bidWins }) {
       <Button variant="contained" color="primary" onClick={bidWinsHandler}>
         Bid Wins
       </Button>
-      ;
     </>
   );
 }

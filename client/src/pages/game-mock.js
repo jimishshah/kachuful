@@ -10,6 +10,8 @@ function GameMock() {
     leaveTheTable: () => {},
     sendMessage: () => {},
     distributeCards: () => {},
+    bidWins: () => {},
+    throwCard: () => {},
   };
   return <GameTemplate {...props} />;
 }
