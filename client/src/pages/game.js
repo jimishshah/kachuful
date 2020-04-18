@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 function Game({ connectionId: currentUserId }) {
   const onEveryonePlayed = () => {};
   const [users, setUsers] = useState([]);
+  const [isGameStarted, setIsGameStarted] = useState(false);
   const history = useHistory();
   const leaveTheTable = async () => {
     const ws = await socket.getInstance();
@@ -19,8 +20,11 @@ function Game({ connectionId: currentUserId }) {
     }
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {
-        const { players } = JSON.parse(event.data);
+        const { players, action } = JSON.parse(event.data);
         setUsers(players);
+        if (action === "sendStartGame") {
+          setIsGameStarted(true);
+        }
       };
     });
   }, [history]);
@@ -62,6 +66,15 @@ function Game({ connectionId: currentUserId }) {
       })
     );
   };
+  const startGame = async () => {
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "startGame",
+        message: "",
+      })
+    );
+  };
 
   const props = {
     currentUserId,
@@ -72,6 +85,8 @@ function Game({ connectionId: currentUserId }) {
     distributeCards,
     bidWins,
     throwCard,
+    isGameStarted,
+    startGame,
   };
   return <GameTemplate {...props} />;
 }

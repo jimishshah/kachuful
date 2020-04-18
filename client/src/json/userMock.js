@@ -12,6 +12,7 @@ export const userMock = [
     lastLevel: 3,
     cardsRemaining: 2,
     lastTrumpColour: "spade",
+    sequenceNumber: 1,
   },
   {
     playerName: "Sujana",
@@ -25,6 +26,7 @@ export const userMock = [
     lastLevel: 3,
     cardsRemaining: 2,
     lastTrumpColour: "spade",
+    sequenceNumber: 2,
   },
   {
     playerName: "Hardik",
@@ -39,6 +41,7 @@ export const userMock = [
     lastLevel: 3,
     cardsRemaining: 2,
     lastTrumpColour: "spade",
+    sequenceNumber: 3,
   },
   {
     playerName: "Hiren",
@@ -53,6 +56,7 @@ export const userMock = [
     lastLevel: 3,
     cardsRemaining: 2,
     lastTrumpColour: "spade",
+    sequenceNumber: 4,
   },
   {
     playerName: "Malav",
@@ -67,6 +71,7 @@ export const userMock = [
     lastLevel: 3,
     cardsRemaining: 2,
     lastTrumpColour: "spade",
+    sequenceNumber: 5,
   },
   {
     playerName: "Meghana",
@@ -81,5 +86,6 @@ export const userMock = [
     lastLevel: 3,
     cardsRemaining: 2,
     lastTrumpColour: "spade",
+    sequenceNumber: 6,
   },
 ];

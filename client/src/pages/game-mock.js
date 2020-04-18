@@ -4,7 +4,7 @@ import GameTemplate from "../templates/game-template";
 
 const currentUserIdMock = 1;
 function GameMock() {
-  const props = {
+  const gameTemplateProps = {
     currentUserId: currentUserIdMock,
     users: userMock,
     leaveTheTable: () => {},
@@ -12,8 +12,17 @@ function GameMock() {
     distributeCards: () => {},
     bidWins: () => {},
     throwCard: () => {},
+    finishRound: () => {
+      console.log("finish round clicked");
+    },
+    isGameStarted: true,
   };
-  return <GameTemplate {...props} />;
+
+  return (
+    <>
+      <GameTemplate {...gameTemplateProps} />
+    </>
+  );
 }
 
 export default GameMock;

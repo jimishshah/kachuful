@@ -2,7 +2,7 @@ const Dynamo = require("./dynamo");
 const WebSocket = require("./web-socket-message");
 
 const tableName = process.env.tableName;
-async function updatePlayers() {
+async function updatePlayers(action = "sendPlayers") {
   const records = await Dynamo.scan(tableName, "tableId", "1234567890");
   const players = records.Items.map((player) => player);
 
@@ -13,7 +13,7 @@ async function updatePlayers() {
         domainName,
         stage,
         connectionID,
-        message: JSON.stringify({ players, action: "sendPlayers" }),
+        message: JSON.stringify({ players, action }),
       })
   );
   await Promise.all(messages);

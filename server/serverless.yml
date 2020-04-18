@@ -67,11 +67,16 @@ functions:
     events:
       - websocket:
           route: throwCard
-  # websocket-message:
-  #   handler: lambdas/websockets/finish-round.handler
-  #   events:
-  #     - websocket:
-  #         route: finish-round
+  websocket-finishRound:
+    handler: lambdas/websockets/finish-round.handler
+    events:
+      - websocket:
+          route: finishRound
+  websocket-startGame:
+    handler: lambdas/websockets/start-game.handler
+    events:
+      - websocket:
+          route: startGame
   # websocket-message:
   #   handler: lambdas/websockets/finish-level.handler
   #   events:
