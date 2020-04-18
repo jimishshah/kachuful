@@ -77,11 +77,11 @@ functions:
     events:
       - websocket:
           route: startGame
-  # websocket-message:
-  #   handler: lambdas/websockets/finish-level.handler
-  #   events:
-  #     - websocket:
-  #         route: finish-level
+  websocket-finishLevel:
+    handler: lambdas/websockets/finish-level.handler
+    events:
+      - websocket:
+          route: finishLevel
 
 resources:
   Resources:

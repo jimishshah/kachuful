@@ -8,6 +8,7 @@ function Game({ connectionId: currentUserId }) {
   const [users, setUsers] = useState([]);
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [roundWinner, setRoundWinner] = useState("");
+  const [scores, setScores] = useState([]);
   const history = useHistory();
   const leaveTheTable = async () => {
     const ws = await socket.getInstance();
@@ -23,6 +24,7 @@ function Game({ connectionId: currentUserId }) {
       ws.onmessage = function (event) {
         const { players, action } = JSON.parse(event.data);
         setUsers(players);
+        setScores(getScores(players));
         if (action === "sendStartGame") {
           setIsGameStarted(true);
         }
@@ -91,6 +93,15 @@ function Game({ connectionId: currentUserId }) {
       })
     );
   };
+  const finishLevel = async () => {
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "finishLevel",
+        message: "",
+      })
+    );
+  };
 
   const props = {
     currentUserId,
@@ -105,8 +116,17 @@ function Game({ connectionId: currentUserId }) {
     startGame,
     roundWinner,
     finishRound,
+    finishLevel,
+    scores,
   };
   return <GameTemplate {...props} />;
 }
 
 export default Game;
+
+function getScores(players) {
+  return players.map(({ playerName, scoreCard }) => ({
+    playerName,
+    scoreCard,
+  }));
+}

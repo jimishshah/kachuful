@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import BidWin from "../organisms/bid-win";
 import Card from "../organisms/card";
 import UsersList from "../organisms/users-list";
+import ScoreCard from "../organisms/score-card";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
@@ -28,6 +29,8 @@ function GameTemplate({
   isGameStarted,
   startGame,
   roundWinner,
+  finishLevel,
+  scores,
 }) {
   const [currentUser] = users.filter((user) => user.ID === currentUserId);
 
@@ -65,11 +68,14 @@ function GameTemplate({
                 sendMessage,
                 distributeCards,
                 finishRound,
+                finishLevel,
               })}
               <Card text="" type={currentUser.lastTrumpColour} />
               Trump colour
               <BidWin bidWins={bidWins} />
               <h1>Last round winner: {roundWinner}</h1>
+              <h3>score card</h3>
+              <ScoreCard scores={scores} />
             </>
           )}
         </>
@@ -85,6 +91,7 @@ function renderButtons({
   sendMessage,
   distributeCards,
   finishRound,
+  finishLevel,
 }) {
   return (
     <>
@@ -99,6 +106,9 @@ function renderButtons({
       </Button>
       <Button variant="contained" color="primary" onClick={finishRound}>
         Finish Round
+      </Button>
+      <Button variant="contained" color="primary" onClick={finishLevel}>
+        Finish level
       </Button>
     </>
   );

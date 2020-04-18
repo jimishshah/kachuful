@@ -16,6 +16,7 @@ function GameMock() {
       console.log("finish round clicked");
     },
     isGameStarted: true,
+    scores: [{ playerName: "jimish", scoreCard: [10, 15, 17] }],
   };
 
   return (

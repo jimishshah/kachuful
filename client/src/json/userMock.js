@@ -14,6 +14,7 @@ export const userMock = [
     lastTrumpColour: "spade",
     sequenceNumber: 1,
     lastRoundWinner: true,
+    scoreCard: [],
   },
   {
     playerName: "Sujana",
@@ -29,6 +30,7 @@ export const userMock = [
     lastTrumpColour: "spade",
     sequenceNumber: 2,
     lastRoundWinner: false,
+    scoreCard: [],
   },
   {
     playerName: "Hardik",
@@ -45,6 +47,7 @@ export const userMock = [
     lastTrumpColour: "spade",
     sequenceNumber: 3,
     lastRoundWinner: false,
+    scoreCard: [],
   },
   {
     playerName: "Hiren",
@@ -61,6 +64,7 @@ export const userMock = [
     lastTrumpColour: "spade",
     sequenceNumber: 4,
     lastRoundWinner: false,
+    scoreCard: [],
   },
   {
     playerName: "Malav",
@@ -77,6 +81,7 @@ export const userMock = [
     lastTrumpColour: "spade",
     sequenceNumber: 5,
     lastRoundWinner: false,
+    scoreCard: [],
   },
   {
     playerName: "Meghana",
@@ -93,5 +98,6 @@ export const userMock = [
     lastTrumpColour: "spade",
     sequenceNumber: 6,
     lastRoundWinner: false,
+    scoreCard: [],
   },
 ];

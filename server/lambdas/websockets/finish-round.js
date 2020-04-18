@@ -42,22 +42,19 @@ exports.handler = async () => {
   );
   const [{ ID: winningPlayerID }] = getWinningPlayer(data);
   const writeToDB = players.map((player) => {
-    let updatedPlayer;
+    let updatedPlayer = {
+      ...player,
+      cardThrown: {},
+      lastRoundWinner: false,
+    };
     if (player.ID === winningPlayerID) {
       updatedPlayer = {
-        ...player,
-        cardThrown: {},
+        ...updatedPlayer,
         lastRoundWinner: true,
         wins: {
           ...player.wins,
           currentWins: Number(player.wins.currentWins) + 1,
         },
-      };
-    } else {
-      updatedPlayer = {
-        ...player,
-        cardThrown: {},
-        lastRoundWinner: false,
       };
     }
     return Dynamo.write(updatedPlayer, tableName);
