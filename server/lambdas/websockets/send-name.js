@@ -1,19 +1,19 @@
 const Responses = require("../common/api-responses");
 const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
+const getPlayerWithMessage = require("../common/get-player-with-message");
 
 const tableName = process.env.tableName;
 
 exports.handler = async (event) => {
   try {
-    const { connectionId: connectionID } = event.requestContext;
-    const body = JSON.parse(event.body);
-    const record = await Dynamo.get(connectionID, tableName);
-
-    const { playerName } = body.message;
+    const {
+      messageBody: { playerName },
+      player,
+    } = await getPlayerWithMessage(event);
 
     const data = {
-      ...record,
+      ...player,
       playerName,
     };
     await Dynamo.write(data, tableName);

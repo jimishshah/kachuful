@@ -1,15 +1,16 @@
 const Responses = require("../common/api-responses");
 const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
+const getPlayerWithMessage = require("../common/get-player-with-message");
 
 const tableName = process.env.tableName;
 
 exports.handler = async (event) => {
   try {
-    const { connectionId: connectionID } = event.requestContext;
-    const body = JSON.parse(event.body);
-    const player = await Dynamo.get(connectionID, tableName);
-    const { cardThrown } = body.message;
+    const {
+      messageBody: { cardThrown },
+      player,
+    } = await getPlayerWithMessage(event);
 
     const newCardsInHand = player.cardsInHand.filter(
       ({ type, number }) =>
