@@ -27,6 +27,7 @@ exports.handler = async (event) => {
       cardsRemaining: 0,
       lastTrumpColour: null,
       sequenceNumber: null,
+      lastRoundWinner: false,
     };
     await Dynamo.write(data, tableName);
 

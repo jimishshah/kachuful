@@ -7,6 +7,7 @@ function Game({ connectionId: currentUserId }) {
   const onEveryonePlayed = () => {};
   const [users, setUsers] = useState([]);
   const [isGameStarted, setIsGameStarted] = useState(false);
+  const [roundWinner, setRoundWinner] = useState("");
   const history = useHistory();
   const leaveTheTable = async () => {
     const ws = await socket.getInstance();
@@ -24,6 +25,12 @@ function Game({ connectionId: currentUserId }) {
         setUsers(players);
         if (action === "sendStartGame") {
           setIsGameStarted(true);
+        }
+        if (action === "sendFinishRound") {
+          const [{ playerName: thisRoundWinner }] = players.filter(
+            ({ lastRoundWinner }) => lastRoundWinner === true
+          );
+          setRoundWinner(thisRoundWinner);
         }
       };
     });
@@ -75,6 +82,15 @@ function Game({ connectionId: currentUserId }) {
       })
     );
   };
+  const finishRound = async () => {
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "finishRound",
+        message: "",
+      })
+    );
+  };
 
   const props = {
     currentUserId,
@@ -87,6 +103,8 @@ function Game({ connectionId: currentUserId }) {
     throwCard,
     isGameStarted,
     startGame,
+    roundWinner,
+    finishRound,
   };
   return <GameTemplate {...props} />;
 }

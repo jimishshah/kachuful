@@ -61,6 +61,8 @@ test("should send connected users list to every user", async () => {
       stage: "test-stage",
       tableId: "1234567890",
       wins: { currentWins: 99, expectedWins: 99 },
+      lastRoundWinner: false,
+      sequenceNumber: null,
     },
     "sample-table",
   ];

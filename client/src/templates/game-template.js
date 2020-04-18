@@ -27,6 +27,7 @@ function GameTemplate({
   finishRound,
   isGameStarted,
   startGame,
+  roundWinner,
 }) {
   const [currentUser] = users.filter((user) => user.ID === currentUserId);
 
@@ -68,6 +69,7 @@ function GameTemplate({
               <Card text="" type={currentUser.lastTrumpColour} />
               Trump colour
               <BidWin bidWins={bidWins} />
+              <h1>Last round winner: {roundWinner}</h1>
             </>
           )}
         </>
