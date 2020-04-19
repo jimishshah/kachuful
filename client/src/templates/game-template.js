@@ -7,14 +7,34 @@ import BidWin from "../organisms/bid-win";
 import Card from "../organisms/card";
 import UsersList from "../organisms/users-list";
 import ScoreCard from "../organisms/score-card";
+import { Paper, Box } from "@material-ui/core";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
+  /* margin-top: ${({ theme }) => theme.spacing(1)}px; */
+  /* margin-bottom: ${({ theme }) => theme.spacing(1)}px; */
+`;
+const StyledGridButtonsContainer = styled(StyledGrid)`
+  flex-grow: 0;
+  text-align: center;
+  margin-top: ${({ theme }) => theme.spacing(1)}px;
+  margin-bottom: ${({ theme }) => theme.spacing(1)}px;
+`;
+
+const StyledButton = styled(Button)`
+  width: 100%;
 `;
 
 const StyledDivder = styled(Divider)`
   margin-top: ${({ theme }) => theme.spacing(3)}px;
   margin-bottom: ${({ theme }) => theme.spacing(3)}px;
+`;
+
+const CardsContainer = styled(Box)`
+  text-align: center;
+`;
+const StyledH4 = styled.h4`
+  margin-bottom: 0;
 `;
 
 function GameTemplate({
@@ -49,6 +69,20 @@ function GameTemplate({
                 <StyledGrid container spacing={3}>
                   {renderCardsThrownInCurrentRound(users)}
                 </StyledGrid>
+                <StyledGrid container spacing={3}>
+                  <StyledGrid item xs={12}>
+                    {currentUser.lastTrumpColour && (
+                      <CardsContainer
+                        bgcolor="secondary.main"
+                        color="secondary.contrastText"
+                        p={2}
+                      >
+                        <Card text="" type={currentUser.lastTrumpColour} />
+                        <StyledH4>Trump colour</StyledH4>
+                      </CardsContainer>
+                    )}
+                  </StyledGrid>
+                </StyledGrid>
               </StyledGrid>
             )}
             {!isGameStarted && (
@@ -58,25 +92,34 @@ function GameTemplate({
             )}
           </StyledGrid>
           {isGameStarted && (
-            <>
-              <StyledDivder />
-              <StyledGrid container spacing={4}>
-                {renderCardsInHand(currentUser, throwCard)}
+            <StyledGrid container spacing={3}>
+              <StyledGrid xs={12}>
+                {currentUser.cardsInHand.length > 0 && (
+                  <CardsContainer
+                    bgcolor="primary.main"
+                    color="primary.contrastText"
+                    p={2}
+                  >
+                    <StyledGrid container spacing={3}>
+                      {renderCardsInHand(currentUser, throwCard)}
+                    </StyledGrid>
+                    <StyledH4>Cards in hand</StyledH4>
+                  </CardsContainer>
+                )}
+                {renderButtons({
+                  leaveTheTable,
+                  sendMessage,
+                  distributeCards,
+                  finishRound,
+                  finishLevel,
+                  bidWins,
+                })}
+
+                <h1>Last round winner: {roundWinner}</h1>
+                <h3>score card</h3>
+                <ScoreCard scores={scores} />
               </StyledGrid>
-              {renderButtons({
-                leaveTheTable,
-                sendMessage,
-                distributeCards,
-                finishRound,
-                finishLevel,
-              })}
-              <Card text="" type={currentUser.lastTrumpColour} />
-              Trump colour
-              <BidWin bidWins={bidWins} />
-              <h1>Last round winner: {roundWinner}</h1>
-              <h3>score card</h3>
-              <ScoreCard scores={scores} />
-            </>
+            </StyledGrid>
           )}
         </>
       ) : (
@@ -92,25 +135,53 @@ function renderButtons({
   distributeCards,
   finishRound,
   finishLevel,
+  bidWins,
 }) {
   return (
-    <>
+    <StyledGridButtonsContainer container spacing={2}>
       {/* <Button variant="contained" color="primary" onClick={sendMessage}>
         Send message
       </Button> */}
-      <Button variant="contained" color="primary" onClick={distributeCards}>
-        Distribute Cards
-      </Button>
-      <Button variant="contained" color="primary" onClick={finishRound}>
-        Finish Round
-      </Button>
-      <Button variant="contained" color="primary" onClick={finishLevel}>
-        Finish level
-      </Button>
-      <Button variant="contained" color="primary" onClick={leaveTheTable}>
-        Leave the Table
-      </Button>
-    </>
+      <StyledGrid item xs={12}>
+        <StyledButton
+          variant="outlined"
+          color="primary"
+          onClick={distributeCards}
+        >
+          Distribute Cards
+        </StyledButton>
+      </StyledGrid>
+      <StyledGrid item xs={12}>
+        <BidWin bidWins={bidWins} />
+      </StyledGrid>
+      <StyledGrid item xs={12}>
+        <StyledButton
+          variant="outlined"
+          color="secondary"
+          onClick={finishRound}
+        >
+          Finish Round
+        </StyledButton>
+      </StyledGrid>
+      <StyledGrid item xs={12}>
+        <StyledButton
+          variant="outlined"
+          color="secondary"
+          onClick={finishLevel}
+        >
+          Finish level
+        </StyledButton>
+      </StyledGrid>
+      <StyledGrid item xs={12}>
+        <StyledButton
+          variant="contained"
+          color="secondary"
+          onClick={leaveTheTable}
+        >
+          Leave the Table
+        </StyledButton>
+      </StyledGrid>
+    </StyledGridButtonsContainer>
   );
 }
 

@@ -15,6 +15,10 @@ export const userMock = [
     sequenceNumber: 1,
     lastRoundWinner: true,
     scoreCard: [],
+    shouldShowDistributeCard: false,
+    shouldShowFinishRound: false,
+    shouldShowFinishLeven: false,
+    shouldShowEnterBids: false,
   },
   {
     playerName: "Sujana",

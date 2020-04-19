@@ -18,6 +18,7 @@ const StyledPaper = styled(Paper)`
   color: ${({ theme }) => theme.palette.text.secondary};
   text-align: center;
   width: ${({ theme }) => theme.spacing(6)}px;
+  margin: 0 auto;
 `;
 
 function Card({ text, type, onClick = () => {} }) {

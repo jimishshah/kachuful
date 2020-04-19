@@ -48,7 +48,7 @@ exports.handler = async () => {
   const writeToDB = players.map((player) => {
     let updatedPlayer = {
       ...player,
-      cardThrown: {},
+      cardThrown: null,
       lastRoundWinner: false,
       sequenceNumber: getNewSequenceNumber(
         totalPlayers,
