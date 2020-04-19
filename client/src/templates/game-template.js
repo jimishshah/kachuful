@@ -95,9 +95,6 @@ function renderButtons({
 }) {
   return (
     <>
-      <Button variant="contained" color="primary" onClick={leaveTheTable}>
-        Leave the Table
-      </Button>
       {/* <Button variant="contained" color="primary" onClick={sendMessage}>
         Send message
       </Button> */}
@@ -109,6 +106,9 @@ function renderButtons({
       </Button>
       <Button variant="contained" color="primary" onClick={finishLevel}>
         Finish level
+      </Button>
+      <Button variant="contained" color="primary" onClick={leaveTheTable}>
+        Leave the Table
       </Button>
     </>
   );
