@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import styled from "@emotion/styled";
+import { DEFAULT_WINS } from "../constants";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
@@ -10,7 +11,7 @@ const StyledGrid = styled(Grid)`
 function UsersList({ users }) {
   return users.map((user) => {
     const badgeText =
-      user.wins.expectedWins === 99
+      user.wins.expectedWins === DEFAULT_WINS
         ? "..."
         : `${user.wins.currentWins}/${user.wins.expectedWins}`;
     return (

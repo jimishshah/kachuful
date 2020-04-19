@@ -24,7 +24,7 @@ export const userMock = [
       { type: "club", number: "J" },
       { type: "club", number: "K" },
     ],
-    wins: { expectedWins: 3, currentWins: 1 },
+    wins: { expectedWins: 99, currentWins: 99 },
     lastLevel: 3,
     cardsRemaining: 2,
     lastTrumpColour: "spade",
