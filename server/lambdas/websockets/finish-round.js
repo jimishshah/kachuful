@@ -1,5 +1,6 @@
 const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
+const getNewSequenceNumber = require("../../helpers/get-new-sequence-number");
 
 const tableName = process.env.tableName;
 
@@ -40,12 +41,20 @@ exports.handler = async () => {
       priority: cardPriorities[number],
     })
   );
-  const [{ ID: winningPlayerID }] = getWinningPlayer(data);
+  const [
+    { ID: winningPlayerID, sequenceNumber: winningPlayerSequenceNumber },
+  ] = getWinningPlayer(data);
+  const totalPlayers = players.length;
   const writeToDB = players.map((player) => {
     let updatedPlayer = {
       ...player,
       cardThrown: {},
       lastRoundWinner: false,
+      sequenceNumber: getNewSequenceNumber(
+        totalPlayers,
+        winningPlayerSequenceNumber,
+        Number(player.sequenceNumber)
+      ),
     };
     if (player.ID === winningPlayerID) {
       updatedPlayer = {

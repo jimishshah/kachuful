@@ -137,6 +137,7 @@ test("predicts correct winner", async () => {
   expect(player3.lastRoundWinner).toEqual(true);
   expect(player3.cardThrown).toEqual({});
   expect(player3.wins.currentWins).toEqual(1);
+  expect(player3.sequenceNumber).toEqual(1);
   Dynamo.write.mockClear();
 
   await finishRound();
@@ -144,6 +145,7 @@ test("predicts correct winner", async () => {
   expect(player1.lastRoundWinner).toEqual(true);
   expect(player1.cardThrown).toEqual({});
   expect(player1.wins.currentWins).toEqual(1);
+  expect(player3.sequenceNumber).toEqual(1);
   Dynamo.write.mockClear();
 
   await finishRound();
@@ -151,4 +153,5 @@ test("predicts correct winner", async () => {
   expect(player2.lastRoundWinner).toEqual(true);
   expect(player2.cardThrown).toEqual({});
   expect(player2.wins.currentWins).toEqual(1);
+  expect(player3.sequenceNumber).toEqual(1);
 });
