@@ -74,6 +74,13 @@ function GameTemplate({
           {isGameStarted && (
             <StyledGrid container spacing={3}>
               <StyledGrid item xs={12}>
+                {currentUser.cardsInHand.length > 0 && (
+                  <CardsList
+                    title="Cards in hand"
+                    clickHandler={throwCard}
+                    cards={currentUser.cardsInHand}
+                  />
+                )}
                 {renderButtons({
                   sendMessage,
                   distributeCards,
@@ -83,13 +90,6 @@ function GameTemplate({
                   currentUser,
                   hasEveryoneThrownCard,
                 })}
-                {currentUser.cardsInHand.length > 0 && (
-                  <CardsList
-                    title="Cards in hand"
-                    clickHandler={throwCard}
-                    cards={currentUser.cardsInHand}
-                  />
-                )}
 
                 <h1>Last round winner: {roundWinner}</h1>
                 <ScoreCard scores={scores} />
@@ -171,12 +171,40 @@ function renderButtons({
 }
 
 function renderCardsThrownInCurrentRound(users) {
+  const sortedUsers = users.sort((a, b) =>
+    a.sequenceNumber > b.sequenceNumber ? 1 : -1
+  );
   const cards = users.map(
     ({ cardThrown, playerName, sequenceNumber }) =>
       cardThrown || {
         number: `Waiting card from ${playerName}: Sq ${sequenceNumber}`,
       }
   );
+  // const { cards } = sortedUsers.reduce(
+  //   (acc, { cardThrown, playerName, sequenceNumber }) => {
+  //     const { hasFoundBlankSpace } = acc;
+  //     if (!hasFoundBlankSpace) {
+  //       if (!cardThrown) {
+  //         return {
+  //           hasFoundBlankSpace: true,
+  //           cards: [
+  //             ...acc.cards,
+  //             { number: `Waiting card from ${playerName}` },
+  //           ],
+  //         };
+  //       }
+  //       return {
+  //         ...acc,
+  //         cards: [...acc.cards, cardThrown],
+  //       };
+  //     }
+  //     return acc;
+  //   },
+  //   {
+  //     cards: [],
+  //     hasFoundBlankSpace: false,
+  //   }
+  // );
   return <CardsList cards={cards} title="Table" />;
 }
 

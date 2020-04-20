@@ -27,7 +27,6 @@ function BidWin({ bidWins }) {
             variant="outlined"
             id="standard-basic"
             label="Enter your bid"
-            value={bid}
             onChange={(e) => setBid(e.target.value)}
             size="small"
           />

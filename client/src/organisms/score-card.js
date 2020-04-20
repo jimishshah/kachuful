@@ -44,7 +44,7 @@ function ScoreCard({ scores }) {
                     {score}
                   </TableCell>
                 ))}
-                <TableCell>
+                <TableCell align="right">
                   {scoreCard.reduce((acc, curr) => acc + curr, 0)}
                 </TableCell>
               </TableRow>
