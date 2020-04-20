@@ -3,10 +3,16 @@ import Table from "@material-ui/core/Table";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
+import styled from "@emotion/styled";
+
+const StoreCardContainer = styled.div`
+  width: 100%;
+  overflow: scroll;
+`;
 
 function ScoreCard({ scores }) {
   return (
-    <>
+    <StoreCardContainer>
       <h3>score card</h3>
       <Table>
         <TableBody>
@@ -23,7 +29,7 @@ function ScoreCard({ scores }) {
           ))}
         </TableBody>
       </Table>
-    </>
+    </StoreCardContainer>
   );
 }
 

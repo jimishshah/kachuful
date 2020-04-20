@@ -3,16 +3,13 @@ import styled from "@emotion/styled";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import BidWin from "../organisms/bid-win";
-import Card from "../organisms/card";
 import UsersList from "../organisms/users-list";
 import ScoreCard from "../organisms/score-card";
-import { Box } from "@material-ui/core";
 import { DEFAULT_WINS } from "../constants";
+import CardsList from "../organisms/cards-list";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
-  /* margin-top: ${({ theme }) => theme.spacing(1)}px; */
-  /* margin-bottom: ${({ theme }) => theme.spacing(1)}px; */
 `;
 const StyledGridButtonsContainer = styled(StyledGrid)`
   flex-grow: 0;
@@ -23,13 +20,6 @@ const StyledGridButtonsContainer = styled(StyledGrid)`
 
 const StyledButton = styled(Button)`
   width: 100%;
-`;
-
-const CardsContainer = styled(Box)`
-  text-align: center;
-`;
-const StyledH4 = styled.h4`
-  margin-bottom: 0;
 `;
 
 function GameTemplate({
@@ -60,23 +50,13 @@ function GameTemplate({
             </StyledGrid>
             {isGameStarted && (
               <StyledGrid item xs={9}>
-                <StyledGrid container spacing={3}>
-                  {renderCardsThrownInCurrentRound(users)}
-                </StyledGrid>
-                <StyledGrid container spacing={3}>
-                  <StyledGrid item xs={12}>
-                    {currentUser.hasLevelStarted && (
-                      <CardsContainer
-                        bgcolor="secondary.main"
-                        color="secondary.contrastText"
-                        p={2}
-                      >
-                        <Card text="" type={currentUser.lastTrumpColour} />
-                        <StyledH4>Trump colour</StyledH4>
-                      </CardsContainer>
-                    )}
-                  </StyledGrid>
-                </StyledGrid>
+                {renderCardsThrownInCurrentRound(users)}
+                {currentUser.hasLevelStarted && (
+                  <CardsList
+                    title="Trump colour"
+                    cards={[{ type: currentUser.lastTrumpColour }]}
+                  />
+                )}
               </StyledGrid>
             )}
             {!isGameStarted && (
@@ -88,20 +68,7 @@ function GameTemplate({
           {isGameStarted && (
             <StyledGrid container spacing={3}>
               <StyledGrid item xs={12}>
-                {currentUser.cardsInHand.length > 0 && (
-                  <CardsContainer
-                    bgcolor="primary.main"
-                    color="primary.contrastText"
-                    p={2}
-                  >
-                    <StyledGrid container spacing={3}>
-                      {renderCardsInHand(currentUser, throwCard)}
-                    </StyledGrid>
-                    <StyledH4>Cards in hand</StyledH4>
-                  </CardsContainer>
-                )}
                 {renderButtons({
-                  leaveTheTable,
                   sendMessage,
                   distributeCards,
                   finishRound,
@@ -110,6 +77,13 @@ function GameTemplate({
                   currentUser,
                   hasEveryoneThrownCard,
                 })}
+                {currentUser.cardsInHand.length > 0 && (
+                  <CardsList
+                    title="Cards in hand"
+                    clickHandler={throwCard}
+                    cards={currentUser.cardsInHand}
+                  />
+                )}
 
                 <h1>Last round winner: {roundWinner}</h1>
                 <ScoreCard scores={scores} />
@@ -134,7 +108,6 @@ function GameTemplate({
 }
 
 function renderButtons({
-  leaveTheTable,
   sendMessage,
   distributeCards,
   finishRound,
@@ -192,23 +165,13 @@ function renderButtons({
 }
 
 function renderCardsThrownInCurrentRound(users) {
-  return users.map((user) => (
-    <StyledGrid item xs key={user.ID}>
-      {user.cardThrown ? (
-        <Card text={user.cardThrown.number} type={user.cardThrown.type} />
-      ) : (
-        `Waiting card from ${user.playerName}: Sq ${user.sequenceNumber}`
-      )}
-    </StyledGrid>
-  ));
-}
-
-function renderCardsInHand(currentUser, throwCard) {
-  return currentUser.cardsInHand.map(({ number, type }) => (
-    <StyledGrid item xs key={number}>
-      <Card text={number} type={type} onClick={throwCard} />
-    </StyledGrid>
-  ));
+  const cards = users.map(
+    ({ cardThrown, playerName, sequenceNumber }) =>
+      cardThrown || {
+        number: `Waiting card from ${playerName}: Sq ${sequenceNumber}`,
+      }
+  );
+  return <CardsList cards={cards} title="Table" />;
 }
 
 export default GameTemplate;
