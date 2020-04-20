@@ -103,6 +103,12 @@ function Game({ connectionId: currentUserId }) {
     );
   };
 
+  const playersThatHaveThrownCard = users.filter(
+    ({ cardThrown }) => cardThrown !== null
+  );
+  const hasEveryoneThrownCard =
+    users.length === playersThatHaveThrownCard.length;
+
   const props = {
     currentUserId,
     users,
@@ -118,6 +124,7 @@ function Game({ connectionId: currentUserId }) {
     finishRound,
     finishLevel,
     scores,
+    hasEveryoneThrownCard,
   };
   return <GameTemplate {...props} />;
 }

@@ -41,6 +41,7 @@ function getPlayers(records) {
           lastLevel: numberOfCardsToDistribute,
           lastTrumpColour: currentTrumpColour,
           cardsInHand,
+          hasLevelStarted: true,
         };
         return {
           players: [...acc.players, player],

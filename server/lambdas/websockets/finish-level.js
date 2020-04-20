@@ -22,7 +22,7 @@ exports.handler = async () => {
       ...player,
       scoreCard: [...player.scoreCard, thisLevelScore],
       wins: { expectedWins: 99, currentWins: 99 },
-      lastTrumpColour: null,
+      hasLevelStarted: false,
     };
     return Dynamo.write(updatedPlayer, tableName);
   });

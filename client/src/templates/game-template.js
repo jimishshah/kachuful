@@ -8,6 +8,7 @@ import Card from "../organisms/card";
 import UsersList from "../organisms/users-list";
 import ScoreCard from "../organisms/score-card";
 import { Paper, Box } from "@material-ui/core";
+import { DEFAULT_WINS } from "../constants";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
@@ -51,6 +52,7 @@ function GameTemplate({
   roundWinner,
   finishLevel,
   scores,
+  hasEveryoneThrownCard,
 }) {
   const [currentUser] = users.filter((user) => user.ID === currentUserId);
 
@@ -71,7 +73,7 @@ function GameTemplate({
                 </StyledGrid>
                 <StyledGrid container spacing={3}>
                   <StyledGrid item xs={12}>
-                    {currentUser.lastTrumpColour && (
+                    {currentUser.hasLevelStarted && (
                       <CardsContainer
                         bgcolor="secondary.main"
                         color="secondary.contrastText"
@@ -113,6 +115,8 @@ function GameTemplate({
                   finishRound,
                   finishLevel,
                   bidWins,
+                  currentUser,
+                  hasEveryoneThrownCard,
                 })}
 
                 <h1>Last round winner: {roundWinner}</h1>
@@ -136,33 +140,42 @@ function renderButtons({
   finishRound,
   finishLevel,
   bidWins,
+  currentUser,
+  hasEveryoneThrownCard,
 }) {
   return (
     <StyledGridButtonsContainer container spacing={2}>
       {/* <Button variant="contained" color="primary" onClick={sendMessage}>
         Send message
       </Button> */}
-      <StyledGrid item xs={12}>
-        <StyledButton
-          variant="outlined"
-          color="primary"
-          onClick={distributeCards}
-        >
-          Distribute Cards
-        </StyledButton>
-      </StyledGrid>
-      <StyledGrid item xs={12}>
-        <BidWin bidWins={bidWins} />
-      </StyledGrid>
-      <StyledGrid item xs={12}>
-        <StyledButton
-          variant="outlined"
-          color="secondary"
-          onClick={finishRound}
-        >
-          Finish Round
-        </StyledButton>
-      </StyledGrid>
+      {!currentUser.hasLevelStarted && (
+        <StyledGrid item xs={12}>
+          <StyledButton
+            variant="outlined"
+            color="primary"
+            onClick={distributeCards}
+          >
+            Distribute Cards
+          </StyledButton>
+        </StyledGrid>
+      )}
+      {currentUser.wins.currentWins === DEFAULT_WINS &&
+        currentUser.hasLevelStarted && (
+          <StyledGrid item xs={12}>
+            <BidWin bidWins={bidWins} />
+          </StyledGrid>
+        )}
+      {hasEveryoneThrownCard && (
+        <StyledGrid item xs={12}>
+          <StyledButton
+            variant="outlined"
+            color="secondary"
+            onClick={finishRound}
+          >
+            Finish Round
+          </StyledButton>
+        </StyledGrid>
+      )}
       <StyledGrid item xs={12}>
         <StyledButton
           variant="outlined"

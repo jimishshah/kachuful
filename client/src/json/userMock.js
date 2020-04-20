@@ -15,10 +15,7 @@ export const userMock = [
     sequenceNumber: 1,
     lastRoundWinner: true,
     scoreCard: [],
-    shouldShowDistributeCard: false,
-    shouldShowFinishRound: false,
-    shouldShowFinishLeven: false,
-    shouldShowEnterBids: false,
+    hasLevelStarted: false,
   },
   {
     playerName: "Sujana",
@@ -35,6 +32,7 @@ export const userMock = [
     sequenceNumber: 2,
     lastRoundWinner: false,
     scoreCard: [],
+    hasLevelStarted: false,
   },
   {
     playerName: "Hardik",
@@ -52,6 +50,7 @@ export const userMock = [
     sequenceNumber: 3,
     lastRoundWinner: false,
     scoreCard: [],
+    hasLevelStarted: false,
   },
   {
     playerName: "Hiren",
@@ -69,6 +68,7 @@ export const userMock = [
     sequenceNumber: 4,
     lastRoundWinner: false,
     scoreCard: [],
+    hasLevelStarted: false,
   },
   {
     playerName: "Malav",
@@ -86,6 +86,7 @@ export const userMock = [
     sequenceNumber: 5,
     lastRoundWinner: false,
     scoreCard: [],
+    hasLevelStarted: false,
   },
   {
     playerName: "Meghana",
@@ -103,5 +104,6 @@ export const userMock = [
     sequenceNumber: 6,
     lastRoundWinner: false,
     scoreCard: [],
+    hasLevelStarted: false,
   },
 ];
