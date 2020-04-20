@@ -120,8 +120,16 @@ function GameTemplate({
                 })}
 
                 <h1>Last round winner: {roundWinner}</h1>
-                <h3>score card</h3>
                 <ScoreCard scores={scores} />
+                <StyledGrid item xs={12}>
+                  <StyledButton
+                    variant="contained"
+                    color="secondary"
+                    onClick={leaveTheTable}
+                  >
+                    Leave the Table
+                  </StyledButton>
+                </StyledGrid>
               </StyledGrid>
             </StyledGrid>
           )}
@@ -183,15 +191,6 @@ function renderButtons({
           onClick={finishLevel}
         >
           Finish level
-        </StyledButton>
-      </StyledGrid>
-      <StyledGrid item xs={12}>
-        <StyledButton
-          variant="contained"
-          color="secondary"
-          onClick={leaveTheTable}
-        >
-          Leave the Table
         </StyledButton>
       </StyledGrid>
     </StyledGridButtonsContainer>
