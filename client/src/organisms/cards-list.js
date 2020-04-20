@@ -19,8 +19,8 @@ function CardsList({ cards, clickHandler = () => {}, title }) {
   return (
     <CardsContainer bgcolor="primary.main" color="primary.contrastText" p={2}>
       <StyledGrid container spacing={1}>
-        {cards.map(({ number, type }) => (
-          <StyledGrid item xs key={number}>
+        {cards.map(({ number, type }, index) => (
+          <StyledGrid item xs key={index}>
             <Card text={number} type={type} onClick={clickHandler} />
           </StyledGrid>
         ))}
