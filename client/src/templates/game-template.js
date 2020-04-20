@@ -33,7 +33,7 @@ const StyledH4 = styled.h4`
 `;
 
 function GameTemplate({
-  currentUserId,
+  currentUser,
   users,
   leaveTheTable,
   sendMessage,
@@ -48,8 +48,6 @@ function GameTemplate({
   scores,
   hasEveryoneThrownCard,
 }) {
-  const [currentUser] = users.filter((user) => user.ID === currentUserId);
-
   return (
     <>
       {currentUser ? (
@@ -89,7 +87,7 @@ function GameTemplate({
           </StyledGrid>
           {isGameStarted && (
             <StyledGrid container spacing={3}>
-              <StyledGrid xs={12}>
+              <StyledGrid item xs={12}>
                 {currentUser.cardsInHand.length > 0 && (
                   <CardsContainer
                     bgcolor="primary.main"
@@ -151,7 +149,7 @@ function renderButtons({
         Send message
       </Button> */}
       {!currentUser.hasLevelStarted && (
-        <StyledGrid item xs={12}>
+        <StyledGrid item xs={12} key="dc">
           <StyledButton
             variant="contained"
             color="secondary"
@@ -163,12 +161,12 @@ function renderButtons({
       )}
       {currentUser.wins.currentWins === DEFAULT_WINS &&
         currentUser.hasLevelStarted && (
-          <StyledGrid item xs={12}>
+          <StyledGrid item xs={12} key="bw">
             <BidWin bidWins={bidWins} />
           </StyledGrid>
         )}
       {hasEveryoneThrownCard && (
-        <StyledGrid item xs={12}>
+        <StyledGrid item xs={12} key="fr">
           <StyledButton
             variant="contained"
             color="secondary"
@@ -179,7 +177,7 @@ function renderButtons({
         </StyledGrid>
       )}
       {currentUser.shouldShowFinishLevel && (
-        <StyledGrid item xs={12}>
+        <StyledGrid item xs={12} key="fll">
           <StyledButton
             variant="contained"
             color="secondary"

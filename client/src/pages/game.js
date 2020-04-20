@@ -10,6 +10,30 @@ function Game({ connectionId: currentUserId }) {
   const [roundWinner, setRoundWinner] = useState("");
   const [scores, setScores] = useState([]);
   const history = useHistory();
+  const [currentUser] = users.filter((user) => user.ID === currentUserId);
+
+  const canIThrowThisCard = (cardThrown) => {
+    // if i have already thrown the card
+    if (currentUser.cardThrown) return false;
+    // if I am initiator
+    if (currentUser.sequenceNumber === 1) return true;
+    const [{ cardThrown: inititorCardThrown }] = users.filter(
+      (user) => user.sequenceNumber === 1
+    );
+    // if I am not the initiator
+    if (!inititorCardThrown) return false;
+    const { type: intiatorType } = inititorCardThrown;
+    // if i am throwing same card type
+    if (intiatorType === cardThrown.type) return true;
+
+    const myCardsWithSameType = currentUser.cardsInHand.filter(
+      ({ type }) => type === intiatorType
+    );
+    // if i have no other option
+    if (intiatorType !== cardThrown.type && myCardsWithSameType.length === 0)
+      return true;
+    return false;
+  };
   const leaveTheTable = async () => {
     const ws = await socket.getInstance();
     ws.close();
@@ -67,13 +91,21 @@ function Game({ connectionId: currentUserId }) {
     );
   };
   const throwCard = async (cardThrown) => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "throwCard",
-        message: { cardThrown },
-      })
-    );
+    // am i in sequence 1
+    // what is the colour of sequence 1
+    // do i have that colour
+    //
+    if (canIThrowThisCard(cardThrown)) {
+      const ws = await socket.getInstance();
+      ws.send(
+        JSON.stringify({
+          action: "throwCard",
+          message: { cardThrown },
+        })
+      );
+    } else {
+      console.log("you cant throw this card");
+    }
   };
   const startGame = async () => {
     const ws = await socket.getInstance();
@@ -110,7 +142,7 @@ function Game({ connectionId: currentUserId }) {
     users.length === playersThatHaveThrownCard.length;
 
   const props = {
-    currentUserId,
+    currentUser,
     users,
     onEveryonePlayed,
     leaveTheTable,

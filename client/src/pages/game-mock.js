@@ -2,11 +2,12 @@ import React from "react";
 import { userMock } from "../json/userMock";
 import GameTemplate from "../templates/game-template";
 
-const currentUserIdMock = 1;
 function GameMock() {
+  const users = userMock;
+  const [currentUser] = users.filter((user) => user.ID === 1);
   const gameTemplateProps = {
-    currentUserId: currentUserIdMock,
-    users: userMock,
+    currentUser,
+    users,
     leaveTheTable: () => {},
     sendMessage: () => {},
     distributeCards: () => {},
