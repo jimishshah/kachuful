@@ -47,6 +47,11 @@ functions:
     events:
       - websocket:
           route: message
+  websocket-getConnectionId:
+    handler: lambdas/websockets/get-connection-id.handler
+    events:
+      - websocket:
+          route: getConnectionId
   websocket-sendName:
     handler: lambdas/websockets/send-name.handler
     events:

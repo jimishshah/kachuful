@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { useHistory } from "react-router-dom";
 import socket from "../socket";
-function Home({ assignConnectionId }) {
+function Home({ assignConnectionId, connectionId }) {
   const history = useHistory();
   const [playerName, setPlayerName] = useState("");
   const joinTheTable = async () => {
@@ -19,6 +19,12 @@ function Home({ assignConnectionId }) {
 
   useEffect(() => {
     socket.getInstance().then((ws) => {
+      ws.send(
+        JSON.stringify({
+          message: "",
+          action: "getConnectionId",
+        })
+      );
       ws.onmessage = function (event) {
         const { connectionID } = JSON.parse(event.data);
         assignConnectionId(connectionID);
@@ -28,14 +34,20 @@ function Home({ assignConnectionId }) {
   }, []);
   return (
     <>
-      <TextField
-        id="standard-basic"
-        label="Enter you name"
-        onChange={(e) => setPlayerName(e.target.value)}
-      />
-      <Button variant="contained" color="primary" onClick={joinTheTable}>
-        Join the Table
-      </Button>
+      {connectionId ? (
+        <>
+          <TextField
+            id="standard-basic"
+            label="Enter you name"
+            onChange={(e) => setPlayerName(e.target.value)}
+          />
+          <Button variant="contained" color="primary" onClick={joinTheTable}>
+            Join the Table
+          </Button>
+        </>
+      ) : (
+        "Loading..."
+      )}
     </>
   );
 }

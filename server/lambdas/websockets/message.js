@@ -22,8 +22,6 @@ exports.handler = async (event) => {
       messages,
     };
 
-    await Dynamo.write(data, tableName);
-
     try {
       await WebSocket.send({
         domainName,
