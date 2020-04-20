@@ -18,7 +18,7 @@ exports.handler = async (event) => {
     };
     await Dynamo.write(data, tableName);
 
-    updatePlayers();
+    await updatePlayers();
     console.log(`${playerName} added`);
     return Responses._200({ message: "got a message" });
   } catch (error) {

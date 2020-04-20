@@ -1,5 +1,6 @@
 const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
+const Responses = require("../common/api-responses");
 
 const tableName = process.env.tableName;
 
@@ -29,4 +30,5 @@ exports.handler = async () => {
   });
   await Promise.all(writeToDB);
   await updatePlayers();
+  return Responses._200({ message: "got a message" });
 };

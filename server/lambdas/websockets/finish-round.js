@@ -1,6 +1,7 @@
 const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
 const getNewSequenceNumber = require("../../helpers/get-new-sequence-number");
+const Responses = require("../common/api-responses");
 
 const tableName = process.env.tableName;
 
@@ -72,6 +73,8 @@ exports.handler = async () => {
   await Promise.all(writeToDB);
 
   await updatePlayers("sendFinishRound");
+
+  return Responses._200({ message: "got a message" });
 };
 
 function getWinningPlayer(data) {
