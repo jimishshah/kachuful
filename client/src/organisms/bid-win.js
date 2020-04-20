@@ -33,7 +33,7 @@ function BidWin({ bidWins }) {
           />
         </Grid>
         <Grid item xs={6}>
-          <StyledButton variant="contained" color="primary" type="submit">
+          <StyledButton variant="contained" color="secondary" type="submit">
             Submit Bid
           </StyledButton>
         </Grid>
