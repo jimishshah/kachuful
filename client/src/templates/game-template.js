@@ -1,13 +1,12 @@
 import React from "react";
 import styled from "@emotion/styled";
 import Grid from "@material-ui/core/Grid";
-import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import BidWin from "../organisms/bid-win";
 import Card from "../organisms/card";
 import UsersList from "../organisms/users-list";
 import ScoreCard from "../organisms/score-card";
-import { Paper, Box } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import { DEFAULT_WINS } from "../constants";
 
 const StyledGrid = styled(Grid)`
@@ -24,11 +23,6 @@ const StyledGridButtonsContainer = styled(StyledGrid)`
 
 const StyledButton = styled(Button)`
   width: 100%;
-`;
-
-const StyledDivder = styled(Divider)`
-  margin-top: ${({ theme }) => theme.spacing(3)}px;
-  margin-bottom: ${({ theme }) => theme.spacing(3)}px;
 `;
 
 const CardsContainer = styled(Box)`
@@ -123,7 +117,7 @@ function GameTemplate({
                 <ScoreCard scores={scores} />
                 <StyledGrid item xs={12}>
                   <StyledButton
-                    variant="contained"
+                    variant="outlined"
                     color="secondary"
                     onClick={leaveTheTable}
                   >
@@ -159,8 +153,8 @@ function renderButtons({
       {!currentUser.hasLevelStarted && (
         <StyledGrid item xs={12}>
           <StyledButton
-            variant="outlined"
-            color="primary"
+            variant="contained"
+            color="secondary"
             onClick={distributeCards}
           >
             Distribute Cards
@@ -176,7 +170,7 @@ function renderButtons({
       {hasEveryoneThrownCard && (
         <StyledGrid item xs={12}>
           <StyledButton
-            variant="outlined"
+            variant="contained"
             color="secondary"
             onClick={finishRound}
           >
@@ -184,15 +178,17 @@ function renderButtons({
           </StyledButton>
         </StyledGrid>
       )}
-      <StyledGrid item xs={12}>
-        <StyledButton
-          variant="outlined"
-          color="secondary"
-          onClick={finishLevel}
-        >
-          Finish level
-        </StyledButton>
-      </StyledGrid>
+      {currentUser.shouldShowFinishLevel && (
+        <StyledGrid item xs={12}>
+          <StyledButton
+            variant="contained"
+            color="secondary"
+            onClick={finishLevel}
+          >
+            Finish level
+          </StyledButton>
+        </StyledGrid>
+      )}
     </StyledGridButtonsContainer>
   );
 }

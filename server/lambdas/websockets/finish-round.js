@@ -55,6 +55,7 @@ exports.handler = async () => {
         winningPlayerSequenceNumber,
         Number(player.sequenceNumber)
       ),
+      shouldShowFinishLevel: player.cardsInHand.length > 0 ? false : true,
     };
     if (player.ID === winningPlayerID) {
       updatedPlayer = {

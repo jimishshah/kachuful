@@ -64,6 +64,8 @@ test("should send connected users list to every user", async () => {
       lastRoundWinner: false,
       sequenceNumber: null,
       scoreCard: [],
+      hasLevelStarted: false,
+      shouldShowFinishLevel: false,
     },
     "sample-table",
   ];

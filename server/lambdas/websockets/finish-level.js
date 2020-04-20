@@ -23,6 +23,7 @@ exports.handler = async () => {
       scoreCard: [...player.scoreCard, thisLevelScore],
       wins: { expectedWins: 99, currentWins: 99 },
       hasLevelStarted: false,
+      shouldShowFinishLevel: false,
     };
     return Dynamo.write(updatedPlayer, tableName);
   });

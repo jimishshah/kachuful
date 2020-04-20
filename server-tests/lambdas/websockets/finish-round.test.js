@@ -28,6 +28,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
             expectedWins: "2",
             currentWins: "0",
           },
+          cardsInHand: [],
         },
         {
           ID: "222",
@@ -39,6 +40,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
             expectedWins: "1",
             currentWins: "0",
           },
+          cardsInHand: [],
         },
         {
           ID: "333",
@@ -50,6 +52,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
             expectedWins: "1",
             currentWins: "0",
           },
+          cardsInHand: [],
         },
       ],
     })
@@ -66,6 +69,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
             expectedWins: "2",
             currentWins: "0",
           },
+          cardsInHand: [],
         },
         {
           ID: "222",
@@ -77,6 +81,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
             expectedWins: "1",
             currentWins: "0",
           },
+          cardsInHand: [],
         },
         {
           ID: "333",
@@ -88,6 +93,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
             expectedWins: "1",
             currentWins: "0",
           },
+          cardsInHand: [],
         },
       ],
     })
@@ -104,6 +110,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
             expectedWins: "2",
             currentWins: "0",
           },
+          cardsInHand: [],
         },
         {
           ID: "222",
@@ -115,6 +122,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
             expectedWins: "1",
             currentWins: "0",
           },
+          cardsInHand: [],
         },
         {
           ID: "333",
@@ -126,6 +134,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
             expectedWins: "1",
             currentWins: "0",
           },
+          cardsInHand: [],
         },
       ],
     }),

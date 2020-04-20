@@ -30,6 +30,7 @@ exports.handler = async (event) => {
       lastRoundWinner: false,
       scoreCard: [],
       hasLevelStarted: false,
+      shouldShowFinishLevel: false,
     };
     await Dynamo.write(data, tableName);
 
