@@ -50,13 +50,19 @@ function GameTemplate({
             </StyledGrid>
             {isGameStarted && (
               <StyledGrid item xs={9}>
-                {renderCardsThrownInCurrentRound(users)}
-                {currentUser.hasLevelStarted && (
-                  <CardsList
-                    title="Trump colour"
-                    cards={[{ type: currentUser.lastTrumpColour }]}
-                  />
-                )}
+                <StyledGrid container spacing={3}>
+                  <StyledGrid item xs={12}>
+                    {renderCardsThrownInCurrentRound(users)}
+                  </StyledGrid>
+                  {currentUser.hasLevelStarted && (
+                    <StyledGrid item xs={12}>
+                      <CardsList
+                        title="Trump colour"
+                        cards={[{ type: currentUser.lastTrumpColour }]}
+                      />
+                    </StyledGrid>
+                  )}
+                </StyledGrid>
               </StyledGrid>
             )}
             {!isGameStarted && (
