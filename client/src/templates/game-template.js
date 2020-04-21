@@ -171,9 +171,7 @@ function renderButtons({
 }
 
 function renderCardsThrownInCurrentRound(users) {
-  const sortedUsers = users.sort((a, b) =>
-    a.sequenceNumber > b.sequenceNumber ? 1 : -1
-  );
+  users.sort((a, b) => (a.sequenceNumber > b.sequenceNumber ? 1 : -1));
   const cards = users.map(
     ({ cardThrown, playerName, sequenceNumber }) =>
       cardThrown || {
