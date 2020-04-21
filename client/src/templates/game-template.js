@@ -156,7 +156,7 @@ function renderButtons({
         Send message
       </Button> */}
       {!currentUser.hasLevelStarted && (
-        <Box flexGrow={1}>
+        <Box flexGrow={1} pt={1} pb={1}>
           <StyledButton
             variant="contained"
             color="secondary"
@@ -173,7 +173,7 @@ function renderButtons({
           </Box>
         )}
       {hasEveryoneThrownCard && (
-        <Box flexGrow={1}>
+        <Box flexGrow={1} pt={1}>
           <StyledButton
             variant="contained"
             color="secondary"
@@ -184,7 +184,7 @@ function renderButtons({
         </Box>
       )}
       {currentUser.shouldShowFinishLevel && (
-        <Box flexGrow={1}>
+        <Box flexGrow={1} pt={1}>
           <StyledButton
             variant="contained"
             color="secondary"
