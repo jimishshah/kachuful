@@ -7,6 +7,10 @@ export const userMock = [
     cardsInHand: [
       { type: "club", number: "J" },
       { type: "club", number: "K" },
+      { type: "club", number: "K" },
+      { type: "club", number: "K" },
+      { type: "club", number: "K" },
+      { type: "club", number: "K" },
     ],
     wins: { expectedWins: 99, currentWins: 99 },
     lastLevel: 3,
