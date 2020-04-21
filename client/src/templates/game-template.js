@@ -11,6 +11,9 @@ import AppBar from "@material-ui/core/AppBar";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
+import PowerSettingsNewRoundedIcon from "@material-ui/icons/PowerSettingsNewRounded";
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -51,6 +54,7 @@ function GameTemplate({
   finishLevel,
   scores,
   hasEveryoneThrownCard,
+  clearRoundWinner,
 }) {
   return (
     <>
@@ -90,17 +94,8 @@ function GameTemplate({
             <>
               <StyledGrid container spacing={3}>
                 <StyledGrid item xs={12}>
-                  <h1>Last round winner: {roundWinner}</h1>
+                  {/* <h1>Last round winner: {roundWinner}</h1> */}
                   <ScoreCard scores={scores} />
-                  <StyledGrid item xs={12}>
-                    <StyledButton
-                      variant="outlined"
-                      color="secondary"
-                      onClick={leaveTheTable}
-                    >
-                      Leave the Table
-                    </StyledButton>
-                  </StyledGrid>
                 </StyledGrid>
               </StyledGrid>
               <StyledAppBar position="fixed" color="primary">
@@ -113,9 +108,24 @@ function GameTemplate({
                     bidWins,
                     currentUser,
                     hasEveryoneThrownCard,
+                    leaveTheTable,
                   })}
                 </Container>
               </StyledAppBar>
+              <Snackbar
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                open={Boolean(roundWinner)}
+                autoHideDuration={6000}
+                onClose={clearRoundWinner}
+                message={`Round winner is ${roundWinner}`}
+              >
+                <Alert onClose={clearRoundWinner} severity="success">
+                  Round winner is {roundWinner}
+                </Alert>
+              </Snackbar>
             </>
           )}
         </>
@@ -134,9 +144,17 @@ function renderButtons({
   bidWins,
   currentUser,
   hasEveryoneThrownCard,
+  leaveTheTable,
 }) {
   return (
     <BoxContainer display="flex">
+      <Box pr={2} pt={2}>
+        <PowerSettingsNewRoundedIcon
+          variant="outlined"
+          color="secondary"
+          onClick={leaveTheTable}
+        />
+      </Box>
       {currentUser.hasLevelStarted && (
         <Box pr={2}>
           <StyledGrid item xs={12}>

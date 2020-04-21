@@ -30,14 +30,14 @@ function BidWin({ bidWins }) {
             type="number"
             variant="outlined"
             id="standard-basic"
-            label="Enter your bid"
+            label="Enter bid"
             onChange={(e) => setBid(e.target.value)}
             size="small"
           />
         </Grid>
         <Grid item xs={6}>
           <StyledButton variant="contained" color="secondary" type="submit">
-            Submit Bid
+            Go
           </StyledButton>
         </Grid>
       </Grid>

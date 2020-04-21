@@ -40,6 +40,9 @@ function Game({ connectionId: currentUserId }) {
     history.push("/");
   };
 
+  const clearRoundWinner = () => {
+    setRoundWinner("");
+  };
   useEffect(() => {
     if (!socket.hasInstance()) {
       history.push("/");
@@ -157,6 +160,7 @@ function Game({ connectionId: currentUserId }) {
     finishLevel,
     scores,
     hasEveryoneThrownCard,
+    clearRoundWinner,
   };
   return <GameTemplate {...props} />;
 }
