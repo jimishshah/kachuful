@@ -10,6 +10,10 @@ const StyledButton = styled(Button)`
   width: 100%;
 `;
 
+const StyledForm = styled.form`
+  padding-top: 8px;
+`;
+
 function BidWin({ bidWins }) {
   const [bid, setBid] = useState();
 
@@ -19,7 +23,7 @@ function BidWin({ bidWins }) {
     setBid("");
   };
   return (
-    <form onSubmit={bidWinsHandler} autoComplete="off">
+    <StyledForm onSubmit={bidWinsHandler} autoComplete="off">
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <StyledTextField
@@ -37,7 +41,7 @@ function BidWin({ bidWins }) {
           </StyledButton>
         </Grid>
       </Grid>
-    </form>
+    </StyledForm>
   );
 }
 

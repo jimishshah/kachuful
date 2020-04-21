@@ -10,6 +10,7 @@ import CardsList from "../organisms/cards-list";
 import AppBar from "@material-ui/core/AppBar";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -20,11 +21,9 @@ const StyledGrid = styled(Grid)`
   flex-grow: 0;
   text-align: center;
 `;
-const StyledGridButtonsContainer = styled(StyledGrid)`
-  flex-grow: 0;
-  text-align: center;
-  margin-top: ${({ theme }) => theme.spacing(1)}px;
-  margin-bottom: ${({ theme }) => theme.spacing(1)}px;
+
+const BoxContainer = styled(Box)`
+  padding: 8px 0;
 `;
 
 const StyledButton = styled(Button)`
@@ -105,7 +104,7 @@ function GameTemplate({
                 </StyledGrid>
               </StyledGrid>
               <StyledAppBar position="fixed" color="primary">
-                <Container container maxWidth="sm">
+                <Container maxWidth="sm">
                   {renderButtons({
                     sendMessage,
                     distributeCards,
@@ -137,9 +136,9 @@ function renderButtons({
   hasEveryoneThrownCard,
 }) {
   return (
-    <StyledGridButtonsContainer container spacing={2}>
+    <BoxContainer display="flex">
       {currentUser.hasLevelStarted && (
-        <StyledGrid item xs={2}>
+        <Box pr={2}>
           <StyledGrid item xs={12}>
             <StyledImg
               src={cardColours[currentUser.lastTrumpColour]}
@@ -151,13 +150,13 @@ function renderButtons({
               Trump
             </Typography>
           </StyledGrid>
-        </StyledGrid>
+        </Box>
       )}
       {/* <Button variant="contained" color="primary" onClick={sendMessage}>
         Send message
       </Button> */}
       {!currentUser.hasLevelStarted && (
-        <StyledGrid item xs={10} key="dc">
+        <Box flexGrow={1}>
           <StyledButton
             variant="contained"
             color="secondary"
@@ -165,16 +164,16 @@ function renderButtons({
           >
             Distribute Cards
           </StyledButton>
-        </StyledGrid>
+        </Box>
       )}
       {currentUser.wins.currentWins === DEFAULT_WINS &&
         currentUser.hasLevelStarted && (
-          <StyledGrid item xs={10} key="bw">
+          <Box flexGrow={1}>
             <BidWin bidWins={bidWins} />
-          </StyledGrid>
+          </Box>
         )}
       {hasEveryoneThrownCard && (
-        <StyledGrid item xs={10} key="fr">
+        <Box flexGrow={1}>
           <StyledButton
             variant="contained"
             color="secondary"
@@ -182,10 +181,10 @@ function renderButtons({
           >
             Finish Round
           </StyledButton>
-        </StyledGrid>
+        </Box>
       )}
       {currentUser.shouldShowFinishLevel && (
-        <StyledGrid item xs={10} key="fll">
+        <Box flexGrow={1}>
           <StyledButton
             variant="contained"
             color="secondary"
@@ -193,9 +192,9 @@ function renderButtons({
           >
             Finish level
           </StyledButton>
-        </StyledGrid>
+        </Box>
       )}
-    </StyledGridButtonsContainer>
+    </BoxContainer>
   );
 }
 
