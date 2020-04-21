@@ -85,9 +85,15 @@ function GameTemplate({
               </StyledGrid>
             )}
             {!isGameStarted && (
-              <Button variant="contained" color="primary" onClick={startGame}>
-                Start Game
-              </Button>
+              <StyledGrid item xs={9}>
+                <StyledButton
+                  variant="contained"
+                  color="secondary"
+                  onClick={startGame}
+                >
+                  Start Game
+                </StyledButton>
+              </StyledGrid>
             )}
           </StyledGrid>
           {isGameStarted && (
