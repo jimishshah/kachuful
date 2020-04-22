@@ -10,7 +10,12 @@ function Game({ connectionId: currentUserId }) {
   const [roundWinner, setRoundWinner] = useState("");
   const [scores, setScores] = useState([]);
   const history = useHistory();
-  const [currentUser] = users.filter((user) => user.ID === currentUserId);
+  const [currentUser = {}] = users.filter((user) => user.ID === currentUserId);
+  const playersThatHaveThrownCard = users.filter(
+    ({ cardThrown }) => cardThrown !== null
+  );
+  const hasEveryoneThrownCard =
+    users.length === playersThatHaveThrownCard.length;
 
   const canIThrowThisCard = (cardThrown) => {
     // if i have already thrown the card
@@ -43,6 +48,25 @@ function Game({ connectionId: currentUserId }) {
   const clearRoundWinner = () => {
     setRoundWinner("");
   };
+
+  const throwCard = async (cardThrown) => {
+    // am i in sequence 1
+    // what is the colour of sequence 1
+    // do i have that colour
+    //
+    if (canIThrowThisCard(cardThrown)) {
+      const ws = await socket.getInstance();
+      ws.send(
+        JSON.stringify({
+          action: "throwCard",
+          message: { cardThrown },
+        })
+      );
+    } else {
+      console.log("you cant throw this card");
+    }
+  };
+
   useEffect(() => {
     if (!socket.hasInstance()) {
       history.push("/");
@@ -63,86 +87,25 @@ function Game({ connectionId: currentUserId }) {
         }
       };
     });
-  }, [history]);
 
-  const sendMessage = async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        message: "my first message",
-        action: "message",
-      })
-    );
-  };
-
-  const distributeCards = async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "distributeCards",
-      })
-    );
-  };
-
-  const bidWins = async (myBid) => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "bidWins",
-        message: { myBid },
-      })
-    );
-  };
-  const throwCard = async (cardThrown) => {
-    // am i in sequence 1
-    // what is the colour of sequence 1
-    // do i have that colour
-    //
-    if (canIThrowThisCard(cardThrown)) {
-      const ws = await socket.getInstance();
-      ws.send(
-        JSON.stringify({
-          action: "throwCard",
-          message: { cardThrown },
-        })
-      );
-    } else {
-      console.log("you cant throw this card");
+    if (hasEveryoneThrownCard && Number(currentUser.sequenceNumber) === 1) {
+      finishRound();
     }
-  };
-  const startGame = async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "startGame",
-        message: "",
-      })
-    );
-  };
-  const finishRound = async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "finishRound",
-        message: "",
-      })
-    );
-  };
-  const finishLevel = async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "finishLevel",
-        message: "",
-      })
-    );
-  };
 
-  const playersThatHaveThrownCard = users.filter(
-    ({ cardThrown }) => cardThrown !== null
-  );
-  const hasEveryoneThrownCard =
-    users.length === playersThatHaveThrownCard.length;
+    if (
+      currentUser.shouldShowFinishLevel &&
+      Number(currentUser.sequenceNumber) === 1
+    ) {
+      finishLevel();
+    }
+
+    if (
+      !currentUser.hasLevelStarted &&
+      Number(currentUser.sequenceNumber) === 1
+    ) {
+      distributeCards();
+    }
+  }, [history, currentUser, hasEveryoneThrownCard]);
 
   const props = {
     currentUser,
@@ -150,16 +113,12 @@ function Game({ connectionId: currentUserId }) {
     onEveryonePlayed,
     leaveTheTable,
     sendMessage,
-    distributeCards,
     bidWins,
     throwCard,
     isGameStarted,
     startGame,
     roundWinner,
-    finishRound,
-    finishLevel,
     scores,
-    hasEveryoneThrownCard,
     clearRoundWinner,
   };
   return <GameTemplate {...props} />;
@@ -172,4 +131,62 @@ function getScores(players) {
     playerName,
     scoreCard,
   }));
+}
+
+async function finishLevel() {
+  const ws = await socket.getInstance();
+  ws.send(
+    JSON.stringify({
+      action: "finishLevel",
+      message: "",
+    })
+  );
+}
+async function finishRound() {
+  const ws = await socket.getInstance();
+  ws.send(
+    JSON.stringify({
+      action: "finishRound",
+      message: "",
+    })
+  );
+}
+
+async function startGame() {
+  const ws = await socket.getInstance();
+  ws.send(
+    JSON.stringify({
+      action: "startGame",
+      message: "",
+    })
+  );
+}
+
+async function distributeCards() {
+  const ws = await socket.getInstance();
+  ws.send(
+    JSON.stringify({
+      action: "distributeCards",
+    })
+  );
+}
+
+async function sendMessage() {
+  const ws = await socket.getInstance();
+  ws.send(
+    JSON.stringify({
+      message: "my first message",
+      action: "message",
+    })
+  );
+}
+
+async function bidWins(myBid) {
+  const ws = await socket.getInstance();
+  ws.send(
+    JSON.stringify({
+      action: "bidWins",
+      message: { myBid },
+    })
+  );
 }

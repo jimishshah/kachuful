@@ -20,7 +20,6 @@ function BidWin({ bidWins }) {
   const bidWinsHandler = (e) => {
     e.preventDefault();
 
-    console.log(Boolean(bid), bid);
     if (Boolean(bid)) {
       bidWins(bid);
       setBid("");

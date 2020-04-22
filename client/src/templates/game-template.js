@@ -44,14 +44,11 @@ function GameTemplate({
   users,
   leaveTheTable,
   sendMessage,
-  distributeCards,
   bidWins,
   throwCard,
-  finishRound,
   isGameStarted,
   startGame,
   roundWinner,
-  finishLevel,
   scores,
   hasEveryoneThrownCard,
   clearRoundWinner,
@@ -108,12 +105,8 @@ function GameTemplate({
                 <Container maxWidth="sm">
                   {renderButtons({
                     sendMessage,
-                    distributeCards,
-                    finishRound,
-                    finishLevel,
                     bidWins,
                     currentUser,
-                    hasEveryoneThrownCard,
                     leaveTheTable,
                   })}
                 </Container>
@@ -144,12 +137,8 @@ function GameTemplate({
 
 function renderButtons({
   sendMessage,
-  distributeCards,
-  finishRound,
-  finishLevel,
   bidWins,
   currentUser,
-  hasEveryoneThrownCard,
   leaveTheTable,
 }) {
   return (
@@ -179,45 +168,12 @@ function renderButtons({
       {/* <Button variant="contained" color="primary" onClick={sendMessage}>
         Send message
       </Button> */}
-      {!currentUser.hasLevelStarted && (
-        <Box flexGrow={1} pt={1} pb={1}>
-          <StyledButton
-            variant="contained"
-            color="secondary"
-            onClick={distributeCards}
-          >
-            Distribute Cards
-          </StyledButton>
-        </Box>
-      )}
       {currentUser.wins.currentWins === DEFAULT_WINS &&
         currentUser.hasLevelStarted && (
           <Box flexGrow={1}>
             <BidWin bidWins={bidWins} />
           </Box>
         )}
-      {hasEveryoneThrownCard && (
-        <Box flexGrow={1} pt={1}>
-          <StyledButton
-            variant="contained"
-            color="secondary"
-            onClick={finishRound}
-          >
-            Finish Round
-          </StyledButton>
-        </Box>
-      )}
-      {currentUser.shouldShowFinishLevel && (
-        <Box flexGrow={1} pt={1}>
-          <StyledButton
-            variant="contained"
-            color="secondary"
-            onClick={finishLevel}
-          >
-            Finish level
-          </StyledButton>
-        </Box>
-      )}
     </BoxContainer>
   );
 }
