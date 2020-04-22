@@ -7,8 +7,9 @@ const tableName = process.env.tableName;
 exports.handler = async (event) => {
   try {
     const { connectionId: connectionID } = event.requestContext;
+    const { tableId } = await Dynamo.get(connectionID, tableName);
     await Dynamo.delete(connectionID, tableName);
-    await updatePlayers();
+    await updatePlayers({ tableId });
     return Responses._200({ message: "sendPlayers" });
   } catch (e) {
     console.log(e);

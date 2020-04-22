@@ -89,21 +89,21 @@ function Game({ connectionId: currentUserId }) {
     });
 
     if (hasEveryoneThrownCard && Number(currentUser.sequenceNumber) === 1) {
-      finishRound();
+      finishRound(currentUser);
     }
 
     if (
       currentUser.shouldShowFinishLevel &&
       Number(currentUser.sequenceNumber) === 1
     ) {
-      finishLevel();
+      finishLevel(currentUser);
     }
 
     if (
       !currentUser.hasLevelStarted &&
       Number(currentUser.sequenceNumber) === 1
     ) {
-      distributeCards();
+      distributeCards(currentUser);
     }
   }, [history, currentUser, hasEveryoneThrownCard]);
 
@@ -133,40 +133,41 @@ function getScores(players) {
   }));
 }
 
-async function finishLevel() {
+async function finishLevel(currentUser) {
   const ws = await socket.getInstance();
   ws.send(
     JSON.stringify({
       action: "finishLevel",
-      message: "",
+      message: { tableId: currentUser.tableId },
     })
   );
 }
-async function finishRound() {
+async function finishRound(currentUser) {
   const ws = await socket.getInstance();
   ws.send(
     JSON.stringify({
       action: "finishRound",
-      message: "",
+      message: { tableId: currentUser.tableId },
     })
   );
 }
 
-async function startGame() {
+async function startGame(currentUser) {
   const ws = await socket.getInstance();
   ws.send(
     JSON.stringify({
       action: "startGame",
-      message: "",
+      message: { tableId: currentUser.tableId },
     })
   );
 }
 
-async function distributeCards() {
+async function distributeCards(currentUser) {
   const ws = await socket.getInstance();
   ws.send(
     JSON.stringify({
       action: "distributeCards",
+      message: { tableId: currentUser.tableId },
     })
   );
 }

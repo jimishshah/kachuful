@@ -23,7 +23,8 @@ exports.handler = async (event) => {
       cardsInHand: newCardsInHand,
     };
     await Dynamo.write(data, tableName);
-    await updatePlayers();
+    const { tableId } = data;
+    await updatePlayers({ tableId });
     console.log(`${cardThrown} card Thrown added`);
     return Responses._200({ message: "got a message" });
   } catch (error) {

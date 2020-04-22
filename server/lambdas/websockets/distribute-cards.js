@@ -5,14 +5,17 @@ const Responses = require("../common/api-responses");
 
 const tableName = process.env.tableName;
 
-exports.handler = async () => {
-  const records = await Dynamo.scan(tableName, "tableId", "1234567890");
+exports.handler = async (event) => {
+  const {
+    message: { tableId },
+  } = JSON.parse(event.body);
+  const records = await Dynamo.scan(tableName, "tableId", tableId);
 
   const { players } = getPlayers(records);
   const writeToDB = players.map((player) => Dynamo.write(player, tableName));
   await Promise.all(writeToDB);
 
-  await updatePlayers();
+  await updatePlayers({ tableId });
   return Responses._200({ message: "got a message" });
 };
 

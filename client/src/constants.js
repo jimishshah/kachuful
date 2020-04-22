@@ -15,3 +15,8 @@ export const websocketLink =
   process.env.NODE_ENV === "development"
     ? "ws://localhost:3001"
     : "wss://dnzhfv2njk.execute-api.eu-west-1.amazonaws.com/dev";
+
+export const linkBase =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://thecardgames.net";

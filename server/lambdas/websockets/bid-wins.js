@@ -18,8 +18,9 @@ exports.handler = async (event) => {
         currentWins: 0,
       },
     };
+    const { tableId } = record;
     await Dynamo.write(data, tableName);
-    await updatePlayers();
+    await updatePlayers({ tableId });
     console.log(`${myBid} Bid added`);
     return Responses._200({ message: "got a message" });
   } catch (error) {

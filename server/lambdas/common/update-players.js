@@ -2,8 +2,8 @@ const Dynamo = require("./dynamo");
 const WebSocket = require("./web-socket-message");
 
 const tableName = process.env.tableName;
-async function updatePlayers(action = "sendPlayers") {
-  const records = await Dynamo.scan(tableName, "tableId", "1234567890");
+async function updatePlayers({ action = "sendPlayers", tableId }) {
+  const records = await Dynamo.scan(tableName, "tableId", tableId);
   const players = records.Items.map((player) => player);
 
   //send connected users list to all the users

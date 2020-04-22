@@ -16,7 +16,7 @@ exports.handler = async (event) => {
       date: Date.now(),
       domainName,
       stage,
-      tableId: "1234567890",
+      tableId: null,
       playerName: null,
       avatarLink: null,
       cardThrown: null,
@@ -30,6 +30,7 @@ exports.handler = async (event) => {
       scoreCard: [],
       hasLevelStarted: false,
       shouldShowFinishLevel: false,
+      isHost: false,
     };
     await Dynamo.write(data, tableName);
     return Responses._200({ message: "connected" });

@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import BidWin from "../organisms/bid-win";
 import UsersList from "../organisms/users-list";
 import ScoreCard from "../organisms/score-card";
-import { DEFAULT_WINS, cardColours } from "../constants";
+import { DEFAULT_WINS, cardColours, linkBase } from "../constants";
 import CardsList from "../organisms/cards-list";
 import AppBar from "@material-ui/core/AppBar";
 import Container from "@material-ui/core/Container";
@@ -14,6 +14,7 @@ import Box from "@material-ui/core/Box";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import PowerSettingsNewRoundedIcon from "@material-ui/icons/PowerSettingsNewRounded";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -82,15 +83,40 @@ function GameTemplate({
               </StyledGrid>
             )}
             {!isGameStarted && (
-              <StyledGrid item xs={9}>
-                <StyledButton
-                  variant="contained"
-                  color="secondary"
-                  onClick={startGame}
-                >
-                  Start Game
-                </StyledButton>
-              </StyledGrid>
+              <>
+                <StyledGrid item xs={9}>
+                  {currentUser.isHost ? (
+                    <StyledButton
+                      variant="contained"
+                      color="primary"
+                      onClick={() => startGame(currentUser)}
+                    >
+                      Start Game
+                    </StyledButton>
+                  ) : (
+                    <Typography variant="subtitle1" gutterBottom>
+                      Waiting for Host to start the game
+                    </Typography>
+                  )}
+                </StyledGrid>
+                <StyledGrid item xs={12}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Share the link below and invite your friends to join your
+                    game, players are not allowed to join once the game is
+                    started. Only Host can start the game.
+                  </Typography>
+                  <Box
+                    bgcolor="grey.300"
+                    p={1}
+                    mb={1}
+                  >{`${linkBase}/${currentUser.tableId}`}</Box>
+                  <CopyToClipboard text={`${linkBase}/${currentUser.tableId}`}>
+                    <StyledButton variant="contained" color="secondary">
+                      Copy Link
+                    </StyledButton>
+                  </CopyToClipboard>
+                </StyledGrid>
+              </>
             )}
           </StyledGrid>
           {isGameStarted && (

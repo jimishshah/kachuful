@@ -21,6 +21,7 @@ export const userMock = [
     scoreCard: [],
     hasLevelStarted: true,
     shouldShowFinishLevel: false,
+    isHost: true,
   },
   {
     playerName: "Sujana",
@@ -39,6 +40,7 @@ export const userMock = [
     scoreCard: [],
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
+    isHost: false,
   },
   {
     playerName: "Hardik",
@@ -58,6 +60,7 @@ export const userMock = [
     scoreCard: [],
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
+    isHost: false,
   },
   {
     playerName: "Hiren",
@@ -77,6 +80,7 @@ export const userMock = [
     scoreCard: [],
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
+    isHost: false,
   },
   {
     playerName: "Malav",
@@ -96,6 +100,7 @@ export const userMock = [
     scoreCard: [],
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
+    isHost: false,
   },
   {
     playerName: "Meghana",
@@ -115,5 +120,6 @@ export const userMock = [
     scoreCard: [],
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
+    isHost: false,
   },
 ];

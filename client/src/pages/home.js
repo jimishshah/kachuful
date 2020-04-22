@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 
 import socket from "../socket";
 function Home({ assignConnectionId, connectionId }) {
   const history = useHistory();
   const [playerName, setPlayerName] = useState("");
+  const { tableId } = useParams();
   const joinTheTable = async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        message: { playerName },
-        action: "sendName",
-      })
-    );
-    history.push("/game");
+    if (Boolean(playerName)) {
+      const ws = await socket.getInstance();
+      ws.send(
+        JSON.stringify({
+          message: { playerName, tableId },
+          action: "sendName",
+        })
+      );
+      history.push("/game");
+    }
   };
 
   useEffect(() => {
@@ -37,11 +40,10 @@ function Home({ assignConnectionId, connectionId }) {
   return (
     <>
       {connectionId ? (
-        <>
+        <form onSubmit={joinTheTable}>
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
-                id="standard-basic"
                 variant="outlined"
                 label="Enter your name"
                 size="small"
@@ -49,16 +51,12 @@ function Home({ assignConnectionId, connectionId }) {
               />
             </Grid>
             <Grid item xs={6}>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={joinTheTable}
-              >
-                Join the Table
+              <Button variant="contained" color="secondary" type="submit">
+                {tableId ? "Join Game" : "Create Game"}
               </Button>
             </Grid>
           </Grid>
-        </>
+        </form>
       ) : (
         "Loading..."
       )}

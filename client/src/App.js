@@ -53,7 +53,7 @@ function App() {
                 <Route path="/game">
                   <Game {...props} />
                 </Route>
-                <Route path="/">
+                <Route path="/:tableId?">
                   <Home {...props} />
                 </Route>
               </Switch>

@@ -7,18 +7,24 @@ const tableName = process.env.tableName;
 
 exports.handler = async (event) => {
   try {
-    const {
-      messageBody: { playerName },
+    let {
+      messageBody: { playerName, tableId },
       player,
     } = await getPlayerWithMessage(event);
 
+    const isHost = !Boolean(tableId);
+    tableId =
+      tableId || (Date.now() + Math.random()).toString().replace(".", "-");
+
     const data = {
       ...player,
+      isHost,
+      tableId,
       playerName,
     };
     await Dynamo.write(data, tableName);
 
-    await updatePlayers();
+    await updatePlayers({ tableId });
     console.log(`${playerName} added`);
     return Responses._200({ message: "got a message" });
   } catch (error) {

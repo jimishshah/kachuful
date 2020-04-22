@@ -18,15 +18,14 @@ const cardPriorities = {
   "10": 9,
   J: 10,
   Q: 11,
-  K: 13,
+  K: 12,
 };
 
-exports.handler = async () => {
-  const { Items: players } = await Dynamo.scan(
-    tableName,
-    "tableId",
-    "1234567890"
-  );
+exports.handler = async (event) => {
+  const {
+    message: { tableId },
+  } = JSON.parse(event.body);
+  const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
   const data = players.map(
     ({
       ID,
@@ -72,7 +71,7 @@ exports.handler = async () => {
   });
   await Promise.all(writeToDB);
 
-  await updatePlayers("sendFinishRound");
+  await updatePlayers({ action: "sendFinishRound", tableId });
 
   return Responses._200({ message: "got a message" });
 };

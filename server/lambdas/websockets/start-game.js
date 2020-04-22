@@ -7,11 +7,10 @@ const tableName = process.env.tableName;
 
 exports.handler = async (event) => {
   try {
-    const { Items: players } = await Dynamo.scan(
-      tableName,
-      "tableId",
-      "1234567890"
-    );
+    const {
+      message: { tableId },
+    } = JSON.parse(event.body);
+    const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
 
     const editedPlayers = players.map((player, index) => ({
       ...player,
@@ -23,7 +22,7 @@ exports.handler = async (event) => {
     );
     await Promise.all(writeToDB);
 
-    await updatePlayers("sendStartGame");
+    await updatePlayers({ action: "sendStartGame", tableId });
     return Responses._200({ message: "got a message" });
   } catch (error) {
     console.log(error);
