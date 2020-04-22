@@ -74,7 +74,7 @@
           "KachufulFe": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
-              "BucketName": "kachuful-fe",
+              "BucketName": "thecardgames.net",
               "AccessControl": "PublicRead",
               "WebsiteConfiguration": {
                 "IndexDocument": "index.html",
@@ -97,9 +97,17 @@
                     "Action": [
                       "s3:GetObject"
                     ],
-                    "Resource": "arn:aws:s3:::kachuful-fe/*"
+                    "Resource": "arn:aws:s3:::thecardgames.net/*"
                   }
                 ]
+              }
+            }
+          },
+          "WebsiteOriginAccessIdentity": {
+            "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+            "Properties": {
+              "CloudFrontOriginAccessIdentityConfig": {
+                "Comment": "CloudFrontOriginAccessIdentity for kachuful-fe"
               }
             }
           },
@@ -109,14 +117,25 @@
               "DistributionConfig": {
                 "Origins": [
                   {
-                    "DomainName": "kachuful-fe.s3.amazonaws.com",
-                    "Id": "KachufulFe",
-                    "CustomOriginConfig": {
-                      "HTTPPort": 80,
-                      "HTTPSPort": 443,
-                      "OriginProtocolPolicy": "https-only"
+                    "DomainName": "thecardgames.net.s3.amazonaws.com",
+                    "Id": "S3-thecardgames.net",
+                    "S3OriginConfig": {
+                      "OriginAccessIdentity": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "origin-access-identity/cloudfront/",
+                            {
+                              "Ref": "WebsiteOriginAccessIdentity"
+                            }
+                          ]
+                        ]
+                      }
                     }
                   }
+                ],
+                "Aliases": [
+                  "thecardgames.net"
                 ],
                 "Enabled": "true",
                 "DefaultRootObject": "index.html",
@@ -137,7 +156,7 @@
                     "POST",
                     "PUT"
                   ],
-                  "TargetOriginId": "KachufulFe",
+                  "TargetOriginId": "S3-thecardgames.net",
                   "ForwardedValues": {
                     "QueryString": "false",
                     "Cookies": {
@@ -147,7 +166,8 @@
                   "ViewerProtocolPolicy": "redirect-to-https"
                 },
                 "ViewerCertificate": {
-                  "CloudFrontDefaultCertificate": true
+                  "AcmCertificateArn": "arn:aws:acm:us-east-1:618246572188:certificate/ba729453-7e4f-44ee-838b-f13db7518ece",
+                  "SslSupportMethod": "sni-only"
                 }
               }
             }
@@ -230,10 +250,10 @@
       }
     },
     "custom": {
-      "bucketName": "kachuful-fe",
+      "bucketName": "thecardgames.net",
       "s3Sync": [
         {
-          "bucketName": "kachuful-fe",
+          "bucketName": "thecardgames.net",
           "localDir": "build/"
         }
       ]
@@ -248,7 +268,7 @@
         "KachufulFe": {
           "Type": "AWS::S3::Bucket",
           "Properties": {
-            "BucketName": "kachuful-fe",
+            "BucketName": "thecardgames.net",
             "AccessControl": "PublicRead",
             "WebsiteConfiguration": {
               "IndexDocument": "index.html",
@@ -271,9 +291,17 @@
                   "Action": [
                     "s3:GetObject"
                   ],
-                  "Resource": "arn:aws:s3:::kachuful-fe/*"
+                  "Resource": "arn:aws:s3:::thecardgames.net/*"
                 }
               ]
+            }
+          }
+        },
+        "WebsiteOriginAccessIdentity": {
+          "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+          "Properties": {
+            "CloudFrontOriginAccessIdentityConfig": {
+              "Comment": "CloudFrontOriginAccessIdentity for kachuful-fe"
             }
           }
         },
@@ -283,14 +311,25 @@
             "DistributionConfig": {
               "Origins": [
                 {
-                  "DomainName": "kachuful-fe.s3.amazonaws.com",
-                  "Id": "KachufulFe",
-                  "CustomOriginConfig": {
-                    "HTTPPort": 80,
-                    "HTTPSPort": 443,
-                    "OriginProtocolPolicy": "https-only"
+                  "DomainName": "thecardgames.net.s3.amazonaws.com",
+                  "Id": "S3-thecardgames.net",
+                  "S3OriginConfig": {
+                    "OriginAccessIdentity": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "origin-access-identity/cloudfront/",
+                          {
+                            "Ref": "WebsiteOriginAccessIdentity"
+                          }
+                        ]
+                      ]
+                    }
                   }
                 }
+              ],
+              "Aliases": [
+                "thecardgames.net"
               ],
               "Enabled": "true",
               "DefaultRootObject": "index.html",
@@ -311,7 +350,7 @@
                   "POST",
                   "PUT"
                 ],
-                "TargetOriginId": "KachufulFe",
+                "TargetOriginId": "S3-thecardgames.net",
                 "ForwardedValues": {
                   "QueryString": "false",
                   "Cookies": {
@@ -321,7 +360,8 @@
                 "ViewerProtocolPolicy": "redirect-to-https"
               },
               "ViewerCertificate": {
-                "CloudFrontDefaultCertificate": true
+                "AcmCertificateArn": "arn:aws:acm:us-east-1:618246572188:certificate/ba729453-7e4f-44ee-838b-f13db7518ece",
+                "SslSupportMethod": "sni-only"
               }
             }
           }
@@ -334,7 +374,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/kachuful-fe/dev/1587500631757-2020-04-21T20:23:51.757Z",
+    "artifactDirectoryName": "serverless/kachuful-fe/dev/1587553912156-2020-04-22T11:11:52.156Z",
     "artifact": ""
   }
 }

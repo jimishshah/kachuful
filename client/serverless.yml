@@ -10,7 +10,7 @@ plugins:
   - serverless-s3-sync
 
 custom:
-  bucketName: kachuful-fe
+  bucketName: thecardgames.net
   s3Sync:
     - bucketName: ${self:custom.bucketName}
       localDir: build/
@@ -38,17 +38,32 @@ resources:
               Action:
                 - s3:GetObject
               Resource: arn:aws:s3:::${self:custom.bucketName}/*
+    WebsiteOriginAccessIdentity:
+      Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+      Properties:
+        CloudFrontOriginAccessIdentityConfig:
+          Comment: "CloudFrontOriginAccessIdentity for ${self:service}"
     CloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       Properties:
         DistributionConfig:
           Origins:
             - DomainName: ${self:custom.bucketName}.s3.amazonaws.com
-              Id: KachufulFe
-              CustomOriginConfig:
-                HTTPPort: 80
-                HTTPSPort: 443
-                OriginProtocolPolicy: https-only
+              Id: S3-${self:custom.bucketName}
+              S3OriginConfig:
+                OriginAccessIdentity:
+                  {
+                    "Fn::Join":
+                      [
+                        "",
+                        [
+                          "origin-access-identity/cloudfront/",
+                          { Ref: WebsiteOriginAccessIdentity },
+                        ],
+                      ],
+                  }
+          Aliases:
+            - thecardgames.net
           Enabled: "true"
           DefaultRootObject: index.html
           CustomErrorResponses:
@@ -64,11 +79,12 @@ resources:
               - PATCH
               - POST
               - PUT
-            TargetOriginId: KachufulFe
+            TargetOriginId: S3-${self:custom.bucketName}
             ForwardedValues:
               QueryString: "false"
               Cookies:
                 Forward: none
             ViewerProtocolPolicy: redirect-to-https
           ViewerCertificate:
-            CloudFrontDefaultCertificate: true
+            AcmCertificateArn: "arn:aws:acm:us-east-1:618246572188:certificate/ba729453-7e4f-44ee-838b-f13db7518ece"
+            SslSupportMethod: "sni-only"
