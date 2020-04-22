@@ -19,8 +19,12 @@ function BidWin({ bidWins }) {
 
   const bidWinsHandler = (e) => {
     e.preventDefault();
-    bidWins(bid);
-    setBid("");
+
+    console.log(Boolean(bid), bid);
+    if (Boolean(bid)) {
+      bidWins(bid);
+      setBid("");
+    }
   };
   return (
     <StyledForm onSubmit={bidWinsHandler} autoComplete="off">
