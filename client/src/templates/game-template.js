@@ -72,7 +72,7 @@ function GameTemplate({
                   <StyledGrid item xs={12}>
                     {currentUser.cardsInHand.length > 0 && (
                       <CardsList
-                        title="Cards in hand"
+                        title="My Cards"
                         clickHandler={throwCard}
                         cards={currentUser.cardsInHand}
                       />
@@ -135,12 +135,7 @@ function GameTemplate({
   );
 }
 
-function renderButtons({
-  sendMessage,
-  bidWins,
-  currentUser,
-  leaveTheTable,
-}) {
+function renderButtons({ sendMessage, bidWins, currentUser, leaveTheTable }) {
   return (
     <BoxContainer display="flex">
       <Box pr={2} pt={2}>
