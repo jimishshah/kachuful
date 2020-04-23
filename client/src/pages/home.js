@@ -9,7 +9,8 @@ function Home({ assignConnectionId, connectionId }) {
   const history = useHistory();
   const [playerName, setPlayerName] = useState("");
   const { tableId } = useParams();
-  const joinTheTable = async () => {
+  const joinTheTable = async (e) => {
+    e.preventDefault();
     if (Boolean(playerName)) {
       const ws = await socket.getInstance();
       ws.send(

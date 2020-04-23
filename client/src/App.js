@@ -8,7 +8,17 @@ import styled from "@emotion/styled";
 import { StylesProvider } from "@material-ui/core/styles";
 import Home from "./pages/home";
 import GameMock from "./pages/game-mock";
+import ReactGA from "react-ga";
+import { createBrowserHistory } from "history";
 
+const trackingId = "UA-164323461-1"; // Replace with your Google Analytics tracking ID
+ReactGA.initialize(trackingId);
+
+const history = createBrowserHistory();
+history.listen((location) => {
+  ReactGA.set({ page: location.pathname }); // Update the user's current page
+  ReactGA.pageview(location.pathname); // Record a pageview for the given page
+});
 const defaultTheme = createMuiTheme();
 
 const StyledContainer = styled(Container)`
