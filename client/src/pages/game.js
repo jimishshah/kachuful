@@ -49,7 +49,7 @@ function Game({
   const leaveTheTable = async () => {
     const ws = await socket.getInstance();
     ws.close();
-    history.push("/");
+    history.push("/judgement");
   };
 
   const clearRoundWinner = () => {
@@ -76,7 +76,7 @@ function Game({
 
   useEffect(() => {
     if (!socket.hasInstance()) {
-      history.push("/");
+      history.push("/judgement");
     }
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {

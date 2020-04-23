@@ -157,6 +157,9 @@
                     "PUT"
                   ],
                   "TargetOriginId": "S3-thecardgames.net",
+                  "DefaultTTL": 0,
+                  "MaxTTL": 0,
+                  "MinTTL": 0,
                   "ForwardedValues": {
                     "QueryString": "false",
                     "Cookies": {
@@ -351,6 +354,9 @@
                   "PUT"
                 ],
                 "TargetOriginId": "S3-thecardgames.net",
+                "DefaultTTL": 0,
+                "MaxTTL": 0,
+                "MinTTL": 0,
                 "ForwardedValues": {
                   "QueryString": "false",
                   "Cookies": {
@@ -374,7 +380,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/kachuful-fe/dev/1587601057474-2020-04-23T00:17:37.474Z",
+    "artifactDirectoryName": "serverless/kachuful-fe/dev/1587643858812-2020-04-23T12:10:58.812Z",
     "artifact": ""
   }
 }

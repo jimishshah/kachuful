@@ -6,10 +6,11 @@ import { ThemeProvider } from "emotion-theming";
 import Game from "./pages/game";
 import styled from "@emotion/styled";
 import { StylesProvider } from "@material-ui/core/styles";
-import Home from "./pages/home";
+import HomeJudgement from "./pages/home-judgement";
 import GameMock from "./pages/game-mock";
 import ReactGA from "react-ga";
 import { createBrowserHistory } from "history";
+import Home from "./pages/home";
 
 const trackingId = "UA-164323461-1"; // Replace with your Google Analytics tracking ID
 ReactGA.initialize(trackingId);
@@ -70,14 +71,17 @@ function App() {
               {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
               <Switch>
-                <Route path="/game-mock">
+                <Route path="/judgement/game-mock">
                   <GameMock {...props} />
                 </Route>
-                <Route path="/game">
+                <Route path="/judgement/game">
                   <Game {...props} />
                 </Route>
-                <Route path="/:tableId?">
-                  <Home {...props} />
+                <Route path="/judgement/:tableId?">
+                  <HomeJudgement {...props} />
+                </Route>
+                <Route path="/">
+                  <Home />
                 </Route>
               </Switch>
             </div>

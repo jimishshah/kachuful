@@ -109,8 +109,10 @@ function GameTemplate({
                     bgcolor="grey.300"
                     p={1}
                     mb={1}
-                  >{`${linkBase}/${currentUser.tableId}`}</Box>
-                  <CopyToClipboard text={`${linkBase}/${currentUser.tableId}`}>
+                  >{`${linkBase}/judgement/${currentUser.tableId}`}</Box>
+                  <CopyToClipboard
+                    text={`${linkBase}/judgement/${currentUser.tableId}`}
+                  >
                     <StyledButton variant="contained" color="secondary">
                       Copy Link
                     </StyledButton>

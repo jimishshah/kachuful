@@ -142,6 +142,9 @@
               "PUT"
             ],
             "TargetOriginId": "S3-thecardgames.net",
+            "DefaultTTL": 0,
+            "MaxTTL": 0,
+            "MinTTL": 0,
             "ForwardedValues": {
               "QueryString": "false",
               "Cookies": {

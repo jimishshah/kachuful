@@ -80,11 +80,31 @@ resources:
               - POST
               - PUT
             TargetOriginId: S3-${self:custom.bucketName}
+            DefaultTTL: 0
+            MaxTTL: 0
+            MinTTL: 0
             ForwardedValues:
               QueryString: "false"
               Cookies:
                 Forward: none
             ViewerProtocolPolicy: redirect-to-https
+          # CacheBehaviors:
+          #   - PathPattern: index.html
+          #     MaxTTL: 0
+          #     DefaultTTL: 0
+          #     TargetOriginId: S3-${self:custom.bucketName}
+          #     ForwardedValues:
+          #       QueryString: "false"
+          #       Cookies:
+          #         Forward: none
+          #     ViewerProtocolPolicy: redirect-to-https
+          #   - PathPattern: static/*
+          #     TargetOriginId: S3-${self:custom.bucketName}
+          #     ForwardedValues:
+          #       QueryString: "false"
+          #       Cookies:
+          #         Forward: none
+          #     ViewerProtocolPolicy: redirect-to-https
           ViewerCertificate:
             AcmCertificateArn: "arn:aws:acm:us-east-1:618246572188:certificate/ba729453-7e4f-44ee-838b-f13db7518ece"
             SslSupportMethod: "sni-only"
