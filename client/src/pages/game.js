@@ -14,10 +14,12 @@ function Game({
   scores,
   setScores,
 }) {
-  console.log(users);
   const onEveryonePlayed = () => {};
   const history = useHistory();
   const [currentUser = {}] = users.filter((user) => user.ID === currentUserId);
+  const [hostPlayer = { playerName: "" }] = users.filter(
+    (user) => user.isHost === true
+  );
   const playersThatHaveThrownCard = users.filter(
     ({ cardThrown }) => cardThrown !== null
   );
@@ -81,7 +83,6 @@ function Game({
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {
         const { players, action } = JSON.parse(event.data);
-        console.log("i am coming here");
         setUsers(players);
         setScores(getScores(players));
         if (action === "sendStartGame") {
@@ -141,6 +142,7 @@ function Game({
     roundWinner,
     scores,
     clearRoundWinner,
+    hostPlayer,
   };
   return <GameTemplate {...props} />;
 }

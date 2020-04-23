@@ -53,6 +53,7 @@ function GameTemplate({
   scores,
   hasEveryoneThrownCard,
   clearRoundWinner,
+  hostPlayer,
 }) {
   return (
     <>
@@ -95,7 +96,7 @@ function GameTemplate({
                     </StyledButton>
                   ) : (
                     <Typography variant="subtitle1" gutterBottom>
-                      Waiting for Host to start the game
+                      Waiting for {hostPlayer.playerName} to start the game
                     </Typography>
                   )}
                 </StyledGrid>
