@@ -19,6 +19,11 @@ const StyledContainer = styled(Container)`
 function App() {
   const [connectionId, setConnectionId] = useState();
 
+  const [users, setUsers] = useState([]);
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [roundWinner, setRoundWinner] = useState("");
+  const [scores, setScores] = useState([]);
+
   const assignConnectionId = (assignedConnectionId) => {
     setConnectionId(assignedConnectionId);
   };
@@ -26,6 +31,14 @@ function App() {
   const props = {
     connectionId,
     assignConnectionId,
+    users,
+    setUsers,
+    isGameStarted,
+    setIsGameStarted,
+    roundWinner,
+    setRoundWinner,
+    scores,
+    setScores,
   };
   return (
     <ThemeProvider theme={defaultTheme}>

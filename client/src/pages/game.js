@@ -3,12 +3,19 @@ import GameTemplate from "../templates/game-template";
 import socket from "../socket";
 import { useHistory } from "react-router-dom";
 
-function Game({ connectionId: currentUserId }) {
+function Game({
+  connectionId: currentUserId,
+  users,
+  setUsers,
+  isGameStarted,
+  setIsGameStarted,
+  roundWinner,
+  setRoundWinner,
+  scores,
+  setScores,
+}) {
+  console.log(users);
   const onEveryonePlayed = () => {};
-  const [users, setUsers] = useState([]);
-  const [isGameStarted, setIsGameStarted] = useState(false);
-  const [roundWinner, setRoundWinner] = useState("");
-  const [scores, setScores] = useState([]);
   const history = useHistory();
   const [currentUser = {}] = users.filter((user) => user.ID === currentUserId);
   const playersThatHaveThrownCard = users.filter(
@@ -74,6 +81,7 @@ function Game({ connectionId: currentUserId }) {
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {
         const { players, action } = JSON.parse(event.data);
+        console.log("i am coming here");
         setUsers(players);
         setScores(getScores(players));
         if (action === "sendStartGame") {
@@ -105,6 +113,11 @@ function Game({ connectionId: currentUserId }) {
     ) {
       distributeCards(currentUser);
     }
+
+    window.addEventListener("popstate", (e) => {
+      // Nope, go back to your page
+      history.go(1);
+    });
   }, [history, currentUser, hasEveryoneThrownCard]);
 
   const props = {

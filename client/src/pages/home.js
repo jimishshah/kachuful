@@ -23,18 +23,20 @@ function Home({ assignConnectionId, connectionId }) {
   };
 
   useEffect(() => {
-    socket.getInstance().then((ws) => {
-      ws.send(
-        JSON.stringify({
-          message: "",
-          action: "getConnectionId",
-        })
-      );
-      ws.onmessage = function (event) {
-        const { connectionID } = JSON.parse(event.data);
-        assignConnectionId(connectionID);
-      };
-    });
+    if (!connectionId) {
+      socket.getInstance().then((ws) => {
+        ws.send(
+          JSON.stringify({
+            message: "",
+            action: "getConnectionId",
+          })
+        );
+        ws.onmessage = function (event) {
+          const { connectionID } = JSON.parse(event.data);
+          assignConnectionId(connectionID);
+        };
+      });
+    }
     // eslint-disable-next-line
   }, []);
   return (
