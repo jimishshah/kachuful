@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import GameTemplate from "../templates/game-template";
 import socket from "../socket";
 import { useHistory } from "react-router-dom";
@@ -118,7 +118,15 @@ function Game({
       // Nope, go back to your page
       history.go(1);
     });
-  }, [history, currentUser, hasEveryoneThrownCard]);
+  }, [
+    history,
+    currentUser,
+    hasEveryoneThrownCard,
+    setIsGameStarted,
+    setRoundWinner,
+    setScores,
+    setUsers,
+  ]);
 
   const props = {
     currentUser,
