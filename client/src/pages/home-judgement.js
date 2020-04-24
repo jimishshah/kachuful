@@ -22,7 +22,7 @@ function HomeJudgement({ assignConnectionId, connectionId }) {
       const ws = await socket.getInstance();
       ws.send(
         JSON.stringify({
-          message: { playerName, tableId },
+          message: { playerName: playerName.slice(0, 6), tableId },
           action: "sendName",
         })
       );
