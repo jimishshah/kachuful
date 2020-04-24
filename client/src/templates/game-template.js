@@ -13,7 +13,6 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
-import PowerSettingsNewRoundedIcon from "@material-ui/icons/PowerSettingsNewRounded";
 import CopyToClipboard from "react-copy-to-clipboard";
 
 const StyledAppBar = styled(AppBar)`
