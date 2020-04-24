@@ -18,6 +18,7 @@ function GameMock() {
     },
     isGameStarted: true,
     scores: [{ playerName: "jimish", scoreCard: [10, 15, 17, 18, 19, 20, 21] }],
+    showAlert: {},
   };
 
   return (

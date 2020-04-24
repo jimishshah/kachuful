@@ -18,6 +18,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 const StyledAppBar = styled(AppBar)`
   top: auto;
   bottom: 0;
+  /* background-color: #d9d7d6; */
 `;
 
 const StyledGrid = styled(Grid)`
@@ -37,6 +38,8 @@ const StyledImg = styled.img`
   width: 35px;
   display: block;
   margin: 0 auto;
+  background-color: white;
+  padding: 5px;
 `;
 
 const StyledSnackbar = styled(Snackbar)`
@@ -211,7 +214,7 @@ function renderCardsThrownInCurrentRound(users) {
   const cards = users.map(
     ({ cardThrown, playerName, sequenceNumber }) =>
       cardThrown || {
-        number: `Waiting card from ${playerName}: Sq ${sequenceNumber}`,
+        number: `${sequenceNumber}. Waiting for ${playerName}`,
       }
   );
   // const { cards } = sortedUsers.reduce(
