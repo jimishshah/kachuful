@@ -53,10 +53,10 @@ function GameTemplate({
   throwCard,
   isGameStarted,
   startGame,
-  roundWinner,
+  showAlert,
   scores,
   hasEveryoneThrownCard,
-  clearRoundWinner,
+  clearShowAlert,
   hostPlayer,
 }) {
   return (
@@ -132,7 +132,6 @@ function GameTemplate({
             <>
               <StyledGrid container spacing={3}>
                 <StyledGrid item xs={12}>
-                  {/* <h1>Last round winner: {roundWinner}</h1> */}
                   <ScoreCard scores={scores} />
                 </StyledGrid>
               </StyledGrid>
@@ -151,13 +150,13 @@ function GameTemplate({
                   vertical: "bottom",
                   horizontal: "center",
                 }}
-                open={Boolean(roundWinner)}
+                open={Boolean(showAlert.message)}
                 autoHideDuration={6000}
-                onClose={clearRoundWinner}
-                message={`Round winner is ${roundWinner}`}
+                onClose={clearShowAlert}
+                message={showAlert.severity}
               >
-                <Alert onClose={clearRoundWinner} severity="success">
-                  Round winner is {roundWinner}
+                <Alert onClose={clearShowAlert} severity={showAlert.severity}>
+                  {showAlert.message}
                 </Alert>
               </StyledSnackbar>
             </>

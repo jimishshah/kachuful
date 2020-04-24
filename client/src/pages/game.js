@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import GameTemplate from "../templates/game-template";
 import socket from "../socket";
 import { useHistory } from "react-router-dom";
+import { DEFAULT_WINS } from "../constants";
 
 function Game({
   connectionId: currentUserId,
@@ -9,8 +10,8 @@ function Game({
   setUsers,
   isGameStarted,
   setIsGameStarted,
-  roundWinner,
-  setRoundWinner,
+  showAlert,
+  setShowAlert,
   scores,
   setScores,
 }) {
@@ -28,15 +29,25 @@ function Game({
 
   const canIThrowThisCard = (cardThrown) => {
     // if i have already thrown the card
-    if (currentUser.cardThrown) return false;
+    if (currentUser.cardThrown) {
+      setShowAlert({
+        message: "You have already thrown the card",
+        severity: "info",
+      });
+      return false;
+    }
     // if I am initiator
     if (currentUser.sequenceNumber === 1) return true;
-    const [{ cardThrown: inititorCardThrown }] = users.filter(
-      (user) => user.sequenceNumber === 1
-    );
+    const [initiator] = users.filter((user) => user.sequenceNumber === 1);
     // if I am not the initiator
-    if (!inititorCardThrown) return false;
-    const { type: intiatorType } = inititorCardThrown;
+    if (initiator && !initiator.cardThrown) {
+      setShowAlert({
+        message: "Wait for your turn to throw the card",
+        severity: "info",
+      });
+      return false;
+    }
+    const { type: intiatorType } = initiator.cardThrown;
     // if i am throwing same card type
     if (intiatorType === cardThrown.type) return true;
 
@@ -46,6 +57,11 @@ function Game({
     // if i have no other option
     if (intiatorType !== cardThrown.type && myCardsWithSameType.length === 0)
       return true;
+
+    setShowAlert({
+      message: "You can not throw this card",
+      severity: "info",
+    });
     return false;
   };
   const leaveTheTable = async () => {
@@ -54,11 +70,15 @@ function Game({
     history.push("/judgement");
   };
 
-  const clearRoundWinner = () => {
-    setRoundWinner("");
+  const clearShowAlert = () => {
+    setShowAlert({});
   };
 
   const throwCard = async (cardThrown) => {
+    if (currentUser.wins.expectedWins === DEFAULT_WINS) {
+      setShowAlert({ message: "Please submit your bid", severity: "error" });
+      return;
+    }
     // am i in sequence 1
     // what is the colour of sequence 1
     // do i have that colour
@@ -71,8 +91,6 @@ function Game({
           message: { cardThrown },
         })
       );
-    } else {
-      console.log("you cant throw this card");
     }
   };
 
@@ -92,7 +110,10 @@ function Game({
           const [{ playerName: thisRoundWinner }] = players.filter(
             ({ lastRoundWinner }) => lastRoundWinner === true
           );
-          setRoundWinner(thisRoundWinner);
+          setShowAlert({
+            message: `Round winner is ${thisRoundWinner}`,
+            severity: "success",
+          });
         }
       };
     });
@@ -124,7 +145,7 @@ function Game({
     currentUser,
     hasEveryoneThrownCard,
     setIsGameStarted,
-    setRoundWinner,
+    setShowAlert,
     setScores,
     setUsers,
   ]);
@@ -139,9 +160,9 @@ function Game({
     throwCard,
     isGameStarted,
     startGame,
-    roundWinner,
+    showAlert,
     scores,
-    clearRoundWinner,
+    clearShowAlert,
     hostPlayer,
   };
   return <GameTemplate {...props} />;

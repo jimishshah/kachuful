@@ -32,7 +32,7 @@ function App() {
 
   const [users, setUsers] = useState([]);
   const [isGameStarted, setIsGameStarted] = useState(false);
-  const [roundWinner, setRoundWinner] = useState("");
+  const [showAlert, setShowAlert] = useState({});
   const [scores, setScores] = useState([]);
 
   const assignConnectionId = (assignedConnectionId) => {
@@ -46,8 +46,8 @@ function App() {
     setUsers,
     isGameStarted,
     setIsGameStarted,
-    roundWinner,
-    setRoundWinner,
+    showAlert,
+    setShowAlert,
     scores,
     setScores,
   };
