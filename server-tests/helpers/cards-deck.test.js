@@ -56,4 +56,16 @@ test("returns correct cards", () => {
   ];
   expect(getCardsDeck()).toEqual(expected);
   expect(getCardsDeck().length).toEqual(52);
+
+  const expected2 = [...expected, ...expected];
+  expect(getCardsDeck(7)).toEqual(expected2);
+  expect(getCardsDeck(7).length).toEqual(104);
+
+  // const expected2 = [...expected, ...expected];
+  expect(getCardsDeck(12)).toEqual(expected2);
+  expect(getCardsDeck(12).length).toEqual(104);
+
+  const expected3 = [...expected, ...expected, ...expected];
+  expect(getCardsDeck(13)).toEqual(expected3);
+  expect(getCardsDeck(13).length).toEqual(156);
 });

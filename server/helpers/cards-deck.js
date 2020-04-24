@@ -1,4 +1,4 @@
-function getCardsDeck() {
+function getCardsDeck(totalPlayers = 6) {
   const types = ["spade", "diamond", "club", "heart"];
   const numbers = [
     "A",
@@ -16,10 +16,19 @@ function getCardsDeck() {
     "K",
   ];
 
-  return numbers.reduce((acc, curr) => {
+  const cardDeck = numbers.reduce((acc, curr) => {
     const typeSet = types.map((type) => ({ type, number: curr }));
     return [...acc, ...typeSet];
   }, []);
+
+  const setsToUse = Math.ceil(totalPlayers / 6);
+
+  const resultCardDeck = Array.from(Array(setsToUse).keys()).reduce(
+    (acc) => [...acc, ...cardDeck],
+    []
+  );
+
+  return resultCardDeck;
 }
 
 module.exports = {

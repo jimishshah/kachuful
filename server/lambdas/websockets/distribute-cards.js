@@ -21,7 +21,7 @@ exports.handler = async (event) => {
 
 function getPlayers(records) {
   try {
-    const cardDeck = getCardsDeck();
+    const cardDeck = getCardsDeck(records.Items.length);
     return records.Items.reduce(
       (acc, currRecord) => {
         const {
