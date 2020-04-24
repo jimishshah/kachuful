@@ -166,13 +166,15 @@ async function finishLevel(currentUser) {
   );
 }
 async function finishRound(currentUser) {
-  const ws = await socket.getInstance();
-  ws.send(
-    JSON.stringify({
-      action: "finishRound",
-      message: { tableId: currentUser.tableId },
-    })
-  );
+  setTimeout(async () => {
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "finishRound",
+        message: { tableId: currentUser.tableId },
+      })
+    );
+  }, 1000);
 }
 
 async function startGame(currentUser) {

@@ -40,6 +40,10 @@ const StyledImg = styled.img`
   margin: 0 auto;
 `;
 
+const StyledSnackbar = styled(Snackbar)`
+  bottom: 90px;
+`;
+
 function GameTemplate({
   currentUser,
   users,
@@ -142,9 +146,9 @@ function GameTemplate({
                   })}
                 </Container>
               </StyledAppBar>
-              <Snackbar
+              <StyledSnackbar
                 anchorOrigin={{
-                  vertical: "top",
+                  vertical: "bottom",
                   horizontal: "center",
                 }}
                 open={Boolean(roundWinner)}
@@ -155,7 +159,7 @@ function GameTemplate({
                 <Alert onClose={clearRoundWinner} severity="success">
                   Round winner is {roundWinner}
                 </Alert>
-              </Snackbar>
+              </StyledSnackbar>
             </>
           )}
         </>
@@ -169,13 +173,13 @@ function GameTemplate({
 function renderButtons({ sendMessage, bidWins, currentUser, leaveTheTable }) {
   return (
     <BoxContainer display="flex">
-      <Box pr={2} pt={2}>
+      {/* <Box pr={2} pt={2}>
         <PowerSettingsNewRoundedIcon
           variant="outlined"
           color="secondary"
           onClick={leaveTheTable}
         />
-      </Box>
+      </Box> */}
       {currentUser.hasLevelStarted && (
         <Box pr={2}>
           <StyledGrid item xs={12}>
