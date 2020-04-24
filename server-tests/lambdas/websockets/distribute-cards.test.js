@@ -40,7 +40,14 @@ jest.mock("../../../server/lambdas/common/web-socket-message", () => ({
 }));
 
 test("should distribute non duplicate cards, correct number of cards and set correct trump colour to the players", async () => {
-  await distributeCardsHandler();
+  const event = {
+    body: JSON.stringify({
+      message: {
+        tableId: "1234567890",
+      },
+    }),
+  };
+  await distributeCardsHandler(event);
 
   const player1 = Dynamo.write.mock.calls[0][0];
   const player2 = Dynamo.write.mock.calls[1][0];

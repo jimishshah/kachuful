@@ -141,7 +141,14 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
 }));
 
 test("predicts correct winner", async () => {
-  await finishRound();
+  const event = {
+    body: JSON.stringify({
+      message: {
+        tableId: "1234567890",
+      },
+    }),
+  };
+  await finishRound(event);
   const player3 = Dynamo.write.mock.calls[2][0];
   expect(player3.lastRoundWinner).toEqual(true);
   expect(player3.cardThrown).toEqual(null);
@@ -149,7 +156,7 @@ test("predicts correct winner", async () => {
   expect(player3.sequenceNumber).toEqual(1);
   Dynamo.write.mockClear();
 
-  await finishRound();
+  await finishRound(event);
   const player1 = Dynamo.write.mock.calls[0][0];
   expect(player1.lastRoundWinner).toEqual(true);
   expect(player1.cardThrown).toEqual(null);
@@ -157,7 +164,7 @@ test("predicts correct winner", async () => {
   expect(player3.sequenceNumber).toEqual(1);
   Dynamo.write.mockClear();
 
-  await finishRound();
+  await finishRound(event);
   const player2 = Dynamo.write.mock.calls[1][0];
   expect(player2.lastRoundWinner).toEqual(true);
   expect(player2.cardThrown).toEqual(null);
