@@ -5,6 +5,7 @@ import { useHistory, useParams } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import socket from "../socket";
 import styled from "@emotion/styled";
+import ProgressSteps from "../organisms/progress-steps";
 
 const StyledTextField = styled(TextField)`
   width: 100%;
@@ -50,23 +51,30 @@ function HomeJudgement({ assignConnectionId, connectionId }) {
   return (
     <>
       {connectionId ? (
-        <form onSubmit={joinTheTable}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <StyledTextField
-                variant="outlined"
-                label="Enter your name"
-                size="small"
-                onChange={(e) => setPlayerName(e.target.value)}
-              />
+        <>
+          <ProgressSteps activeStep={0} isCreate={tableId ? false : true} />
+          <form onSubmit={joinTheTable}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <StyledTextField
+                  variant="outlined"
+                  label="Enter your name"
+                  size="small"
+                  onChange={(e) => setPlayerName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <StyledButton
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                >
+                  {tableId ? "Join Game" : "Create Game"}
+                </StyledButton>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <StyledButton variant="contained" color="secondary" type="submit">
-                {tableId ? "Join Game" : "Create Game"}
-              </StyledButton>
-            </Grid>
-          </Grid>
-        </form>
+          </form>
+        </>
       ) : (
         "Loading..."
       )}

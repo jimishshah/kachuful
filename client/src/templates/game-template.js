@@ -14,6 +14,13 @@ import Box from "@material-ui/core/Box";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import CopyToClipboard from "react-copy-to-clipboard";
+import ProgressSteps from "../organisms/progress-steps";
+import GameRules from "../organisms/game-rules";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import Dialog from "@material-ui/core/Dialog";
+import Slide from "@material-ui/core/Slide";
+import CancelIcon from "@material-ui/icons/Cancel";
+import IconButton from "@material-ui/core/IconButton";
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -46,6 +53,10 @@ const StyledSnackbar = styled(Snackbar)`
   bottom: 90px;
 `;
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 function GameTemplate({
   currentUser,
   users,
@@ -57,12 +68,17 @@ function GameTemplate({
   startGame,
   showAlert,
   scores,
-  hasEveryoneThrownCard,
   clearShowAlert,
   hostPlayer,
+  openDialog,
+  openDialogHandler,
+  closeDialogHandler,
 }) {
   return (
     <>
+      {!isGameStarted && (
+        <ProgressSteps activeStep={1} isCreate={currentUser.isHost} />
+      )}
       {currentUser ? (
         <>
           <StyledGrid container spacing={3}>
@@ -144,6 +160,7 @@ function GameTemplate({
                     bidWins,
                     currentUser,
                     leaveTheTable,
+                    openDialogHandler,
                   })}
                 </Container>
               </StyledAppBar>
@@ -161,6 +178,22 @@ function GameTemplate({
                   {showAlert.message}
                 </Alert>
               </StyledSnackbar>
+              <Dialog
+                fullScreen
+                open={openDialog}
+                onClose={closeDialogHandler}
+                TransitionComponent={Transition}
+              >
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={closeDialogHandler}
+                  aria-label="close"
+                >
+                  <CancelIcon />
+                </IconButton>
+                <GameRules />
+              </Dialog>
             </>
           )}
         </>
@@ -171,7 +204,12 @@ function GameTemplate({
   );
 }
 
-function renderButtons({ sendMessage, bidWins, currentUser, leaveTheTable }) {
+function renderButtons({
+  bidWins,
+  currentUser,
+  leaveTheTable,
+  openDialogHandler,
+}) {
   return (
     <BoxContainer display="flex">
       {/* <Box pr={2} pt={2}>
@@ -181,6 +219,13 @@ function renderButtons({ sendMessage, bidWins, currentUser, leaveTheTable }) {
           onClick={leaveTheTable}
         />
       </Box> */}
+      <Box pr={2} pt={2}>
+        <HelpOutlineIcon
+          variant="outlined"
+          color="secondary"
+          onClick={openDialogHandler}
+        />
+      </Box>
       {currentUser.hasLevelStarted && (
         <Box pr={2}>
           <StyledGrid item xs={12}>
@@ -217,31 +262,6 @@ function renderCardsThrownInCurrentRound(users) {
         number: `${sequenceNumber}. Waiting for ${playerName}`,
       }
   );
-  // const { cards } = sortedUsers.reduce(
-  //   (acc, { cardThrown, playerName, sequenceNumber }) => {
-  //     const { hasFoundBlankSpace } = acc;
-  //     if (!hasFoundBlankSpace) {
-  //       if (!cardThrown) {
-  //         return {
-  //           hasFoundBlankSpace: true,
-  //           cards: [
-  //             ...acc.cards,
-  //             { number: `Waiting card from ${playerName}` },
-  //           ],
-  //         };
-  //       }
-  //       return {
-  //         ...acc,
-  //         cards: [...acc.cards, cardThrown],
-  //       };
-  //     }
-  //     return acc;
-  //   },
-  //   {
-  //     cards: [],
-  //     hasFoundBlankSpace: false,
-  //   }
-  // );
   return <CardsList cards={cards} title="Play Table" />;
 }
 

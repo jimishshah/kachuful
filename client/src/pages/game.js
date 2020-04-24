@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import GameTemplate from "../templates/game-template";
 import socket from "../socket";
 import { useHistory } from "react-router-dom";
@@ -15,6 +15,7 @@ function Game({
   scores,
   setScores,
 }) {
+  const [openDialog, setOpenDialog] = useState(false);
   const onEveryonePlayed = () => {};
   const history = useHistory();
   const [currentUser = {}] = users.filter((user) => user.ID === currentUserId);
@@ -94,6 +95,13 @@ function Game({
     }
   };
 
+  const openDialogHandler = () => {
+    setOpenDialog(true);
+  };
+  const closeDialogHandler = () => {
+    setOpenDialog(false);
+  };
+
   useEffect(() => {
     if (!socket.hasInstance()) {
       history.push("/judgement");
@@ -164,6 +172,9 @@ function Game({
     scores,
     clearShowAlert,
     hostPlayer,
+    openDialog,
+    openDialogHandler,
+    closeDialogHandler,
   };
   return <GameTemplate {...props} />;
 }
