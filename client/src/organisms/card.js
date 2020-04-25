@@ -12,6 +12,10 @@ const StyledPaper = styled(Paper)`
   margin: 0 auto;
 `;
 
+const StyledTypography = styled(Typography)`
+  line-height: normal;
+`;
+
 function Card({ text, type, onClick = () => {} }) {
   const clickHandler = () => {
     onClick({ type, number: text });
@@ -21,7 +25,7 @@ function Card({ text, type, onClick = () => {} }) {
       {type ? (
         <strong>{text}</strong>
       ) : (
-        <Typography variant="subtitle1">{text}</Typography>
+        <StyledTypography variant="subtitle1">{text}</StyledTypography>
       )}
       <img src={cardColours[type]} alt={type} />
     </StyledPaper>
