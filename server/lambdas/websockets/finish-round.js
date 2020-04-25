@@ -94,5 +94,10 @@ function getWinningPlayerByColour(data, trumpType) {
   if (players.length === 0) return [];
   const priorities = players.map(({ priority }) => priority);
   const maxPriority = Math.max(...priorities);
-  return players.filter(({ priority }) => priority === maxPriority);
+  const result = players
+    .filter(({ priority }) => priority === maxPriority)
+    .sort((a, b) =>
+      Number(a.sequenceNumber) > Number(b.sequenceNumber) ? 1 : -1
+    );
+  return [result[0]];
 }

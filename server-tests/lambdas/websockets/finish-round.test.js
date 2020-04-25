@@ -137,6 +137,88 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           cardsInHand: [],
         },
       ],
+    })
+    .mockReturnValueOnce({
+      // 3rd player, because of her sequence was first
+      Items: [
+        {
+          ID: "111",
+          cardThrown: { number: "Q", type: "club" },
+          sequenceNumber: "3",
+          lastTrumpColour: "heart",
+          lastRoundWinner: "false",
+          wins: {
+            expectedWins: "2",
+            currentWins: "0",
+          },
+          cardsInHand: [],
+        },
+        {
+          ID: "222",
+          cardThrown: { number: "K", type: "club" },
+          sequenceNumber: "2",
+          lastTrumpColour: "heart",
+          lastRoundWinner: "false",
+          wins: {
+            expectedWins: "1",
+            currentWins: "0",
+          },
+          cardsInHand: [],
+        },
+        {
+          ID: "333",
+          cardThrown: { number: "K", type: "club" },
+          sequenceNumber: "1",
+          lastTrumpColour: "heart",
+          lastRoundWinner: "false",
+          wins: {
+            expectedWins: "1",
+            currentWins: "0",
+          },
+          cardsInHand: [],
+        },
+      ],
+    })
+    .mockReturnValueOnce({
+      // 3rd player, 2 players used same trump card but lower sequence wins
+      Items: [
+        {
+          ID: "111",
+          cardThrown: { number: "Q", type: "club" },
+          sequenceNumber: "3",
+          lastTrumpColour: "heart",
+          lastRoundWinner: "false",
+          wins: {
+            expectedWins: "2",
+            currentWins: "0",
+          },
+          cardsInHand: [],
+        },
+        {
+          ID: "222",
+          cardThrown: { number: "K", type: "heart" },
+          sequenceNumber: "2",
+          lastTrumpColour: "heart",
+          lastRoundWinner: "false",
+          wins: {
+            expectedWins: "1",
+            currentWins: "0",
+          },
+          cardsInHand: [],
+        },
+        {
+          ID: "333",
+          cardThrown: { number: "K", type: "heart" },
+          sequenceNumber: "1",
+          lastTrumpColour: "heart",
+          lastRoundWinner: "false",
+          wins: {
+            expectedWins: "1",
+            currentWins: "0",
+          },
+          cardsInHand: [],
+        },
+      ],
     }),
 }));
 
@@ -170,4 +252,25 @@ test("predicts correct winner", async () => {
   expect(player2.cardThrown).toEqual(null);
   expect(player2.wins.currentWins).toEqual(1);
   expect(player3.sequenceNumber).toEqual(1);
+  Dynamo.write.mockClear();
+
+  await finishRound(event);
+  {
+    const player3 = Dynamo.write.mock.calls[2][0];
+    expect(player3.lastRoundWinner).toEqual(true);
+    expect(player3.cardThrown).toEqual(null);
+    expect(player3.wins.currentWins).toEqual(1);
+    expect(player3.sequenceNumber).toEqual(1);
+  }
+  Dynamo.write.mockClear();
+
+  await finishRound(event);
+  {
+    const player3 = Dynamo.write.mock.calls[2][0];
+    expect(player3.lastRoundWinner).toEqual(true);
+    expect(player3.cardThrown).toEqual(null);
+    expect(player3.wins.currentWins).toEqual(1);
+    expect(player3.sequenceNumber).toEqual(1);
+  }
+  Dynamo.write.mockClear();
 });
