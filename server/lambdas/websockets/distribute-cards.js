@@ -95,8 +95,8 @@ function getCards(numberOfCardsToDistribute, remainingCardDeck) {
       const { cardDeck: newRemainingCardDeck } = currentCardDeck.reduce(
         (acc, curr) => {
           if (
-            (curr.number !== selectedCard.number ||
-              curr.type !== selectedCard.number) &&
+            curr.number == selectedCard.number &&
+            curr.type == selectedCard.type &&
             acc.foundFirstSelectedCard === false
           ) {
             return { ...acc, foundFirstSelectedCard: true };

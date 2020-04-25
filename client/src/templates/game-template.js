@@ -21,6 +21,7 @@ import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 import CancelIcon from "@material-ui/icons/Cancel";
 import IconButton from "@material-ui/core/IconButton";
+import { WhatsappShareButton, WhatsappIcon } from "react-share";
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -74,6 +75,7 @@ function GameTemplate({
   openDialogHandler,
   closeDialogHandler,
 }) {
+  const linkToShare = `${linkBase}/judgement/${currentUser.tableId}`;
   return (
     <>
       {!isGameStarted && (
@@ -130,18 +132,25 @@ function GameTemplate({
                     game, players are not allowed to join once the game is
                     started. Only Host can start the game.
                   </Typography>
-                  <Box
-                    bgcolor="grey.300"
-                    p={1}
-                    mb={1}
-                  >{`${linkBase}/judgement/${currentUser.tableId}`}</Box>
-                  <CopyToClipboard
-                    text={`${linkBase}/judgement/${currentUser.tableId}`}
-                  >
+                  <Box bgcolor="grey.300" p={1} mb={1}>
+                    {linkToShare}
+                  </Box>
+                  {/* <CopyToClipboard text={linkToShare}>
                     <StyledButton variant="contained" color="secondary">
                       Copy Link
                     </StyledButton>
-                  </CopyToClipboard>
+                  </CopyToClipboard> */}
+                  <Box p={1} mb={1}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Share on:{" "}
+                    </Typography>
+                    <WhatsappShareButton
+                      title="share on whats app"
+                      url={linkToShare}
+                    >
+                      <WhatsappIcon size={32} round={true} />
+                    </WhatsappShareButton>
+                  </Box>
                 </StyledGrid>
               </>
             )}
