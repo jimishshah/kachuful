@@ -12,9 +12,21 @@ exports.handler = async (event) => {
       player,
     } = await getPlayerWithMessage(event);
 
-    const newCardsInHand = player.cardsInHand.filter(
-      ({ type, number }) =>
-        type !== cardThrown.type || number !== cardThrown.number
+    const { cardsInHand: newCardsInHand } = player.cardsInHand.reduce(
+      (acc, curr) => {
+        if (
+          curr.number == cardThrown.number &&
+          curr.type == cardThrown.type &&
+          acc.foundFirstSelectedCard === false
+        ) {
+          return { ...acc, foundFirstSelectedCard: true };
+        }
+        return { ...acc, cardsInHand: [...acc.cardsInHand, curr] };
+      },
+      {
+        cardsInHand: [],
+        foundFirstSelectedCard: false,
+      }
     );
 
     const data = {
