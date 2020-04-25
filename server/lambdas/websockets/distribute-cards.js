@@ -91,9 +91,22 @@ function getCards(numberOfCardsToDistribute, remainingCardDeck) {
       } = acc;
       const randomNumber = Math.floor(Math.random() * currentCardDeck.length);
       const selectedCard = currentCardDeck[randomNumber];
-      const newRemainingCardDeck = currentCardDeck.filter(
-        ({ number, type }) =>
-          number !== selectedCard.number || type !== selectedCard.type
+
+      const { cardDeck: newRemainingCardDeck } = currentCardDeck.reduce(
+        (acc, curr) => {
+          if (
+            (curr.number !== selectedCard.number ||
+              curr.type !== selectedCard.number) &&
+            acc.foundFirstSelectedCard === false
+          ) {
+            return { ...acc, foundFirstSelectedCard: true };
+          }
+          return { ...acc, cardDeck: [...acc.cardDeck, curr] };
+        },
+        {
+          cardDeck: [],
+          foundFirstSelectedCard: false,
+        }
       );
       return {
         cardsInHand: [...currentCardsInHand, selectedCard],
