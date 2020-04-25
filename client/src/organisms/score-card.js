@@ -19,6 +19,7 @@ const StyledTableCell = styled(TableCell)`
 
 function ScoreCard({ scores }) {
   const [firstPlayer] = scores;
+
   return (
     <StoreCardContainer>
       <h3>Score Card</h3>
@@ -27,26 +28,26 @@ function ScoreCard({ scores }) {
           <TableHead>
             <TableRow>
               <StyledTableCell align="right">Name</StyledTableCell>
+              <StyledTableCell align="right">Total</StyledTableCell>
               {firstPlayer.scoreCard.map((score, index) => (
                 <StyledTableCell align="right" key={index}>
-                  Level {index + 1}
+                  Level {firstPlayer.scoreCard.length - index}
                 </StyledTableCell>
               ))}
-              <StyledTableCell align="right">Total</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {scores.map(({ playerName, scoreCard }) => (
               <TableRow key={playerName}>
                 <TableCell align="right">{playerName}</TableCell>
+                <TableCell align="right">
+                  {scoreCard.reverse().reduce((acc, curr) => acc + curr, 0)}
+                </TableCell>
                 {scoreCard.map((score, index) => (
                   <TableCell align="right" key={index}>
                     {score}
                   </TableCell>
                 ))}
-                <TableCell align="right">
-                  {scoreCard.reduce((acc, curr) => acc + curr, 0)}
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>
