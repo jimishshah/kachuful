@@ -6,6 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import socket from "../socket";
 import styled from "@emotion/styled";
 import ProgressSteps from "../organisms/progress-steps";
+import GameRules from "../organisms/game-rules";
+import Box from "@material-ui/core/Box";
 
 const StyledTextField = styled(TextField)`
   width: 100%;
@@ -74,6 +76,9 @@ function HomeJudgement({ assignConnectionId, connectionId }) {
               </Grid>
             </Grid>
           </form>
+          <Box pt={4} mb={1}>
+            <GameRules />
+          </Box>
         </>
       ) : (
         "Loading..."

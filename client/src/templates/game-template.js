@@ -140,17 +140,19 @@ function GameTemplate({
                       Copy Link
                     </StyledButton>
                   </CopyToClipboard> */}
-                  <Box p={1} mb={1}>
-                    <Typography variant="subtitle2" gutterBottom>
-                      Share on:{" "}
-                    </Typography>
-                    <WhatsappShareButton
-                      title="share on whats app"
-                      url={linkToShare}
-                    >
-                      <WhatsappIcon size={32} round={true} />
-                    </WhatsappShareButton>
-                  </Box>
+                  {currentUser.tableId && (
+                    <Box p={1} mb={1}>
+                      <Typography variant="subtitle2" gutterBottom>
+                        Share on:{" "}
+                      </Typography>
+                      <WhatsappShareButton
+                        title="share on whats app"
+                        url={linkToShare}
+                      >
+                        <WhatsappIcon size={45} round={true} />
+                      </WhatsappShareButton>
+                    </Box>
+                  )}
                 </StyledGrid>
               </>
             )}

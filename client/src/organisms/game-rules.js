@@ -22,13 +22,14 @@ function GameRules() {
         <ListItem>
           <ListItemText>
             3. Each Player need to predict wins in the level before first player
-            throws card in any level
+            throws card
           </ListItemText>
         </ListItem>
         <ListItem>
           <ListItemText>
             4. Each player throws one card, first player's card decides the
-            colour other players should throw
+            colour other players should throw, highest card player wins the
+            round
           </ListItemText>
         </ListItem>
         <ListItem>
@@ -47,7 +48,7 @@ function GameRules() {
         <ListItem>
           <ListItemText>
             7. Every Level winning player will get 10 + predicted win points. eg
-            if predicted win was 2, player gets 12 points
+            if predicted win was 2, player gets 10 + 2 = 12 points
           </ListItemText>
         </ListItem>
         <ListItem>
