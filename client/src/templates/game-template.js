@@ -265,11 +265,12 @@ function renderButtons({
 
 function renderCardsThrownInCurrentRound(users) {
   users.sort((a, b) => (a.sequenceNumber > b.sequenceNumber ? 1 : -1));
-  const cards = users.map(
-    ({ cardThrown, playerName, sequenceNumber }) =>
-      cardThrown || {
-        number: `${sequenceNumber}. Waiting for ${playerName}`,
-      }
+  const cards = users.map(({ cardThrown, playerName, sequenceNumber }) =>
+    cardThrown
+      ? { ...cardThrown, badge: playerName }
+      : {
+          number: `${sequenceNumber}. Waiting for ${playerName}`,
+        }
   );
   return <CardsList cards={cards} title="Play Table" />;
 }
