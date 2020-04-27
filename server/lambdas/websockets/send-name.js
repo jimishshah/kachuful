@@ -11,6 +11,10 @@ exports.handler = async (event) => {
       messageBody: { playerName, tableId },
       player,
     } = await getPlayerWithMessage(event);
+    const isValidTableId = await checkIsValidTableId(tableId);
+    if (!isValidTableId) {
+      tableId = null;
+    }
 
     const isHost = !Boolean(tableId);
     tableId =
@@ -32,3 +36,9 @@ exports.handler = async (event) => {
     return Responses._400({ message: "message could not be received" });
   }
 };
+
+async function checkIsValidTableId(tableId) {
+  if (!tableId) return false;
+  const records = await Dynamo.scan(tableName, "tableId", tableId);
+  return records.Items.length > 0;
+}
