@@ -59,7 +59,11 @@ function Home() {
             <br />
             Jimish Shah
             <br />
-            <a href="https://www.linkedin.com/in/jimishshah/" target="_blank">
+            <a
+              href="https://www.linkedin.com/in/jimishshah/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <StyledLinkedInIcon fontSize="large" color="action" />
             </a>
           </ListItemText>

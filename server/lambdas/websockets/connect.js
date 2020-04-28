@@ -10,7 +10,7 @@ exports.handler = async (event) => {
       domainName,
       stage,
     } = event.requestContext;
-
+    console.log({ connectionID });
     const data = {
       ID: connectionID,
       date: Date.now(),

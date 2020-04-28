@@ -2,13 +2,10 @@ import React from "react";
 import styled from "@emotion/styled";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import BidWin from "../organisms/bid-win";
 import UsersList from "../organisms/users-list";
 import ScoreCard from "../organisms/score-card";
-import { DEFAULT_WINS, cardColours, linkBase } from "../constants";
+import { linkBase } from "../constants";
 import CardsList from "../organisms/cards-list";
-import AppBar from "@material-ui/core/AppBar";
-import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -16,38 +13,20 @@ import Alert from "@material-ui/lab/Alert";
 import CopyToClipboard from "react-copy-to-clipboard";
 import ProgressSteps from "../organisms/progress-steps";
 import GameRules from "../organisms/game-rules";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 import CancelIcon from "@material-ui/icons/Cancel";
 import IconButton from "@material-ui/core/IconButton";
 import { WhatsappShareButton, WhatsappIcon } from "react-share";
-
-const StyledAppBar = styled(AppBar)`
-  top: auto;
-  bottom: 0;
-  /* background-color: #d9d7d6; */
-`;
+import ActionBar from "../organisms/action-bar";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
   text-align: center;
 `;
 
-const BoxContainer = styled(Box)`
-  padding: 8px 0;
-`;
-
 const StyledButton = styled(Button)`
   width: 100%;
-`;
-
-const StyledImg = styled.img`
-  width: 35px;
-  display: block;
-  margin: 0 auto;
-  background-color: white;
-  padding: 5px;
 `;
 
 const StyledSnackbar = styled(Snackbar)`
@@ -76,6 +55,7 @@ function GameTemplate({
   closeDialogHandler,
 }) {
   const linkToShare = `${linkBase}/judgement/${currentUser.tableId}`;
+  const actionBarProps = { bidWins, currentUser, openDialogHandler };
   return (
     <>
       {!isGameStarted && (
@@ -135,15 +115,15 @@ function GameTemplate({
                   <Box bgcolor="grey.300" p={1} mb={1}>
                     {linkToShare}
                   </Box>
-                  {/* <CopyToClipboard text={linkToShare}>
+                  <CopyToClipboard text={linkToShare}>
                     <StyledButton variant="contained" color="secondary">
                       Copy Link
                     </StyledButton>
-                  </CopyToClipboard> */}
+                  </CopyToClipboard>
                   {currentUser.tableId && (
                     <Box p={1} mb={1}>
                       <Typography variant="subtitle2" gutterBottom>
-                        Share on:{" "}
+                        Send on:{" "}
                       </Typography>
                       <WhatsappShareButton
                         title="Join our game"
@@ -164,17 +144,8 @@ function GameTemplate({
                   <ScoreCard scores={scores} />
                 </StyledGrid>
               </StyledGrid>
-              <StyledAppBar position="fixed" color="primary">
-                <Container maxWidth="sm">
-                  {renderButtons({
-                    sendMessage,
-                    bidWins,
-                    currentUser,
-                    leaveTheTable,
-                    openDialogHandler,
-                  })}
-                </Container>
-              </StyledAppBar>
+
+              <ActionBar {...actionBarProps} />
               <StyledSnackbar
                 anchorOrigin={{
                   vertical: "bottom",
@@ -212,56 +183,6 @@ function GameTemplate({
         "Loading....."
       )}
     </>
-  );
-}
-
-function renderButtons({
-  bidWins,
-  currentUser,
-  leaveTheTable,
-  openDialogHandler,
-}) {
-  return (
-    <BoxContainer display="flex">
-      {/* <Box pr={2} pt={2}>
-        <PowerSettingsNewRoundedIcon
-          variant="outlined"
-          color="secondary"
-          onClick={leaveTheTable}
-        />
-      </Box> */}
-      <Box pr={2} pt={2}>
-        <HelpOutlineIcon
-          variant="outlined"
-          color="secondary"
-          onClick={openDialogHandler}
-        />
-      </Box>
-      {currentUser.hasLevelStarted && (
-        <Box pr={2}>
-          <StyledGrid item xs={12}>
-            <StyledImg
-              src={cardColours[currentUser.lastTrumpColour]}
-              alt={currentUser.lastTrumpColour}
-            />
-          </StyledGrid>
-          <StyledGrid item xs={12}>
-            <Typography variant="caption" display="block" gutterBottom>
-              Trump
-            </Typography>
-          </StyledGrid>
-        </Box>
-      )}
-      {/* <Button variant="contained" color="primary" onClick={sendMessage}>
-        Send message
-      </Button> */}
-      {currentUser.wins.currentWins === DEFAULT_WINS &&
-        currentUser.hasLevelStarted && (
-          <Box flexGrow={1}>
-            <BidWin bidWins={bidWins} />
-          </Box>
-        )}
-    </BoxContainer>
   );
 }
 
