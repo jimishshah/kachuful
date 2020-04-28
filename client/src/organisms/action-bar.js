@@ -1,18 +1,14 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import Typography from "@material-ui/core/Typography";
 import styled from "@emotion/styled";
 import { DEFAULT_WINS, cardColours } from "../constants";
 import AppBar from "@material-ui/core/AppBar";
 import BidWin from "../organisms/bid-win";
-
-const StyledGrid = styled(Grid)`
-  flex-grow: 0;
-  text-align: center;
-`;
+import RefreshIcon from "@material-ui/icons/Refresh";
+import Button from "@material-ui/core/Button";
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -31,7 +27,12 @@ const StyledImg = styled.img`
   background-color: white;
   padding: 5px;
 `;
-function ActionBar({ bidWins, currentUser, openDialogHandler }) {
+function ActionBar({
+  bidWins,
+  currentUser,
+  openDialogHandler,
+  refreshHandler,
+}) {
   return (
     <StyledAppBar position="fixed" color="primary">
       <Container maxWidth="sm">
@@ -46,25 +47,24 @@ function ActionBar({ bidWins, currentUser, openDialogHandler }) {
           />
         </Box> */}
               <Box pr={2} pt={2}>
-                <HelpOutlineIcon
-                  variant="outlined"
-                  color="secondary"
-                  onClick={openDialogHandler}
-                />
+                <Button variant="contained" color="secondary">
+                  <HelpOutlineIcon onClick={openDialogHandler} />
+                </Button>
+              </Box>
+              <Box pr={2} pt={2}>
+                <Button variant="contained" color="secondary">
+                  <RefreshIcon onClick={refreshHandler} />
+                </Button>
               </Box>
               {currentUser.hasLevelStarted && (
-                <Box pr={2}>
-                  <StyledGrid item xs={12}>
-                    <StyledImg
-                      src={cardColours[currentUser.lastTrumpColour]}
-                      alt={currentUser.lastTrumpColour}
-                    />
-                  </StyledGrid>
-                  <StyledGrid item xs={12}>
-                    <Typography variant="caption" display="block" gutterBottom>
-                      Trump
-                    </Typography>
-                  </StyledGrid>
+                <Box pr={2} pt={1} textAlign="center">
+                  <StyledImg
+                    src={cardColours[currentUser.lastTrumpColour]}
+                    alt={currentUser.lastTrumpColour}
+                  />
+                  <Typography variant="caption" display="block">
+                    Trump
+                  </Typography>
                 </Box>
               )}
               {/* <Button variant="contained" color="primary" onClick={sendMessage}>

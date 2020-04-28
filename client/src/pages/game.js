@@ -102,6 +102,16 @@ function Game({
     setOpenDialog(false);
   };
 
+  const refreshHandler = async () => {
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "refreshData",
+        message: "",
+      })
+    );
+  };
+
   useEffect(() => {
     if (!socket.hasInstance()) {
       history.push("/judgement");
@@ -109,6 +119,7 @@ function Game({
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {
         const { players, action } = JSON.parse(event.data);
+        console.log({ players });
         setUsers(players);
         setScores(getScores(players));
         if (action === "sendStartGame") {
@@ -175,6 +186,7 @@ function Game({
     openDialog,
     openDialogHandler,
     closeDialogHandler,
+    refreshHandler,
   };
   return <GameTemplate {...props} />;
 }

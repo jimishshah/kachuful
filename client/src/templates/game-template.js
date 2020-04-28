@@ -53,9 +53,15 @@ function GameTemplate({
   openDialog,
   openDialogHandler,
   closeDialogHandler,
+  refreshHandler,
 }) {
   const linkToShare = `${linkBase}/judgement/${currentUser.tableId}`;
-  const actionBarProps = { bidWins, currentUser, openDialogHandler };
+  const actionBarProps = {
+    bidWins,
+    currentUser,
+    openDialogHandler,
+    refreshHandler,
+  };
   return (
     <>
       {!isGameStarted && (
