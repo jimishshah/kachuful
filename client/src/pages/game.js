@@ -119,7 +119,6 @@ function Game({
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {
         const { players, action } = JSON.parse(event.data);
-        console.log({ players });
         setUsers(players);
         setScores(getScores(players));
         if (action === "sendStartGame") {
