@@ -146,7 +146,7 @@ function GameTemplate({
                         Share on:{" "}
                       </Typography>
                       <WhatsappShareButton
-                        title="share on whats app"
+                        title="Join our game"
                         url={linkToShare}
                       >
                         <WhatsappIcon size={45} round={true} />
