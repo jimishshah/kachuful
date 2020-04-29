@@ -29,6 +29,17 @@ function Game({
     users.length === playersThatHaveThrownCard.length;
 
   const canIThrowThisCard = (cardThrown) => {
+    // if everyone have not placed the bid
+    const usersWhoHaveNotPlayedTheBid = users.filter(
+      (user) => user.wins.expectedWins === DEFAULT_WINS
+    );
+    if (usersWhoHaveNotPlayedTheBid.length > 0) {
+      setShowAlert({
+        message: "Wait for everyone to bid",
+        severity: "info",
+      });
+      return false;
+    }
     // if i have already thrown the card
     if (currentUser.cardThrown) {
       setShowAlert({
@@ -39,23 +50,24 @@ function Game({
     }
     // if I am initiator
     if (currentUser.sequenceNumber === 1) return true;
+    // if its not my turn
     const [initiator] = users.filter((user) => user.sequenceNumber === 1);
-    // if I am not the initiator
-    if (initiator && !initiator.cardThrown) {
+    const usersWhoThrewCards = users.filter((user) => Boolean(user.cardThrown));
+    if (usersWhoThrewCards.length + 1 < Number(currentUser.sequenceNumber)) {
       setShowAlert({
         message: "Wait for your turn to throw the card",
         severity: "info",
       });
       return false;
     }
+    // if i am throwing same card type as initiator
     const { type: intiatorType } = initiator.cardThrown;
-    // if i am throwing same card type
     if (intiatorType === cardThrown.type) return true;
 
+    // if i have no other option
     const myCardsWithSameType = currentUser.cardsInHand.filter(
       ({ type }) => type === intiatorType
     );
-    // if i have no other option
     if (intiatorType !== cardThrown.type && myCardsWithSameType.length === 0)
       return true;
 
@@ -117,7 +129,7 @@ function Game({
       history.push("/judgement");
     }
     socket.getInstance().then((ws) => {
-      ws.onmessage = function (event) {
+      ws.onmessage = function(event) {
         const { players, action } = JSON.parse(event.data);
         setUsers(players);
         setScores(getScores(players));
