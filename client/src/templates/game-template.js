@@ -53,14 +53,14 @@ function GameTemplate({
   openDialog,
   openDialogHandler,
   closeDialogHandler,
-  refreshHandler,
+  refreshHandler
 }) {
-  const linkToShare = `${linkBase}/judgement/${currentUser.tableId}`;
+  const linkToShare = `${linkBase}/judgement/${currentUser.tableId}?utm_source=app&utm_medium=whatsapp&utm_campaign=invite`;
   const actionBarProps = {
     bidWins,
     currentUser,
     openDialogHandler,
-    refreshHandler,
+    refreshHandler
   };
   return (
     <>
@@ -155,7 +155,7 @@ function GameTemplate({
               <StyledSnackbar
                 anchorOrigin={{
                   vertical: "bottom",
-                  horizontal: "center",
+                  horizontal: "center"
                 }}
                 open={Boolean(showAlert.message)}
                 autoHideDuration={6000}
@@ -198,7 +198,7 @@ function renderCardsThrownInCurrentRound(users) {
     cardThrown
       ? { ...cardThrown, badge: playerName }
       : {
-          number: `${sequenceNumber}. Waiting for ${playerName}`,
+          number: `${sequenceNumber}. Waiting for ${playerName}`
         }
   );
   return <CardsList cards={cards} title="Play Table" />;
