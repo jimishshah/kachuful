@@ -24,3 +24,4 @@ yarn-error.log*
 
 
 .dynamodb
+client/.serverless/serverless-state.json

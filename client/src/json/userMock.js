@@ -22,6 +22,7 @@ export const userMock = [
     hasLevelStarted: true,
     shouldShowFinishLevel: false,
     isHost: true,
+    hasGameStarted: true,
   },
   {
     playerName: "Sujana",
@@ -41,6 +42,7 @@ export const userMock = [
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
     isHost: false,
+    hasGameStarted: true,
   },
   {
     playerName: "Hardik",
@@ -61,6 +63,7 @@ export const userMock = [
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
     isHost: false,
+    hasGameStarted: true,
   },
   {
     playerName: "Hiren",
@@ -81,6 +84,7 @@ export const userMock = [
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
     isHost: false,
+    hasGameStarted: true,
   },
   {
     playerName: "Malav",
@@ -101,6 +105,7 @@ export const userMock = [
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
     isHost: false,
+    hasGameStarted: true,
   },
   {
     playerName: "Meghana",
@@ -121,5 +126,6 @@ export const userMock = [
     hasLevelStarted: false,
     shouldShowFinishLevel: false,
     isHost: false,
+    hasGameStarted: true,
   },
 ];

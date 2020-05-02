@@ -5,11 +5,11 @@ const getPlayerWithMessage = require("../common/get-player-with-message");
 
 const tableName = process.env.tableName;
 
-exports.handler = async (event) => {
+exports.handler = async event => {
   try {
     let {
       messageBody: { playerName, tableId },
-      player,
+      player
     } = await getPlayerWithMessage(event);
     const isValidTableId = await checkIsValidTableId(tableId);
     if (!isValidTableId) {
@@ -24,7 +24,7 @@ exports.handler = async (event) => {
       ...player,
       isHost,
       tableId,
-      playerName,
+      playerName
     };
     await Dynamo.write(data, tableName);
 
@@ -40,5 +40,8 @@ exports.handler = async (event) => {
 async function checkIsValidTableId(tableId) {
   if (!tableId) return false;
   const records = await Dynamo.scan(tableName, "tableId", tableId);
-  return records.Items.length > 0;
+  const usersWithGameStarted = records.Items.filter(({ hasGameStarted }) =>
+    Boolean(hasGameStarted)
+  );
+  return records.Items.length > 0 && usersWithGameStarted.length === 0;
 }

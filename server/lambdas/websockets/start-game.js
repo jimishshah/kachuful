@@ -5,19 +5,20 @@ const getPlayerWithMessage = require("../common/get-player-with-message");
 
 const tableName = process.env.tableName;
 
-exports.handler = async (event) => {
+exports.handler = async event => {
   try {
     const {
-      message: { tableId },
+      message: { tableId }
     } = JSON.parse(event.body);
     const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
 
     const editedPlayers = players.map((player, index) => ({
       ...player,
       sequenceNumber: index + 1,
+      hasGameStarted: true
     }));
 
-    const writeToDB = editedPlayers.map((player) =>
+    const writeToDB = editedPlayers.map(player =>
       Dynamo.write(player, tableName)
     );
     await Promise.all(writeToDB);
