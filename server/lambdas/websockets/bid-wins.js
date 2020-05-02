@@ -28,3 +28,5 @@ exports.handler = async (event) => {
     return Responses._400({ message: "message could not be received" });
   }
 };
+
+// same player should not be able to place the bid again

@@ -31,3 +31,7 @@ exports.handler = async (event) => {
   await updatePlayers({ tableId });
   return Responses._200({ message: "got a message" });
 };
+
+test("check if finish level is really needed", () => {
+  
+})

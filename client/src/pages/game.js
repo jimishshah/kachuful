@@ -6,7 +6,7 @@ import { DEFAULT_WINS } from "../constants";
 
 function Game({
   connectionId: currentUserId,
-  users,
+  users = [],
   setUsers,
   isGameStarted,
   setIsGameStarted,
@@ -114,23 +114,18 @@ function Game({
     setOpenDialog(false);
   };
 
-  const refreshHandler = async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "refreshData",
-        message: "",
-      })
-    );
-  };
 
   useEffect(() => {
     if (!socket.hasInstance()) {
       history.push("/judgement");
     }
+    if(users.length === 0 ) {
+      // console.log('i come here'); 
+      refreshHandler();
+    }
     socket.getInstance().then((ws) => {
       ws.onmessage = function(event) {
-        const { players, action } = JSON.parse(event.data);
+        const { players = [], action } = JSON.parse(event.data);
         setUsers(players);
         setScores(getScores(players));
         if (action === "sendStartGame") {
@@ -203,6 +198,16 @@ function Game({
 }
 
 export default Game;
+
+async function refreshHandler () {
+  const ws = await socket.getInstance();
+  ws.send(
+    JSON.stringify({
+      action: "refreshData",
+      message: "",
+    })
+  );
+};
 
 function getScores(players) {
   return players.map(({ playerName, scoreCard }) => ({

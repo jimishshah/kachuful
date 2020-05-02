@@ -274,3 +274,7 @@ test("predicts correct winner", async () => {
   }
   Dynamo.write.mockClear();
 });
+
+test("check if the finish round is really needed, if not ignore", () => {
+
+});

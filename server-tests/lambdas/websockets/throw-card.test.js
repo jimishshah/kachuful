@@ -59,3 +59,7 @@ test("if I have 2 spade Ks for example and if I throw one, than only one should 
     process.env.tableName
   );
 });
+
+test("player should not be able to throw same card again", () => {
+
+});

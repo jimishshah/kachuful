@@ -67,7 +67,7 @@ function GameTemplate({
       {!isGameStarted && (
         <ProgressSteps activeStep={1} isCreate={currentUser.isHost} />
       )}
-      {currentUser ? (
+      {currentUser.playerName ? (
         <>
           <StyledGrid container spacing={3}>
             <StyledGrid item xs={3}>

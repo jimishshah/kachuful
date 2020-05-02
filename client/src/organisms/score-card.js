@@ -20,8 +20,8 @@ const StyledTableCell = styled(TableCell)`
 function ScoreCard({ scores }) {
   const [firstPlayer] = scores;
 
-  return (
-    <StoreCardContainer>
+  return (<>
+    {firstPlayer && (<StoreCardContainer>
       <h3>Score Card</h3>
       <TableContainer component={Paper}>
         <Table>
@@ -53,8 +53,8 @@ function ScoreCard({ scores }) {
           </TableBody>
         </Table>
       </TableContainer>
-    </StoreCardContainer>
-  );
+    </StoreCardContainer>)}
+  </>);
 }
 
 export default ScoreCard;
