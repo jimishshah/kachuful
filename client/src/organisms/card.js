@@ -34,8 +34,7 @@ function Card({ text, type, badge, onClick = () => {} }) {
         ) : (
           <StyledTypography variant="subtitle1">{text}</StyledTypography>
         )}
-        <img src={cardColours[type]} alt={type} />
-        {/* <NameTag>Jimish</NameTag> */}
+        {cardColours[type] && <img src={cardColours[type]} alt={type} />}
       </StyledPaper>
     </Badge>
   );
