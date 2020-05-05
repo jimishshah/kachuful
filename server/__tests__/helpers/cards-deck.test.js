@@ -1,4 +1,4 @@
-const { getCardsDeck } = require("../../server/helpers/cards-deck");
+const { getCardsDeck } = require("../../helpers/cards-deck");
 test("returns correct cards", () => {
   const expected = [
     { number: "A", type: "spade" },
@@ -52,7 +52,7 @@ test("returns correct cards", () => {
     { number: "K", type: "spade" },
     { number: "K", type: "diamond" },
     { number: "K", type: "club" },
-    { number: "K", type: "heart" },
+    { number: "K", type: "heart" }
   ];
   expect(getCardsDeck()).toEqual(expected);
   expect(getCardsDeck().length).toEqual(52);

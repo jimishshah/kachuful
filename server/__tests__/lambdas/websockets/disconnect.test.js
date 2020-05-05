@@ -1,19 +1,19 @@
 process.env = { tableName: "sample-table" };
-const Dynamo = require("../../../server/lambdas/common/dynamo");
-const WebSocket = require("../../../server/lambdas/common/web-socket-message");
-const disconnectHandler = require("../../../server/lambdas/websockets/disconnect")
+const Dynamo = require("../../../lambdas/common/dynamo");
+const WebSocket = require("../../../lambdas/common/web-socket-message");
+const disconnectHandler = require("../../../lambdas/websockets/disconnect")
   .handler;
 
-jest.mock("../../../server/lambdas/common/dynamo", () => {
+jest.mock("../../../lambdas/common/dynamo", () => {
   function createPlayers(count) {
-    return Array.from(Array(count).keys()).map((index) => ({
+    return Array.from(Array(count).keys()).map(index => ({
       ID: `ID${index + 1}`,
       domainName: "test-domainName" + index,
       stage: "int-test",
       playerName: "anna" + index,
       lastLevel: "7",
       lastTrumpColour: "heart",
-      sequenceNumber: index + 1,
+      sequenceNumber: index + 1
     }));
   }
   return {
@@ -24,7 +24,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => {
       playerName: "anna1",
       lastLevel: "7",
       lastTrumpColour: "heart",
-      sequenceNumber: 1,
+      sequenceNumber: 1
     }),
     write: jest.fn(),
     delete: jest.fn(),
@@ -37,7 +37,7 @@ jest.mock("../../../server/lambdas/common/dynamo", () => {
           playerName: "anna",
           lastLevel: "7",
           lastTrumpColour: "heart",
-          sequenceNumber: 2,
+          sequenceNumber: 2
         },
         {
           ID: `ID3`,
@@ -46,24 +46,24 @@ jest.mock("../../../server/lambdas/common/dynamo", () => {
           playerName: "anna",
           lastLevel: "7",
           lastTrumpColour: "heart",
-          sequenceNumber: 3,
-        },
-      ],
-    }),
+          sequenceNumber: 3
+        }
+      ]
+    })
   };
 });
-jest.mock("../../../server/lambdas/common/web-socket-message", () => ({
-  send: jest.fn().mockReturnValue(Promise.resolve("something")),
+jest.mock("../../../lambdas/common/web-socket-message", () => ({
+  send: jest.fn().mockReturnValue(Promise.resolve("something"))
 }));
 
 test("when a player gets disconnected, that player is deleted and new sequence is given to everyone", async () => {
   const event = {
     body: JSON.stringify({
-      message: "",
+      message: ""
     }),
     requestContext: {
-      connectionId: 0,
-    },
+      connectionId: 0
+    }
   };
   await disconnectHandler(event);
 

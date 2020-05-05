@@ -1,38 +1,38 @@
 process.env = { tableName: "sample-table" };
-const Dynamo = require("../../../server/lambdas/common/dynamo");
-const WebSocket = require("../../../server/lambdas/common/web-socket-message");
-const distributeCardsHandler = require("../../../server/lambdas/websockets/distribute-cards")
+const Dynamo = require("../../../lambdas/common/dynamo");
+const WebSocket = require("../../../lambdas/common/web-socket-message");
+const distributeCardsHandler = require("../../../lambdas/websockets/distribute-cards")
   .handler;
-jest.mock("../../../server/lambdas/common/dynamo", () => {
+jest.mock("../../../lambdas/common/dynamo", () => {
   function createPlayers(count) {
-    return Array.from(Array(count).keys()).map((index) => ({
+    return Array.from(Array(count).keys()).map(index => ({
       ID: index,
       domainName: "test-domainName" + index,
       stage: "int-test",
       playerName: "anna" + index,
       lastLevel: "7",
-      lastTrumpColour: "heart",
+      lastTrumpColour: "heart"
     }));
   }
   return {
     get: jest.fn(),
     write: jest.fn(),
     scan: jest.fn().mockReturnValue({
-      Items: createPlayers(30),
-    }),
+      Items: createPlayers(30)
+    })
   };
 });
-jest.mock("../../../server/lambdas/common/web-socket-message", () => ({
-  send: jest.fn().mockReturnValue(Promise.resolve("something")),
+jest.mock("../../../lambdas/common/web-socket-message", () => ({
+  send: jest.fn().mockReturnValue(Promise.resolve("something"))
 }));
 
 test("should distribute non duplicate cards, correct number of cards and set correct trump colour to the players", async () => {
   const event = {
     body: JSON.stringify({
       message: {
-        tableId: "1234567890",
-      },
-    }),
+        tableId: "1234567890"
+      }
+    })
   };
   await distributeCardsHandler(event);
 

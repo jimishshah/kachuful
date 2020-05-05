@@ -1,18 +1,18 @@
 process.env = { tableName: "sample-table" };
-const Dynamo = require("../../../server/lambdas/common/dynamo");
-const WebSocket = require("../../../server/lambdas/common/web-socket-message");
-const throwCardsHandler = require("../../../server/lambdas/websockets/throw-card")
+const Dynamo = require("../../../lambdas/common/dynamo");
+const WebSocket = require("../../../lambdas/common/web-socket-message");
+const throwCardsHandler = require("../../../lambdas/websockets/throw-card")
   .handler;
 
-jest.mock("../../../server/lambdas/common/dynamo", () => {
+jest.mock("../../../lambdas/common/dynamo", () => {
   function createPlayers(count) {
-    return Array.from(Array(count).keys()).map((index) => ({
+    return Array.from(Array(count).keys()).map(index => ({
       ID: index,
       domainName: "test-domainName" + index,
       stage: "int-test",
       playerName: "anna" + index,
       lastLevel: "7",
-      lastTrumpColour: "heart",
+      lastTrumpColour: "heart"
     }));
   }
   return {
@@ -21,29 +21,29 @@ jest.mock("../../../server/lambdas/common/dynamo", () => {
       cardsInHand: [
         { type: "spade", number: "K" },
         { type: "spade", number: "K" },
-        { type: "spade", number: "Q" },
-      ],
+        { type: "spade", number: "Q" }
+      ]
     }),
     write: jest.fn(),
     scan: jest.fn().mockReturnValue({
-      Items: createPlayers(30),
-    }),
+      Items: createPlayers(30)
+    })
   };
 });
-jest.mock("../../../server/lambdas/common/web-socket-message", () => ({
-  send: jest.fn().mockReturnValue(Promise.resolve("something")),
+jest.mock("../../../lambdas/common/web-socket-message", () => ({
+  send: jest.fn().mockReturnValue(Promise.resolve("something"))
 }));
 
 test("if I have 2 spade Ks for example and if I throw one, than only one should be removed from mycards section", async () => {
   const event = {
     body: JSON.stringify({
       message: {
-        cardThrown: { type: "spade", number: "K" },
-      },
+        cardThrown: { type: "spade", number: "K" }
+      }
     }),
     requestContext: {
-      connectionId: "abcd",
-    },
+      connectionId: "abcd"
+    }
   };
   await throwCardsHandler(event);
 
@@ -51,8 +51,8 @@ test("if I have 2 spade Ks for example and if I throw one, than only one should 
     cardThrown: { number: "K", type: "spade" },
     cardsInHand: [
       { number: "K", type: "spade" },
-      { number: "Q", type: "spade" },
-    ],
+      { number: "Q", type: "spade" }
+    ]
   };
   expect(Dynamo.write).toHaveBeenCalledWith(
     expectedArg1,
@@ -60,6 +60,4 @@ test("if I have 2 spade Ks for example and if I throw one, than only one should 
   );
 });
 
-test("player should not be able to throw same card again", () => {
-
-});
+test("player should not be able to throw same card again", () => {});

@@ -115,3 +115,5 @@ package:
   exclude:
     - node_modules/**
     - .dynamodb/**
+    - coverage/**
+    - __tests__/**

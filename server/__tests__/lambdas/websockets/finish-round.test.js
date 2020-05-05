@@ -1,16 +1,15 @@
 process.env = { tableName: "sample-table" };
-const Dynamo = require("../../../server/lambdas/common/dynamo");
-const WebSocket = require("../../../server/lambdas/common/web-socket-message");
-const updatePlayers = require("../../../server/lambdas/common/update-players");
+const Dynamo = require("../../../lambdas/common/dynamo");
+const WebSocket = require("../../../lambdas/common/web-socket-message");
+const updatePlayers = require("../../../lambdas/common/update-players");
 
-const finishRound = require("../../../server/lambdas/websockets/finish-round")
-  .handler;
+const finishRound = require("../../../lambdas/websockets/finish-round").handler;
 
-jest.mock("../../../server/lambdas/common/web-socket-message", () => ({
-  send: jest.fn().mockReturnValue(Promise.resolve("something")),
+jest.mock("../../../lambdas/common/web-socket-message", () => ({
+  send: jest.fn().mockReturnValue(Promise.resolve("something"))
 }));
-jest.mock("../../../server/lambdas/common/update-players");
-jest.mock("../../../server/lambdas/common/dynamo", () => ({
+jest.mock("../../../lambdas/common/update-players");
+jest.mock("../../../lambdas/common/dynamo", () => ({
   get: jest.fn(),
   write: jest.fn(),
   scan: jest
@@ -26,9 +25,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "2",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "222",
@@ -38,9 +37,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "333",
@@ -50,11 +49,11 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
-        },
-      ],
+          cardsInHand: []
+        }
+      ]
     })
     .mockReturnValueOnce({
       // 1st player, highest value number wins
@@ -67,9 +66,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "2",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "222",
@@ -79,9 +78,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "333",
@@ -91,11 +90,11 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
-        },
-      ],
+          cardsInHand: []
+        }
+      ]
     })
     .mockReturnValueOnce({
       // 2nd player, trump colour wins
@@ -108,9 +107,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "2",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "222",
@@ -120,9 +119,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "333",
@@ -132,11 +131,11 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
-        },
-      ],
+          cardsInHand: []
+        }
+      ]
     })
     .mockReturnValueOnce({
       // 3rd player, because of her sequence was first
@@ -149,9 +148,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "2",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "222",
@@ -161,9 +160,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "333",
@@ -173,11 +172,11 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
-        },
-      ],
+          cardsInHand: []
+        }
+      ]
     })
     .mockReturnValueOnce({
       // 3rd player, 2 players used same trump card but lower sequence wins
@@ -190,9 +189,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "2",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "222",
@@ -202,9 +201,9 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
+          cardsInHand: []
         },
         {
           ID: "333",
@@ -214,21 +213,21 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
           lastRoundWinner: "false",
           wins: {
             expectedWins: "1",
-            currentWins: "0",
+            currentWins: "0"
           },
-          cardsInHand: [],
-        },
-      ],
-    }),
+          cardsInHand: []
+        }
+      ]
+    })
 }));
 
 test("predicts correct winner", async () => {
   const event = {
     body: JSON.stringify({
       message: {
-        tableId: "1234567890",
-      },
-    }),
+        tableId: "1234567890"
+      }
+    })
   };
   await finishRound(event);
   const player3 = Dynamo.write.mock.calls[2][0];
@@ -275,6 +274,4 @@ test("predicts correct winner", async () => {
   Dynamo.write.mockClear();
 });
 
-test("check if the finish round is really needed, if not ignore", () => {
-
-});
+test("check if the finish round is really needed, if not ignore", () => {});

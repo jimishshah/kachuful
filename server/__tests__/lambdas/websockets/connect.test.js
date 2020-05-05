@@ -1,9 +1,8 @@
 process.env = { tableName: "sample-table" };
-const connectHandler = require("../../../server/lambdas/websockets/connect")
-  .handler;
-const Dynamo = require("../../../server/lambdas/common/dynamo");
-const WebSocket = require("../../../server/lambdas/common/web-socket-message");
-jest.mock("../../../server/lambdas/common/dynamo", () => ({
+const connectHandler = require("../../../lambdas/websockets/connect").handler;
+const Dynamo = require("../../../lambdas/common/dynamo");
+const WebSocket = require("../../../lambdas/common/web-socket-message");
+jest.mock("../../../lambdas/common/dynamo", () => ({
   get: jest.fn(),
   write: jest.fn(),
   scan: jest.fn().mockReturnValue({
@@ -12,26 +11,26 @@ jest.mock("../../../server/lambdas/common/dynamo", () => ({
         ID: "111",
         domainName: "test-domainName1",
         stage: "int-test",
-        name: "rapunzel",
+        name: "rapunzel"
       },
       {
         ID: "222",
         domainName: "test-domainName2",
         stage: "int-test",
-        name: "elsa",
+        name: "elsa"
       },
       {
         ID: "333",
         domainName: "test-domainName3",
         stage: "int-test",
-        name: "anna",
-      },
-    ],
-  }),
+        name: "anna"
+      }
+    ]
+  })
 }));
 
-jest.mock("../../../server/lambdas/common/web-socket-message", () => ({
-  send: jest.fn().mockReturnValue(Promise.resolve("something")),
+jest.mock("../../../lambdas/common/web-socket-message", () => ({
+  send: jest.fn().mockReturnValue(Promise.resolve("something"))
 }));
 test("should send connected users list to every user", async () => {
   // prepare
@@ -40,11 +39,11 @@ test("should send connected users list to every user", async () => {
     requestContext: {
       connectionId,
       domainName: "test-domainName",
-      stage: "test-stage",
-    },
+      stage: "test-stage"
+    }
   };
   global.Date = {
-    now: jest.fn().mockReturnValue(123),
+    now: jest.fn().mockReturnValue(123)
   };
   const expectedDynamowrite = [
     {
@@ -66,9 +65,9 @@ test("should send connected users list to every user", async () => {
       scoreCard: [],
       hasLevelStarted: false,
       shouldShowFinishLevel: false,
-      isHost: false,
+      isHost: false
     },
-    "sample-table",
+    "sample-table"
   ];
   // act
   await connectHandler(event);

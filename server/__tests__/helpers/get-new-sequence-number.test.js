@@ -1,4 +1,4 @@
-const getNewSequenceNumber = require("../../server/helpers/get-new-sequence-number");
+const getNewSequenceNumber = require("../../helpers/get-new-sequence-number");
 
 test("test function works as expected", () => {
   // 1 2 3 4
