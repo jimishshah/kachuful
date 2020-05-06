@@ -12,18 +12,19 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "emotion-theming": "^10.0.27",
-    "react": "^16.13.1",
+    "react": "^16.13.0",
     "react-copy-to-clipboard": "^5.0.2",
-    "react-dom": "^16.13.1",
+    "react-dom": "^16.13.0",
     "react-ga": "^2.7.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1",
+    "react-scripts": "3.4.0",
     "react-share": "^4.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "env NODE_ENV='test' react-scripts test",
+    "test:coverage": "yarn test --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
