@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { ThemeProvider } from "emotion-theming";
 import Game from "./pages/game";
@@ -20,6 +20,11 @@ history.listen((location) => {
   ReactGA.set({ page: location.pathname }); // Update the user's current page
   ReactGA.pageview(location.pathname); // Record a pageview for the given page
 });
+// const defaultTheme = createMuiTheme({
+//   palette: {
+//     primary: { main: "#175676" }, // 2274A5 // use rubik fonts
+//   },
+// });
 const defaultTheme = createMuiTheme();
 
 const StyledContainer = styled(Container)`
@@ -52,12 +57,13 @@ function App() {
     setScores,
   };
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <StylesProvider injectFirst>
-        <StyledContainer maxWidth="sm">
-          <Router>
-            <div>
-              {/* <nav>
+    <MuiThemeProvider theme={defaultTheme}>
+      <ThemeProvider theme={defaultTheme}>
+        <StylesProvider injectFirst>
+          <StyledContainer maxWidth="sm">
+            <Router>
+              <div>
+                {/* <nav>
               <ul>
                 <li>
                   <Link to="/">Home</Link>
@@ -68,27 +74,28 @@ function App() {
               </ul>
             </nav> */}
 
-              {/* A <Switch> looks through its children <Route>s and
+                {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-              <Switch>
-                <Route path="/judgement/game-mock">
-                  <GameMock {...props} />
-                </Route>
-                <Route path="/judgement/game">
-                  <Game {...props} />
-                </Route>
-                <Route path="/judgement/:tableId?">
-                  <HomeJudgement {...props} />
-                </Route>
-                <Route path="/">
-                  <Home />
-                </Route>
-              </Switch>
-            </div>
-          </Router>
-        </StyledContainer>
-      </StylesProvider>
-    </ThemeProvider>
+                <Switch>
+                  <Route path="/judgement/game-mock">
+                    <GameMock {...props} />
+                  </Route>
+                  <Route path="/judgement/game">
+                    <Game {...props} />
+                  </Route>
+                  <Route path="/judgement/:tableId?">
+                    <HomeJudgement {...props} />
+                  </Route>
+                  <Route path="/">
+                    <Home />
+                  </Route>
+                </Switch>
+              </div>
+            </Router>
+          </StyledContainer>
+        </StylesProvider>
+      </ThemeProvider>
+    </MuiThemeProvider>
   );
 }
 

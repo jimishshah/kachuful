@@ -1,0 +1,142 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should display correct data in score card 1`] = `
+<div
+  class="css-1gf299j"
+  data-testid="score-card"
+>
+  <h3>
+    Score Card
+  </h3>
+  <div
+    class="MuiPaper-root MuiTableContainer-root MuiPaper-elevation1 MuiPaper-rounded"
+  >
+    <table
+      class="MuiTable-root"
+    >
+      <thead
+        class="MuiTableHead-root"
+      >
+        <tr
+          class="MuiTableRow-root MuiTableRow-head"
+        >
+          <th
+            class="MuiTableCell-root MuiTableCell-head css-1xxe9l9 MuiTableCell-alignRight"
+            scope="col"
+          >
+            Name
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head css-1xxe9l9 MuiTableCell-alignRight"
+            scope="col"
+          >
+            Total
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head css-1xxe9l9 MuiTableCell-alignRight"
+            scope="col"
+          >
+            Level 
+            7
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head css-1xxe9l9 MuiTableCell-alignRight"
+            scope="col"
+          >
+            Level 
+            6
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head css-1xxe9l9 MuiTableCell-alignRight"
+            scope="col"
+          >
+            Level 
+            5
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head css-1xxe9l9 MuiTableCell-alignRight"
+            scope="col"
+          >
+            Level 
+            4
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head css-1xxe9l9 MuiTableCell-alignRight"
+            scope="col"
+          >
+            Level 
+            3
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head css-1xxe9l9 MuiTableCell-alignRight"
+            scope="col"
+          >
+            Level 
+            2
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head css-1xxe9l9 MuiTableCell-alignRight"
+            scope="col"
+          >
+            Level 
+            1
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="MuiTableBody-root"
+      >
+        <tr
+          class="MuiTableRow-root"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight"
+          >
+            p1
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight"
+          >
+            120
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight"
+          >
+            21
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight"
+          >
+            20
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight"
+          >
+            19
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight"
+          >
+            18
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight"
+          >
+            17
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight"
+          >
+            15
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight"
+          >
+            10
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;

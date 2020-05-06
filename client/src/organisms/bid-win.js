@@ -62,7 +62,11 @@ function BidWin({ bidWins }) {
   };
   const classes = useStyles();
   return (
-    <StyledForm onSubmit={bidWinsHandler} autoComplete="off">
+    <StyledForm
+      onSubmit={bidWinsHandler}
+      autoComplete="off"
+      data-testid="bid-wins-form"
+    >
       <Box pt={2}>
         <div className={classes.search}>
           <InputBase

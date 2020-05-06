@@ -26,3 +26,4 @@ yarn-error.log*
 .dynamodb
 client/.serverless/serverless-state.json
 server/coverage
+client/coverage

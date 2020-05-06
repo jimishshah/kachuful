@@ -27,7 +27,7 @@ function ScoreCard({ scores: initialScores }) {
       return {
         playerName,
         scoreCard,
-        totalScore
+        totalScore,
       };
     })
     .sort((a, b) => (a.totalScore < b.totalScore ? 1 : -1));
@@ -35,7 +35,7 @@ function ScoreCard({ scores: initialScores }) {
   return (
     <>
       {firstPlayer && (
-        <StoreCardContainer>
+        <StoreCardContainer data-testid="score-card">
           <h3>Score Card</h3>
           <TableContainer component={Paper}>
             <Table>

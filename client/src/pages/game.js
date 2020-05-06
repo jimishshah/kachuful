@@ -114,17 +114,15 @@ function Game({
     setOpenDialog(false);
   };
 
-
   useEffect(() => {
     if (!socket.hasInstance()) {
       history.push("/judgement");
     }
-    if(users.length === 0 ) {
-      // console.log('i come here'); 
+    if (users.length === 0) {
       refreshHandler();
     }
     socket.getInstance().then((ws) => {
-      ws.onmessage = function(event) {
+      ws.onmessage = function (event) {
         const { players = [], action } = JSON.parse(event.data);
         setUsers(players);
         setScores(getScores(players));
@@ -142,7 +140,6 @@ function Game({
         }
       };
     });
-
     if (hasEveryoneThrownCard && Number(currentUser.sequenceNumber) === 1) {
       finishRound(currentUser);
     }
@@ -199,7 +196,7 @@ function Game({
 
 export default Game;
 
-async function refreshHandler () {
+async function refreshHandler() {
   const ws = await socket.getInstance();
   ws.send(
     JSON.stringify({
@@ -207,7 +204,7 @@ async function refreshHandler () {
       message: "",
     })
   );
-};
+}
 
 function getScores(players) {
   return players.map(({ playerName, scoreCard }) => ({
