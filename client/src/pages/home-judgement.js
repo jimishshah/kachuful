@@ -21,68 +21,53 @@ function HomeJudgement({ assignConnectionId, connectionId }) {
   const { tableId } = useParams();
   const joinTheTable = async (e) => {
     e.preventDefault();
-    if (Boolean(playerName)) {
-      const ws = await socket.getInstance();
+    socket.getInstance().then((ws) => {
       ws.send(
         JSON.stringify({
-          message: { playerName: playerName.slice(0, 6), tableId },
-          action: "sendName",
+          message: "",
+          action: "getConnectionId",
         })
       );
-      history.push("/judgement/game");
-    }
+      ws.onmessage = async function (event) {
+        const { connectionID } = JSON.parse(event.data);
+        assignConnectionId(connectionID);
+        if (Boolean(playerName)) {
+          const ws = await socket.getInstance();
+          ws.send(
+            JSON.stringify({
+              message: { playerName: playerName.slice(0, 6), tableId },
+              action: "sendName",
+            })
+          );
+          history.push("/judgement/game");
+        }
+      };
+    });
   };
 
-  useEffect(() => {
-    if (!connectionId) {
-      socket.getInstance().then((ws) => {
-        ws.send(
-          JSON.stringify({
-            message: "",
-            action: "getConnectionId",
-          })
-        );
-        ws.onmessage = function (event) {
-          const { connectionID } = JSON.parse(event.data);
-          assignConnectionId(connectionID);
-        };
-      });
-    }
-    // eslint-disable-next-line
-  }, []);
   return (
     <>
-      {connectionId ? (
-        <>
-          <ProgressSteps activeStep={0} isCreate={tableId ? false : true} />
-          <form onSubmit={joinTheTable}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <StyledTextField
-                  variant="outlined"
-                  label="Enter your name"
-                  size="small"
-                  onChange={(e) => setPlayerName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <StyledButton
-                  variant="contained"
-                  color="secondary"
-                  type="submit"
-                >
-                  {tableId ? "Join Game" : "Create Game"}
-                </StyledButton>
-              </Grid>
-            </Grid>
-          </form>
-          <Box pt={4} mb={1}>
-            <GameRules />
-          </Box>
-        </>
-      ) : (
-        "Loading..."
-      )}
+      <ProgressSteps activeStep={0} isCreate={tableId ? false : true} />
+      <form onSubmit={joinTheTable}>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <StyledTextField
+              variant="outlined"
+              label="Enter your name"
+              size="small"
+              onChange={(e) => setPlayerName(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <StyledButton variant="contained" color="secondary" type="submit">
+              {tableId ? "Join Game" : "Create Game"}
+            </StyledButton>
+          </Grid>
+        </Grid>
+      </form>
+      <Box pt={4} mb={1}>
+        <GameRules />
+      </Box>
     </>
   );
 }
