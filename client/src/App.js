@@ -40,13 +40,9 @@ function App() {
   const [showAlert, setShowAlert] = useState({});
   const [scores, setScores] = useState([]);
 
-  const assignConnectionId = (assignedConnectionId) => {
-    setConnectionId(assignedConnectionId);
-  };
-
   const props = {
     connectionId,
-    assignConnectionId,
+    setConnectionId,
     users,
     setUsers,
     isGameStarted,

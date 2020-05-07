@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { useHistory, useParams } from "react-router-dom";
@@ -15,7 +15,7 @@ const StyledTextField = styled(TextField)`
 const StyledButton = styled(Button)`
   width: 100%;
 `;
-function HomeJudgement({ assignConnectionId, connectionId }) {
+function HomeJudgement({ setConnectionId }) {
   const history = useHistory();
   const [playerName, setPlayerName] = useState("");
   const { tableId } = useParams();
@@ -30,7 +30,7 @@ function HomeJudgement({ assignConnectionId, connectionId }) {
       );
       ws.onmessage = async function (event) {
         const { connectionID } = JSON.parse(event.data);
-        assignConnectionId(connectionID);
+        setConnectionId(connectionID);
         if (Boolean(playerName)) {
           const ws = await socket.getInstance();
           ws.send(

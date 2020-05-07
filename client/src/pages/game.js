@@ -18,65 +18,19 @@ function Game({
   const [openDialog, setOpenDialog] = useState(false);
   const onEveryonePlayed = () => {};
   const history = useHistory();
-  const [currentUser = {}] = users.filter((user) => user.ID === currentUserId);
-  const [hostPlayer = { playerName: "" }] = users.filter(
-    (user) => user.isHost === true
-  );
-  const playersThatHaveThrownCard = users.filter(
-    ({ cardThrown }) => cardThrown !== null
-  );
+
+  const {
+    currentUser,
+    hostPlayer,
+    playersThatHaveThrownCard,
+    usersWhoThrewCards,
+    intiatorCardType,
+    usersWhoHaveNotPlayedTheBid,
+    myCardsWithSameType,
+  } = getMyData(users, currentUserId);
   const hasEveryoneThrownCard =
     users.length === playersThatHaveThrownCard.length;
 
-  const canIThrowThisCard = (cardThrown) => {
-    // if everyone have not placed the bid
-    const usersWhoHaveNotPlayedTheBid = users.filter(
-      (user) => user.wins.expectedWins === DEFAULT_WINS
-    );
-    if (usersWhoHaveNotPlayedTheBid.length > 0) {
-      setShowAlert({
-        message: "Wait for everyone to bid",
-        severity: "info",
-      });
-      return false;
-    }
-    // if i have already thrown the card
-    if (currentUser.cardThrown) {
-      setShowAlert({
-        message: "You have already thrown the card",
-        severity: "info",
-      });
-      return false;
-    }
-    // if I am initiator
-    if (currentUser.sequenceNumber === 1) return true;
-    // if its not my turn
-    const [initiator] = users.filter((user) => user.sequenceNumber === 1);
-    const usersWhoThrewCards = users.filter((user) => Boolean(user.cardThrown));
-    if (usersWhoThrewCards.length + 1 < Number(currentUser.sequenceNumber)) {
-      setShowAlert({
-        message: "Wait for your turn to throw the card",
-        severity: "info",
-      });
-      return false;
-    }
-    // if i am throwing same card type as initiator
-    const { type: intiatorType } = initiator.cardThrown;
-    if (intiatorType === cardThrown.type) return true;
-
-    // if i have no other option
-    const myCardsWithSameType = currentUser.cardsInHand.filter(
-      ({ type }) => type === intiatorType
-    );
-    if (intiatorType !== cardThrown.type && myCardsWithSameType.length === 0)
-      return true;
-
-    setShowAlert({
-      message: "You can not throw this card",
-      severity: "info",
-    });
-    return false;
-  };
   const leaveTheTable = async () => {
     const ws = await socket.getInstance();
     ws.close();
@@ -96,7 +50,17 @@ function Game({
     // what is the colour of sequence 1
     // do i have that colour
     //
-    if (canIThrowThisCard(cardThrown)) {
+    if (
+      canIThrowThisCard({
+        cardThrown,
+        usersWhoHaveNotPlayedTheBid,
+        currentUser,
+        usersWhoThrewCards,
+        intiatorCardType,
+        setShowAlert,
+        myCardsWithSameType,
+      })
+    ) {
       const ws = await socket.getInstance();
       ws.send(
         JSON.stringify({
@@ -272,4 +236,85 @@ async function bidWins(myBid) {
       message: { myBid },
     })
   );
+}
+
+function getMyData(users, currentUserId) {
+  const [currentUser = {}] = users.filter((user) => user.ID === currentUserId);
+  const [hostPlayer = { playerName: "" }] = users.filter(
+    (user) => user.isHost === true
+  );
+  const playersThatHaveThrownCard = users.filter(
+    ({ cardThrown }) => cardThrown !== null
+  );
+  const usersWhoThrewCards = users.filter((user) => Boolean(user.cardThrown));
+  const usersWhoHaveNotPlayedTheBid = users.filter(
+    (user) => user.wins.expectedWins === DEFAULT_WINS
+  );
+  const [initiator] = users.filter((user) => user.sequenceNumber === 1);
+  let intiatorCardType = null;
+  let myCardsWithSameType = [];
+  if (initiator && initiator.cardThrown && initiator.cardThrown.type) {
+    ({ type: intiatorCardType } = initiator.cardThrown);
+    myCardsWithSameType = currentUser.cardsInHand.filter(
+      ({ type }) => type === intiatorCardType
+    );
+  }
+  return {
+    currentUser,
+    hostPlayer,
+    playersThatHaveThrownCard,
+    usersWhoThrewCards,
+    intiatorCardType,
+    usersWhoHaveNotPlayedTheBid,
+    myCardsWithSameType,
+  };
+}
+
+function canIThrowThisCard({
+  cardThrown,
+  usersWhoHaveNotPlayedTheBid,
+  currentUser,
+  usersWhoThrewCards,
+  intiatorCardType,
+  setShowAlert,
+  myCardsWithSameType,
+}) {
+  // if everyone have not placed the bid
+  if (usersWhoHaveNotPlayedTheBid.length > 0) {
+    setShowAlert({
+      message: "Wait for everyone to bid",
+      severity: "info",
+    });
+    return false;
+  }
+  // if i have already thrown the card
+  if (currentUser.cardThrown) {
+    setShowAlert({
+      message: "You have already thrown the card",
+      severity: "info",
+    });
+    return false;
+  }
+  // if I am initiator
+  if (currentUser.sequenceNumber === 1) return true;
+  // if its not my turn
+  if (usersWhoThrewCards.length + 1 < Number(currentUser.sequenceNumber)) {
+    setShowAlert({
+      message: "Wait for your turn to throw the card",
+      severity: "info",
+    });
+    return false;
+  }
+  // if i am throwing same card type as initiator
+  if (intiatorCardType === cardThrown.type) return true;
+
+  // if i have no other option
+  if (intiatorCardType !== cardThrown.type && myCardsWithSameType.length === 0)
+    return true;
+
+  setShowAlert({
+    message: "You can not throw this card",
+    severity: "info",
+  });
+  return false;
 }
