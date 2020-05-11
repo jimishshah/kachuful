@@ -107,14 +107,52 @@ test("should be able to submit my bid", async () => {
     },
   ]);
   const { getByPlaceholderText, getByTestId } = renderComponent(props);
-  fireEvent.change(getByPlaceholderText("My Bid"), { target: { value: "7" } });
+  fireEvent.change(getByPlaceholderText("My Bid"), { target: { value: "1" } });
   fireEvent.submit(getByTestId("bid-wins-form"));
   const ws = await socket.getInstance();
   expect(ws.send).toHaveBeenCalledWith(
-    '{"action":"bidWins","message":{"myBid":"7"}}'
+    '{"action":"bidWins","message":{"myBid":"1"}}'
   );
   ws.send.mockClear();
 });
+
+test("should not be able to submit bid higher than card in hand", async () => {
+  const props = getProps([
+    {
+      ID: 123,
+      playerName: "test-name",
+      wins: { expectedWins: 99, currentWins: 99 },
+      cardsInHand: [{ type: "club", number: "3" }],
+      sequenceNumber: 2,
+      hasLevelStarted: true,
+    },
+  ]);
+  const { getByPlaceholderText, getByTestId } = renderComponent(props);
+  fireEvent.change(getByPlaceholderText("My Bid"), { target: { value: "7" } });
+  fireEvent.submit(getByTestId("bid-wins-form"));
+  const ws = await socket.getInstance();
+  expect(ws.send).not.toHaveBeenCalled();
+  ws.send.mockClear();
+});
+
+// test.only("should display message if user goes offline", async () => {
+//   const props = getProps([
+//     {
+//       ID: 123,
+//       playerName: "test-name",
+//       wins: { expectedWins: 99, currentWins: 99 },
+//       cardsInHand: [{ type: "club", number: "3" }],
+//       sequenceNumber: 2,
+//       hasLevelStarted: true,
+//       setShowAlert: jest.fn(),
+//     },
+//   ]);
+//   const { getByTitle } = renderComponent(props);
+//   fireEvent.click(getByTitle("refresh button"));
+//   jest.runAllTimers();
+//   expect(props.setShowAlert).toHaveBeenCalledWith();
+//   ws.send.mockClear();
+// });
 
 function getProps(users) {
   return {

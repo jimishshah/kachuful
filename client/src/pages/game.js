@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import GameTemplate from "../templates/game-template";
 import socket from "../socket";
 import { useHistory } from "react-router-dom";
@@ -18,6 +18,7 @@ function Game({
   const [openDialog, setOpenDialog] = useState(false);
   const onEveryonePlayed = () => {};
   const history = useHistory();
+  const refreshTimer = useRef(null);
 
   const {
     currentUser,
@@ -78,6 +79,49 @@ function Game({
     setOpenDialog(false);
   };
 
+  const bidWins = async (myBid) => {
+    if (myBid < 0 || myBid > currentUser.cardsInHand.length) {
+      setShowAlert({
+        message: `Your bid should be between 0 and ${currentUser.cardsInHand.length}`,
+        severity: "error",
+      });
+      return;
+    }
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "bidWins",
+        message: { myBid },
+      })
+    );
+  };
+
+  const refreshHandler = async (e) => {
+    const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "refreshData",
+        message: "",
+      })
+    );
+    // check if refresh was called by user interaction
+    if (e) {
+      refreshTimer.current = setTimeout(() => {
+        console.log("timeout is fired");
+        setShowAlert({
+          message: `You are offline, check your network and try again in 5 seconds`,
+          severity: "error",
+        });
+      }, 1500);
+    }
+  };
+
+  const clearRefreshTimer = () => {
+    setTimeout(() => {
+      clearInterval(refreshTimer.current);
+    }, 0);
+  };
+
   useEffect(() => {
     if (!socket.hasInstance()) {
       history.push("/judgement");
@@ -87,6 +131,7 @@ function Game({
     }
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {
+        clearRefreshTimer();
         const { players = [], action } = JSON.parse(event.data);
         setUsers(players);
         setScores(getScores(players));
@@ -126,6 +171,19 @@ function Game({
       // Nope, go back to your page
       history.go(1);
     });
+
+    window.onbeforeunload = function () {
+      setShowAlert({
+        message:
+          "Don't refresh your page, page refresh will log you out of your game.",
+        severity: "error",
+      });
+      return "You will be logged out of the game, do you want to continue ? ";
+    };
+
+    return () => {
+      clearRefreshTimer();
+    };
   }, [
     history,
     currentUser,
@@ -159,16 +217,6 @@ function Game({
 }
 
 export default Game;
-
-async function refreshHandler() {
-  const ws = await socket.getInstance();
-  ws.send(
-    JSON.stringify({
-      action: "refreshData",
-      message: "",
-    })
-  );
-}
 
 function getScores(players) {
   return players.map(({ playerName, scoreCard }) => ({
@@ -224,16 +272,6 @@ async function sendMessage() {
     JSON.stringify({
       message: "my first message",
       action: "message",
-    })
-  );
-}
-
-async function bidWins(myBid) {
-  const ws = await socket.getInstance();
-  ws.send(
-    JSON.stringify({
-      action: "bidWins",
-      message: { myBid },
     })
   );
 }

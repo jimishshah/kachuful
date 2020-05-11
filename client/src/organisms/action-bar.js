@@ -53,7 +53,10 @@ function ActionBar({
               </Box>
               <Box pr={2} pt={2}>
                 <Button variant="contained" color="secondary">
-                  <RefreshIcon onClick={refreshHandler} />
+                  <RefreshIcon
+                    onClick={refreshHandler}
+                    title="refresh button"
+                  />
                 </Button>
               </Box>
               {currentUser.hasLevelStarted && (
