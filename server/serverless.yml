@@ -52,6 +52,11 @@ functions:
     events:
       - websocket:
           route: getConnectionId
+  websocket-reCreateConnection:
+    handler: lambdas/websockets/re-create-connection.handler
+    events:
+      - websocket:
+          route: reCreateConnection
   websocket-refreshData:
     handler: lambdas/websockets/refresh-data.handler
     events:
