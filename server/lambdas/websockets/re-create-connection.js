@@ -37,7 +37,7 @@ exports.handler = async (event) => {
       domainName,
       stage,
       connectionID: newConnectionId,
-      message: JSON.stringify({ players }),
+      message: JSON.stringify({ players, action: "sendRecreateConnection" }),
     });
     return Responses._200({ message: "connected" });
   } catch (e) {
