@@ -6,6 +6,7 @@ const tableName = process.env.tableName;
 
 exports.handler = async (event) => {
   try {
+    console.log(event);
     const { connectionId: connectionID } = event.requestContext;
     const { tableId } = await Dynamo.get(connectionID, tableName);
     await Dynamo.delete(connectionID, tableName);
