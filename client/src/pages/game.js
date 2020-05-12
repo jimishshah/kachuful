@@ -8,14 +8,18 @@ function Game({
   connectionId: currentUserId,
   users = [],
   setUsers,
-  isGameStarted,
-  setIsGameStarted,
   showAlert,
   setShowAlert,
   scores,
   setScores,
 }) {
   const [openDialog, setOpenDialog] = useState(false);
+  const [drawer, setDrawer] = useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
   const onEveryonePlayed = () => {};
   const history = useHistory();
   const refreshTimer = useRef(null);
@@ -40,6 +44,17 @@ function Game({
 
   const clearShowAlert = () => {
     setShowAlert({});
+  };
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setDrawer({ ...drawer, [anchor]: open });
   };
 
   const throwCard = async (cardThrown) => {
@@ -135,9 +150,6 @@ function Game({
         const { players = [], action } = JSON.parse(event.data);
         setUsers(players);
         setScores(getScores(players));
-        if (action === "sendStartGame") {
-          setIsGameStarted(true);
-        }
         if (action === "sendFinishRound") {
           const [{ playerName: thisRoundWinner }] = players.filter(
             ({ lastRoundWinner }) => lastRoundWinner === true
@@ -188,7 +200,6 @@ function Game({
     history,
     currentUser,
     hasEveryoneThrownCard,
-    setIsGameStarted,
     setShowAlert,
     setScores,
     setUsers,
@@ -202,7 +213,6 @@ function Game({
     sendMessage,
     bidWins,
     throwCard,
-    isGameStarted,
     startGame,
     showAlert,
     scores,
@@ -212,6 +222,8 @@ function Game({
     openDialogHandler,
     closeDialogHandler,
     refreshHandler,
+    drawer,
+    toggleDrawer,
   };
   return <GameTemplate {...props} />;
 }

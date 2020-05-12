@@ -21,7 +21,7 @@ function HomeJudgement({ setConnectionId }) {
   const { tableId } = useParams();
   const joinTheTable = async (e) => {
     e.preventDefault();
-    socket.getInstance().then((ws) => {
+    socket.getInstance(true).then((ws) => {
       ws.send(
         JSON.stringify({
           message: "",

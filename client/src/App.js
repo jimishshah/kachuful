@@ -36,7 +36,6 @@ function App() {
   const [connectionId, setConnectionId] = useState();
 
   const [users, setUsers] = useState([]);
-  const [isGameStarted, setIsGameStarted] = useState(false);
   const [showAlert, setShowAlert] = useState({});
   const [scores, setScores] = useState([]);
 
@@ -45,8 +44,6 @@ function App() {
     setConnectionId,
     users,
     setUsers,
-    isGameStarted,
-    setIsGameStarted,
     showAlert,
     setShowAlert,
     scores,

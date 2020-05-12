@@ -31,6 +31,7 @@ exports.handler = async (event) => {
       hasLevelStarted: false,
       shouldShowFinishLevel: false,
       isHost: false,
+      hasGameStarted: false,
     };
     await Dynamo.write(data, tableName);
     return Responses._200({ message: "connected" });

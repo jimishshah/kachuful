@@ -19,6 +19,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import IconButton from "@material-ui/core/IconButton";
 import { WhatsappShareButton, WhatsappIcon } from "react-share";
 import ActionBar from "../organisms/action-bar";
+import MenuDrawer from "../organisms/menu-drawer";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
@@ -44,7 +45,6 @@ function GameTemplate({
   sendMessage,
   bidWins,
   throwCard,
-  isGameStarted,
   startGame,
   showAlert,
   scores,
@@ -54,6 +54,8 @@ function GameTemplate({
   openDialogHandler,
   closeDialogHandler,
   refreshHandler,
+  drawer,
+  toggleDrawer,
 }) {
   const linkToShare = `${linkBase}/judgement/${currentUser.tableId}?utm_source=app&utm_medium=whatsapp&utm_campaign=invite`;
   const actionBarProps = {
@@ -61,10 +63,20 @@ function GameTemplate({
     currentUser,
     openDialogHandler,
     refreshHandler,
+    toggleDrawer,
   };
+
+  const menuDrawerProps = {
+    drawer,
+    toggleDrawer,
+    leaveTheTable,
+    openDialogHandler,
+  };
+
+  const { hasGameStarted } = currentUser;
   return (
     <>
-      {!isGameStarted && currentUser.playerName && (
+      {!hasGameStarted && currentUser.playerName && (
         <ProgressSteps activeStep={1} isCreate={currentUser.isHost} />
       )}
       {currentUser.playerName ? (
@@ -75,7 +87,7 @@ function GameTemplate({
                 <UsersList users={users} />
               </StyledGrid>
             </StyledGrid>
-            {isGameStarted && (
+            {hasGameStarted && (
               <StyledGrid item xs={9}>
                 <StyledGrid container spacing={3}>
                   <StyledGrid item xs={12}>
@@ -93,7 +105,7 @@ function GameTemplate({
                 </StyledGrid>
               </StyledGrid>
             )}
-            {!isGameStarted && (
+            {!hasGameStarted && (
               <>
                 <StyledGrid item xs={9}>
                   {currentUser.isHost ? (
@@ -143,7 +155,7 @@ function GameTemplate({
               </>
             )}
           </StyledGrid>
-          {isGameStarted && (
+          {hasGameStarted && (
             <>
               <StyledGrid container spacing={3}>
                 <StyledGrid item xs={12}>
@@ -182,6 +194,7 @@ function GameTemplate({
                 </IconButton>
                 <GameRules />
               </Dialog>
+              <MenuDrawer {...menuDrawerProps} />
             </>
           )}
         </>

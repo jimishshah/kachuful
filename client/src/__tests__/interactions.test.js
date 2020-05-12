@@ -41,6 +41,7 @@ test("should be able to throw correct card", async () => {
       ],
       sequenceNumber: 1,
       hasLevelStarted: true,
+      hasGameStarted: true,
     },
   ]);
   const { getByAltText } = renderComponent(props);
@@ -62,6 +63,7 @@ test("should finish round if everyone have thrown the card and current user is o
       sequenceNumber: 1,
       hasLevelStarted: true,
       tableId: "test-tableId",
+      hasGameStarted: true,
     },
   ]);
   renderComponent(props);
@@ -84,6 +86,7 @@ test("should finish level if server says so and current user is on first sequenc
       hasLevelStarted: true,
       tableId: "test-tableId",
       shouldShowFinishLevel: true,
+      hasGameStarted: true,
     },
   ]);
   renderComponent(props);
@@ -104,6 +107,7 @@ test("should be able to submit my bid", async () => {
       cardsInHand: [{ type: "club", number: "3" }],
       sequenceNumber: 2,
       hasLevelStarted: true,
+      hasGameStarted: true,
     },
   ]);
   const { getByPlaceholderText, getByTestId } = renderComponent(props);
@@ -125,6 +129,7 @@ test("should not be able to submit bid higher than card in hand", async () => {
       cardsInHand: [{ type: "club", number: "3" }],
       sequenceNumber: 2,
       hasLevelStarted: true,
+      hasGameStarted: true,
     },
   ]);
   const { getByPlaceholderText, getByTestId } = renderComponent(props);
@@ -158,8 +163,6 @@ function getProps(users) {
   return {
     connectionId: 123,
     setUsers: jest.fn(),
-    isGameStarted: true,
-    setIsGameStarted: jest.fn(),
     showAlert: false,
     setShowAlert: jest.fn(),
     scores: [],

@@ -13,8 +13,8 @@ const socket = (function () {
   }
 
   return {
-    getInstance: async function () {
-      if (!instance) {
+    getInstance: async function (shouldCreateNewInstance) {
+      if (!instance || shouldCreateNewInstance) {
         instance = await createInstance();
       }
       return instance;

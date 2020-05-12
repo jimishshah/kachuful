@@ -11,26 +11,26 @@ jest.mock("../../../lambdas/common/dynamo", () => ({
         ID: "111",
         domainName: "test-domainName1",
         stage: "int-test",
-        name: "rapunzel"
+        name: "rapunzel",
       },
       {
         ID: "222",
         domainName: "test-domainName2",
         stage: "int-test",
-        name: "elsa"
+        name: "elsa",
       },
       {
         ID: "333",
         domainName: "test-domainName3",
         stage: "int-test",
-        name: "anna"
-      }
-    ]
-  })
+        name: "anna",
+      },
+    ],
+  }),
 }));
 
 jest.mock("../../../lambdas/common/web-socket-message", () => ({
-  send: jest.fn().mockReturnValue(Promise.resolve("something"))
+  send: jest.fn().mockReturnValue(Promise.resolve("something")),
 }));
 test("should send connected users list to every user", async () => {
   // prepare
@@ -39,11 +39,11 @@ test("should send connected users list to every user", async () => {
     requestContext: {
       connectionId,
       domainName: "test-domainName",
-      stage: "test-stage"
-    }
+      stage: "test-stage",
+    },
   };
   global.Date = {
-    now: jest.fn().mockReturnValue(123)
+    now: jest.fn().mockReturnValue(123),
   };
   const expectedDynamowrite = [
     {
@@ -65,9 +65,10 @@ test("should send connected users list to every user", async () => {
       scoreCard: [],
       hasLevelStarted: false,
       shouldShowFinishLevel: false,
-      isHost: false
+      isHost: false,
+      hasGameStarted: false,
     },
-    "sample-table"
+    "sample-table",
   ];
   // act
   await connectHandler(event);

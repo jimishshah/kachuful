@@ -1,7 +1,6 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import Typography from "@material-ui/core/Typography";
 import styled from "@emotion/styled";
 import { DEFAULT_WINS, cardColours } from "../constants";
@@ -9,6 +8,8 @@ import AppBar from "@material-ui/core/AppBar";
 import BidWin from "../organisms/bid-win";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -32,6 +33,7 @@ function ActionBar({
   currentUser,
   openDialogHandler,
   refreshHandler,
+  toggleDrawer,
 }) {
   return (
     <StyledAppBar position="fixed" color="primary">
@@ -46,10 +48,10 @@ function ActionBar({
             onClick={leaveTheTable}
           />
         </Box> */}
-              <Box pr={2} pt={2}>
-                <Button variant="contained" color="secondary">
-                  <HelpOutlineIcon onClick={openDialogHandler} />
-                </Button>
+              <Box pr={2} pt={1.1}>
+                <IconButton color="inherit">
+                  <MenuIcon onClick={toggleDrawer("left", true)} />
+                </IconButton>
               </Box>
               <Box pr={2} pt={2}>
                 <Button variant="contained" color="secondary">

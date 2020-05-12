@@ -19,7 +19,9 @@ jest.mock("react-ga", () => ({
 
 const server = new WS("ws://localhost:3001");
 test("show loading message and call refresh if players are empty", async () => {
-  const props = { ...getProps([]), isGameStarted: false };
+  const props = {
+    ...getProps([]),
+  };
   const { getByText } = renderComponent(props);
   const loadingMessage = getByText("Loading.....");
   expect(loadingMessage).toBeInTheDocument();
@@ -37,6 +39,7 @@ test("should not show enter bid if player has already bidded", () => {
       cardsInHand: [],
       sequenceNumber: 1,
       hasLevelStarted: true,
+      hasGameStarted: true,
     },
   ]);
   const { queryByPlaceholderText } = renderComponent(props);
@@ -53,6 +56,7 @@ test("should show enter bid if player has already bidded", () => {
       cardsInHand: [],
       sequenceNumber: 1,
       hasLevelStarted: true,
+      hasGameStarted: true,
     },
   ]);
   const { getByPlaceholderText } = renderComponent(props);
@@ -69,6 +73,7 @@ test("should show not enter bid if the level has not yet started", () => {
       cardsInHand: [],
       sequenceNumber: 1,
       hasLevelStarted: false,
+      hasGameStarted: true,
     },
   ]);
   const { queryByPlaceholderText } = renderComponent(props);
@@ -85,6 +90,7 @@ test("should display correct users lists", () => {
       cardsInHand: [],
       sequenceNumber: 1,
       hasLevelStarted: false,
+      hasGameStarted: true,
     },
     {
       ID: 456,
@@ -93,6 +99,7 @@ test("should display correct users lists", () => {
       cardsInHand: [],
       sequenceNumber: 1,
       hasLevelStarted: false,
+      hasGameStarted: true,
     },
   ]);
   const { getByText } = renderComponent(props);
@@ -110,6 +117,7 @@ test("should display correct cards on play table and correct waiting for card me
       cardsInHand: [],
       sequenceNumber: 1,
       hasLevelStarted: false,
+      hasGameStarted: true,
     },
     {
       ID: 456,
@@ -118,6 +126,7 @@ test("should display correct cards on play table and correct waiting for card me
       cardsInHand: [],
       sequenceNumber: 2,
       hasLevelStarted: false,
+      hasGameStarted: true,
     },
   ]);
   const { getByAltText, getByText } = renderComponent(props);
@@ -137,6 +146,7 @@ test("should display correct cards in hand", () => {
       ],
       sequenceNumber: 1,
       hasLevelStarted: false,
+      hasGameStarted: true,
     },
   ]);
   const { getByAltText } = renderComponent(props);
@@ -157,6 +167,7 @@ test("should display correct data in score card", () => {
         ],
         sequenceNumber: 1,
         hasLevelStarted: false,
+        hasGameStarted: true,
       },
     ]),
     scores: [{ playerName: "p1", scoreCard: [10, 15, 17, 18, 19, 20, 21] }],
@@ -190,8 +201,6 @@ function getProps(users) {
   return {
     connectionId: 123,
     setUsers: jest.fn(),
-    isGameStarted: true,
-    setIsGameStarted: jest.fn(),
     showAlert: false,
     setShowAlert: jest.fn(),
     scores: [],
