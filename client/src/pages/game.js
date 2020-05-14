@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import GameTemplate from "../templates/game-template";
 import socket from "../socket";
 import { useHistory } from "react-router-dom";
@@ -12,6 +12,7 @@ function Game({
   setShowAlert,
   scores,
   setScores,
+  setConnectionId,
 }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [drawer, setDrawer] = useState({
@@ -38,7 +39,15 @@ function Game({
 
   const leaveTheTable = async () => {
     const ws = await socket.getInstance();
+    ws.send(
+      JSON.stringify({
+        action: "endGame",
+        message: { connectionID: "thisConnection" },
+      })
+    );
+    localStorage.removeItem("connectionID");
     ws.close();
+    setConnectionId(null);
     history.push("/judgement");
   };
 
@@ -111,25 +120,38 @@ function Game({
     );
   };
 
-  const refreshHandler = async (e) => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "refreshData",
-        message: "",
-      })
-    );
-    // check if refresh was called by user interaction
-    if (e) {
-      refreshTimer.current = setTimeout(() => {
-        console.log("timeout is fired");
-        setShowAlert({
-          message: `You are offline, check your network and try again in 5 seconds`,
-          severity: "error",
-        });
-      }, 1500);
-    }
-  };
+  const refreshHandler = useCallback(
+    async (e) => {
+      let ws = await socket.getInstance();
+      if (ws.readyState === WebSocket.CLOSED) {
+        ws = await socket.getInstance(true);
+        const oldConnectionId = localStorage.getItem("connectionID");
+        ws.send(
+          JSON.stringify({
+            action: "reCreateConnection",
+            message: { oldConnectionId },
+          })
+        );
+        return;
+      }
+      ws.send(
+        JSON.stringify({
+          action: "refreshData",
+          message: "",
+        })
+      );
+      // check if refresh was called by user interaction
+      if (e) {
+        refreshTimer.current = setTimeout(() => {
+          setShowAlert({
+            message: `You are offline, check your network and try again in 5 seconds`,
+            severity: "error",
+          });
+        }, 1500);
+      }
+    },
+    [setShowAlert]
+  );
 
   const clearRefreshTimer = () => {
     setTimeout(() => {
@@ -140,6 +162,7 @@ function Game({
   useEffect(() => {
     if (!socket.hasInstance()) {
       history.push("/judgement");
+      return;
     }
     if (users.length === 0) {
       refreshHandler();
@@ -148,8 +171,21 @@ function Game({
       ws.onmessage = function (event) {
         clearRefreshTimer();
         const { players = [], action } = JSON.parse(event.data);
+        if (action === "sendCloseSession") {
+          ws.close();
+          history.push("/judgement");
+          window.location.reload();
+          return;
+        }
         setUsers(players);
         setScores(getScores(players));
+        if (action === "sendRecreateConnection") {
+          const [{ ID: newConnectionId }] = players.filter(
+            ({ oldConnectionId }) => oldConnectionId === currentUserId
+          );
+          setConnectionId(newConnectionId);
+          localStorage.setItem("connectionID", newConnectionId);
+        }
         if (action === "sendFinishRound") {
           const [{ playerName: thisRoundWinner }] = players.filter(
             ({ lastRoundWinner }) => lastRoundWinner === true
@@ -184,14 +220,14 @@ function Game({
       history.go(1);
     });
 
-    window.onbeforeunload = function () {
-      setShowAlert({
-        message:
-          "Don't refresh your page, page refresh will log you out of your game.",
-        severity: "error",
-      });
-      return "You will be logged out of the game, do you want to continue ? ";
-    };
+    // window.onbeforeunload = function () {
+    //   setShowAlert({
+    //     message:
+    //       "Don't refresh your page, page refresh will log you out of your game.",
+    //     severity: "error",
+    //   });
+    //   return "You will be logged out of the game, do you want to continue ? ";
+    // };
 
     return () => {
       clearRefreshTimer();
@@ -203,6 +239,10 @@ function Game({
     setShowAlert,
     setScores,
     setUsers,
+    refreshHandler,
+    setConnectionId,
+    users.length,
+    currentUserId,
   ]);
 
   const props = {
@@ -289,7 +329,9 @@ async function sendMessage() {
 }
 
 function getMyData(users, currentUserId) {
-  const [currentUser = {}] = users.filter((user) => user.ID === currentUserId);
+  const [currentUser = { cardsInHand: [] }] = users.filter(
+    (user) => user.ID === currentUserId
+  );
   const [hostPlayer = { playerName: "" }] = users.filter(
     (user) => user.isHost === true
   );

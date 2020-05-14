@@ -53,14 +53,14 @@ function ActionBar({
                   <MenuIcon onClick={toggleDrawer("left", true)} />
                 </IconButton>
               </Box>
-              <Box pr={2} pt={2}>
+              {/* <Box pr={2} pt={2}>
                 <Button variant="contained" color="secondary">
                   <RefreshIcon
                     onClick={refreshHandler}
                     title="refresh button"
                   />
                 </Button>
-              </Box>
+              </Box> */}
               {currentUser.hasLevelStarted && (
                 <Box pr={2} pt={1} textAlign="center">
                   <StyledImg

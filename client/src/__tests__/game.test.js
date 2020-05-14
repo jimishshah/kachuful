@@ -4,6 +4,7 @@ import Game from "../pages/game";
 import WS from "jest-websocket-mock";
 import { ThemeProvider } from "emotion-theming";
 import { createMuiTheme } from "@material-ui/core/styles";
+import socket from "../socket";
 
 const defaultTheme = createMuiTheme();
 jest.mock("react-router-dom", () => ({
@@ -16,16 +17,27 @@ jest.mock("react-ga", () => ({
   set: jest.fn(),
   pageview: jest.fn(),
 }));
-
 const server = new WS("ws://localhost:3001");
-test("show loading message and call refresh if players are empty", async () => {
+jest.mock("../socket", () => {
+  const instance = {
+    send: jest.fn(),
+    close: jest.fn(),
+  };
+  return {
+    getInstance: () => Promise.resolve(instance),
+    hasInstance: () => true,
+    instance,
+  };
+});
+test("when socket is connected and player are empty should show loading message and call refresh", async () => {
   const props = {
     ...getProps([]),
   };
   const { getByText } = renderComponent(props);
   const loadingMessage = getByText("Loading.....");
   expect(loadingMessage).toBeInTheDocument();
-  await expect(server).toReceiveMessage(
+  const ws = await socket.getInstance();
+  await expect(ws.send).toHaveBeenCalledWith(
     '{"action":"refreshData","message":""}'
   );
 });

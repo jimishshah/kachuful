@@ -17,7 +17,10 @@ function GameRules() {
           </ListItemText>
         </ListItem>
         <ListItem>
-          <ListItemText>2. Trump colour changes on every level</ListItemText>
+          <ListItemText>
+            2. Trump type changes on every level. In rotational order of Spade,
+            Diamond, Club & Heart.
+          </ListItemText>
         </ListItem>
         <ListItem>
           <ListItemText>
@@ -27,16 +30,15 @@ function GameRules() {
         </ListItem>
         <ListItem>
           <ListItemText>
-            4. Each player throws one card, first player's card decides the
-            colour other players should throw, highest card player wins the
-            round
+            4. Each player throws one card, first player's card decides the type
+            other players should throw, highest card player wins the round
           </ListItemText>
         </ListItem>
         <ListItem>
           <ListItemText>
-            5. If player don't have same colour card, she can use Trump colour
-            card and that takes precedence, if player don't have Trump colour
-            card she can throw any card
+            5. If player don't have same type card then Trump type could be
+            thrown and that takes precedence, if player don't have Trump type
+            card then any card can be thrown
           </ListItemText>
         </ListItem>
         <ListItem>

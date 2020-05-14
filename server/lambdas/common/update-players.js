@@ -7,14 +7,15 @@ async function updatePlayers({ action = "sendPlayers", tableId }) {
   const players = records.Items.map((player) => player);
 
   //send connected users list to all the users
-  const messages = records.Items.map(
-    ({ ID: connectionID, domainName, stage }) =>
-      WebSocket.send({
-        domainName,
-        stage,
-        connectionID,
-        message: JSON.stringify({ players, action }),
-      })
+  const messages = records.Items.filter(
+    ({ isDisconnected }) => !Boolean(isDisconnected)
+  ).map(({ ID: connectionID, domainName, stage }) =>
+    WebSocket.send({
+      domainName,
+      stage,
+      connectionID,
+      message: JSON.stringify({ players, action }),
+    })
   );
   await Promise.all(messages);
 }

@@ -33,7 +33,9 @@ const StyledContainer = styled(Container)`
 `;
 
 function App() {
-  const [connectionId, setConnectionId] = useState();
+  const [connectionId, setConnectionId] = useState(
+    localStorage.getItem("connectionID")
+  );
 
   const [users, setUsers] = useState([]);
   const [showAlert, setShowAlert] = useState({});

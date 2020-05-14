@@ -23,6 +23,8 @@ export const userMock = [
     shouldShowFinishLevel: false,
     isHost: true,
     hasGameStarted: true,
+    oldConnectionId: true,
+    isDisconnected: false,
   },
   {
     playerName: "Sujana",
@@ -43,6 +45,8 @@ export const userMock = [
     shouldShowFinishLevel: false,
     isHost: false,
     hasGameStarted: true,
+    oldConnectionId: true,
+    isDisconnected: false,
   },
   {
     playerName: "Hardik",
@@ -64,6 +68,8 @@ export const userMock = [
     shouldShowFinishLevel: false,
     isHost: false,
     hasGameStarted: true,
+    oldConnectionId: true,
+    isDisconnected: false,
   },
   {
     playerName: "Hiren",
@@ -85,6 +91,8 @@ export const userMock = [
     shouldShowFinishLevel: false,
     isHost: false,
     hasGameStarted: true,
+    oldConnectionId: true,
+    isDisconnected: false,
   },
   {
     playerName: "Malav",
@@ -106,6 +114,8 @@ export const userMock = [
     shouldShowFinishLevel: false,
     isHost: false,
     hasGameStarted: true,
+    oldConnectionId: true,
+    isDisconnected: false,
   },
   {
     playerName: "Meghana",
@@ -127,5 +137,7 @@ export const userMock = [
     shouldShowFinishLevel: false,
     isHost: false,
     hasGameStarted: true,
+    oldConnectionId: true,
+    isDisconnected: false,
   },
 ];

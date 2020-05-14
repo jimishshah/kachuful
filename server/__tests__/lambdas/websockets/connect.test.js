@@ -56,7 +56,7 @@ test("should send connected users list to every user", async () => {
       domainName: "test-domainName",
       lastLevel: null,
       lastTrumpColour: null,
-      playerName: null,
+      playerName: false,
       stage: "test-stage",
       tableId: null,
       wins: { currentWins: 99, expectedWins: 99 },
@@ -67,6 +67,8 @@ test("should send connected users list to every user", async () => {
       shouldShowFinishLevel: false,
       isHost: false,
       hasGameStarted: false,
+      oldConnectionId: false,
+      isDisconnected: false,
     },
     "sample-table",
   ];

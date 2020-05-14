@@ -21,6 +21,7 @@ exports.handler = async (event) => {
       ...oldPlayerRow,
       ID: newConnectionId,
       oldConnectionId,
+      isDisconnected: false,
     };
 
     await Promise.all([
@@ -32,13 +33,21 @@ exports.handler = async (event) => {
 
     const records = await Dynamo.scan(tableName, "tableId", tableId);
     const players = records.Items.map((player) => player);
-
     await WebSocket.send({
       domainName,
       stage,
       connectionID: newConnectionId,
       message: JSON.stringify({ players, action: "sendRecreateConnection" }),
     });
+
+    if (!oldPlayerRow.isDisconnected) {
+      await WebSocket.send({
+        domainName,
+        stage,
+        connectionID: oldConnectionId,
+        message: JSON.stringify({ players, action: "sendCloseSession" }),
+      });
+    }
     return Responses._200({ message: "connected" });
   } catch (e) {
     console.log(e);

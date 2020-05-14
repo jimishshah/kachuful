@@ -97,6 +97,11 @@ functions:
     events:
       - websocket:
           route: finishLevel
+  websocket-endGame:
+    handler: lambdas/websockets/end-game.handler
+    events:
+      - websocket:
+          route: endGame
 
 resources:
   Resources:
