@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 import ProgressSteps from "../organisms/progress-steps";
 import GameRules from "../organisms/game-rules";
 import Box from "@material-ui/core/Box";
+import ReactGA from "react-ga";
 
 const StyledTextField = styled(TextField)`
   width: 100%;
@@ -28,6 +29,10 @@ function HomeJudgement({ setConnectionId, connectionId }) {
         action: "getConnectionId",
       })
     );
+    ReactGA.event({
+      category: "Button",
+      action: "Create / Join Game",
+    });
     ws.onmessage = async function (event) {
       const { connectionID } = JSON.parse(event.data);
       setConnectionId(connectionID);
@@ -52,6 +57,10 @@ function HomeJudgement({ setConnectionId, connectionId }) {
         message: { oldConnectionId: connectionId },
       })
     );
+    ReactGA.event({
+      category: "Button",
+      action: "Resume Game",
+    });
     history.push("/judgement/game");
   };
 
@@ -72,6 +81,10 @@ function HomeJudgement({ setConnectionId, connectionId }) {
     localStorage.removeItem("connectionID");
     ws.close();
     setConnectionId(null);
+    ReactGA.event({
+      category: "Button",
+      action: "End old Game",
+    });
     const redirectUrl = tableId ? `/judgement/${tableId}` : "/judgement";
     history.push(redirectUrl);
   };

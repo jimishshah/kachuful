@@ -13,6 +13,10 @@ import { createBrowserHistory } from "history";
 import Home from "./pages/home";
 
 const trackingId = "UA-164323461-1"; // Replace with your Google Analytics tracking ID
+// ReactGA.initialize(trackingId, {
+//   debug: true,
+//   gaOptions: { cookieFlags: "max-age=7200;secure;samesite=none" },
+// });
 ReactGA.initialize(trackingId);
 
 const history = createBrowserHistory();

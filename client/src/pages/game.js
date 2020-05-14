@@ -3,6 +3,7 @@ import GameTemplate from "../templates/game-template";
 import socket from "../socket";
 import { useHistory } from "react-router-dom";
 import { DEFAULT_WINS } from "../constants";
+import ReactGA from "react-ga";
 
 function Game({
   connectionId: currentUserId,
@@ -48,6 +49,10 @@ function Game({
     localStorage.removeItem("connectionID");
     ws.close();
     setConnectionId(null);
+    ReactGA.event({
+      category: "Menu",
+      action: "Exit Game",
+    });
     history.push("/judgement");
   };
 
@@ -97,6 +102,10 @@ function Game({
   };
 
   const openDialogHandler = () => {
+    ReactGA.event({
+      category: "Menu",
+      action: "Help",
+    });
     setOpenDialog(true);
   };
   const closeDialogHandler = () => {
@@ -285,6 +294,11 @@ async function finishLevel(currentUser) {
       message: { tableId: currentUser.tableId },
     })
   );
+  ReactGA.event({
+    category: "Game",
+    action: "Finish Level",
+    value: currentUser.lastLevel,
+  });
 }
 async function finishRound(currentUser) {
   setTimeout(async () => {
@@ -306,6 +320,10 @@ async function startGame(currentUser) {
       message: { tableId: currentUser.tableId },
     })
   );
+  ReactGA.event({
+    category: "Button",
+    action: "Start Game",
+  });
 }
 
 async function distributeCards(currentUser) {

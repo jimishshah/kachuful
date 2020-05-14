@@ -20,6 +20,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { WhatsappShareButton, WhatsappIcon } from "react-share";
 import ActionBar from "../organisms/action-bar";
 import MenuDrawer from "../organisms/menu-drawer";
+import ReactGA from "react-ga";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
@@ -134,7 +135,16 @@ function GameTemplate({
                     {linkToShare}
                   </Box>
                   <CopyToClipboard text={linkToShare}>
-                    <StyledButton variant="contained" color="secondary">
+                    <StyledButton
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        ReactGA.event({
+                          category: "Button",
+                          action: "Copy Link",
+                        });
+                      }}
+                    >
                       Copy Link
                     </StyledButton>
                   </CopyToClipboard>
@@ -147,7 +157,16 @@ function GameTemplate({
                         title="Join our game"
                         url={linkToShare}
                       >
-                        <WhatsappIcon size={45} round={true} />
+                        <WhatsappIcon
+                          size={45}
+                          round={true}
+                          onClick={() => {
+                            ReactGA.event({
+                              category: "Button",
+                              action: "Whatsapp share",
+                            });
+                          }}
+                        />
                       </WhatsappShareButton>
                     </Box>
                   )}
