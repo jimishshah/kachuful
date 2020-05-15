@@ -57,6 +57,7 @@ function GameTemplate({
   refreshHandler,
   drawer,
   toggleDrawer,
+  messageUs,
 }) {
   const linkToShare = `${linkBase}/judgement/${currentUser.tableId}?utm_source=app&utm_medium=whatsapp&utm_campaign=invite`;
   const actionBarProps = {
@@ -72,6 +73,7 @@ function GameTemplate({
     toggleDrawer,
     leaveTheTable,
     openDialogHandler,
+    messageUs,
   };
 
   const { hasGameStarted } = currentUser;

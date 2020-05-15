@@ -16,6 +16,7 @@ jest.mock("react-ga", () => ({
   initialize: jest.fn(),
   set: jest.fn(),
   pageview: jest.fn(),
+  event: jest.fn(),
 }));
 jest.mock("../socket", () => {
   const instance = {

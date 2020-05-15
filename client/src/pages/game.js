@@ -273,11 +273,19 @@ function Game({
     refreshHandler,
     drawer,
     toggleDrawer,
+    messageUs,
   };
   return <GameTemplate {...props} />;
 }
 
 export default Game;
+
+function messageUs() {
+  ReactGA.event({
+    category: "Button",
+    action: "Send Feedback",
+  });
+}
 
 function getScores(players) {
   return players.map(({ playerName, scoreCard }) => ({
