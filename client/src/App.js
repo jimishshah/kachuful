@@ -24,12 +24,15 @@ history.listen((location) => {
   ReactGA.set({ page: location.pathname }); // Update the user's current page
   ReactGA.pageview(location.pathname); // Record a pageview for the given page
 });
-// const defaultTheme = createMuiTheme({
-//   palette: {
-//     primary: { main: "#175676" }, // 2274A5 // use rubik fonts
-//   },
-// });
-const defaultTheme = createMuiTheme();
+const defaultTheme = createMuiTheme({
+  palette: {
+    primary: { main: "#0a2463" }, // 254E70 2274A5 // use rubik fonts
+  },
+  typography: {
+    fontFamily: ["Rubik"],
+  },
+});
+// const defaultTheme = createMuiTheme();
 
 const StyledContainer = styled(Container)`
   padding-top: ${({ theme }) => theme.spacing(2)}px;
