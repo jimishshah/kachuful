@@ -13,7 +13,7 @@ exports.handler = async (event) => {
     console.log({ connectionID });
     const data = {
       ID: connectionID,
-      date: Date.now(),
+      date: new Date().toGMTString(),
       domainName,
       stage,
       tableId: null,
