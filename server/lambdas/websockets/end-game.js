@@ -15,21 +15,23 @@ exports.handler = async (event) => {
         ? thisConnectionID
         : initialConnectionID;
     const { tableId } = await Dynamo.get(connectionID, tableName);
+    const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
     await Dynamo.delete(connectionID, tableName);
-    await updateSequence(tableId);
-    await updatePlayers({ tableId });
+    const newPlayers = players.filter((player) => player.ID !== connectionID);
+    const updatedPlayers = await updateSequence(newPlayers);
+    await updatePlayers({ players: updatedPlayers });
     return Responses._200({ message: "sendPlayers" });
   } catch (e) {
     console.log(e);
   }
 };
 
-async function updateSequence(tableId) {
-  const records = await Dynamo.scan(tableName, "tableId", tableId);
-  const writeToDB = records.Items.sort((a, b) =>
-    Number(a.sequenceNumber) > Number(b.sequenceNumber) ? 1 : -1
-  ).map((player, index) =>
-    Dynamo.write({ ...player, sequenceNumber: index + 1 }, tableName)
-  );
-  await Promise.all(writeToDB);
+async function updateSequence(players) {
+  const updatedPlayers = players
+    .sort((a, b) =>
+      Number(a.sequenceNumber) > Number(b.sequenceNumber) ? 1 : -1
+    )
+    .map((player, index) => ({ ...player, sequenceNumber: index + 1 }));
+  await Dynamo.batchWrite(updatedPlayers, tableName);
+  return updatedPlayers;
 }

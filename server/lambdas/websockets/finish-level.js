@@ -4,15 +4,15 @@ const Responses = require("../common/api-responses");
 
 const tableName = process.env.tableName;
 
-exports.handler = async event => {
+exports.handler = async (event) => {
   const {
-    message: { tableId }
+    message: { tableId },
   } = JSON.parse(event.body);
   const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
 
-  const writeToDB = players.map(player => {
+  const updatedPlayers = players.map((player) => {
     const {
-      wins: { expectedWins, currentWins }
+      wins: { expectedWins, currentWins },
     } = player;
     const thisLevelScore =
       Number(expectedWins) === Number(currentWins)
@@ -23,11 +23,11 @@ exports.handler = async event => {
       scoreCard: [...player.scoreCard, thisLevelScore],
       wins: { expectedWins: 99, currentWins: 99 },
       hasLevelStarted: false,
-      shouldShowFinishLevel: false
+      shouldShowFinishLevel: false,
     };
-    return Dynamo.write(updatedPlayer, tableName);
+    return updatedPlayer;
   });
-  await Promise.all(writeToDB);
-  await updatePlayers({ tableId });
+  await Dynamo.batchWrite(updatedPlayers, tableName);
+  await updatePlayers({ players: updatedPlayers });
   return Responses._200({ message: "got a message" });
 };

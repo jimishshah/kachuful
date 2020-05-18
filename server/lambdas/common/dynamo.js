@@ -47,6 +47,28 @@ const Dynamo = {
 
     return data;
   },
+  async batchWrite(data, TableName) {
+    if (data.length > 0) {
+      const itemsArray = data.map((Item) => ({
+        PutRequest: {
+          Item,
+        },
+      }));
+      const params = {
+        RequestItems: {
+          [TableName]: itemsArray,
+        },
+      };
+
+      const res = await documentClient.batchWrite(params).promise();
+
+      if (!res) {
+        throw Error(`There was an error udpating data in table ${TableName}`);
+      }
+
+      return data;
+    }
+  },
 
   async delete(ID, TableName) {
     const params = {

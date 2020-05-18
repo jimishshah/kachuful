@@ -45,7 +45,7 @@ exports.handler = async (event) => {
     { ID: winningPlayerID, sequenceNumber: winningPlayerSequenceNumber },
   ] = getWinningPlayer(data);
   const totalPlayers = players.length;
-  const writeToDB = players.map((player) => {
+  const updatedPlayers = players.map((player) => {
     let updatedPlayer = {
       ...player,
       cardThrown: null,
@@ -67,11 +67,11 @@ exports.handler = async (event) => {
         },
       };
     }
-    return Dynamo.write(updatedPlayer, tableName);
+    return updatedPlayer;
   });
-  await Promise.all(writeToDB);
+  await Dynamo.batchWrite(updatedPlayers, tableName);
 
-  await updatePlayers({ action: "sendFinishRound", tableId });
+  await updatePlayers({ action: "sendFinishRound", players: updatedPlayers });
 
   return Responses._200({ message: "got a message" });
 };
