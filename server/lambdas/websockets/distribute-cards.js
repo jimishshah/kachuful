@@ -10,23 +10,35 @@ exports.handler = async (event) => {
     const {
       message: { tableId },
     } = JSON.parse(event.body);
-    const records = await Dynamo.scan(tableName, "tableId", tableId);
+    const { Items: intialPlayers } = await Dynamo.scan(
+      tableName,
+      "tableId",
+      tableId
+    );
 
-    const { players } = getPlayers(records);
-
-    await Dynamo.batchWrite(players, tableName);
-
-    await updatePlayers({ players });
-    return Responses._200({ message: "got a message" });
+    const response = await distributeCards(intialPlayers);
+    return response;
   } catch (e) {
     console.log(e);
   }
 };
 
-function getPlayers(records) {
+module.exports = distributeCards;
+
+async function distributeCards(intialPlayers) {
+  const { players } = getPlayers(intialPlayers);
+
+  await Dynamo.batchWrite(players, tableName);
+  const { lastLevel } = players[0];
+  const action = lastLevel > 1 ? "sendFinishRound" : null;
+  await updatePlayers({ players, action });
+  return Responses._200({ message: "got a message" });
+}
+
+function getPlayers(intialPlayers) {
   try {
-    const cardDeck = getCardsDeck(records.Items.length);
-    return records.Items.reduce(
+    const cardDeck = getCardsDeck(intialPlayers.length);
+    return intialPlayers.reduce(
       (acc, currRecord) => {
         const {
           playerName,

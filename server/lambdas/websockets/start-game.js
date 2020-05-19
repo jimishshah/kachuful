@@ -1,8 +1,7 @@
 const Responses = require("../common/api-responses");
 const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
-const getPlayerWithMessage = require("../common/get-player-with-message");
-
+const distributeCards = require("./distribute-cards");
 const tableName = process.env.tableName;
 
 exports.handler = async (event) => {
@@ -17,11 +16,8 @@ exports.handler = async (event) => {
       sequenceNumber: index + 1,
       hasGameStarted: true,
     }));
-
-    await Dynamo.batchWrite(editedPlayers, tableName);
-
-    await updatePlayers({ action: "sendStartGame", players: editedPlayers });
-    return Responses._200({ message: "got a message" });
+    const response = await distributeCards(editedPlayers);
+    return response;
   } catch (error) {
     console.log(error);
     return Responses._400({ message: "message could not be received" });

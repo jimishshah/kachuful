@@ -12,10 +12,13 @@ const StyledPaper = styled(Paper)`
   width: ${({ theme }) => theme.spacing(6)}px;
   margin: 0 auto;
   position: relative;
+  min-height: 69px;
 `;
 
 const StyledTypography = styled(Typography)`
-  line-height: normal;
+  line-height: 1;
+  font-size: 0.9rem;
+  text-align: center;
 `;
 
 function Card({ text, type, badge, onClick = () => {} }) {

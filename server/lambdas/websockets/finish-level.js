@@ -1,6 +1,7 @@
 const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
 const Responses = require("../common/api-responses");
+const distributeCards = require("./distribute-cards");
 
 const tableName = process.env.tableName;
 
@@ -9,7 +10,13 @@ exports.handler = async (event) => {
     message: { tableId },
   } = JSON.parse(event.body);
   const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
+  const response = await finishLevel(players);
+  return response;
+};
 
+module.exports = finishLevel;
+
+async function finishLevel(players) {
   const updatedPlayers = players.map((player) => {
     const {
       wins: { expectedWins, currentWins },
@@ -27,7 +34,7 @@ exports.handler = async (event) => {
     };
     return updatedPlayer;
   });
-  await Dynamo.batchWrite(updatedPlayers, tableName);
-  await updatePlayers({ players: updatedPlayers });
+
+  await distributeCards(updatedPlayers);
   return Responses._200({ message: "got a message" });
-};
+}

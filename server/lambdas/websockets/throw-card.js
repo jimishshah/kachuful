@@ -2,6 +2,7 @@ const Responses = require("../common/api-responses");
 const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
 const getPlayerWithMessage = require("../common/get-player-with-message");
+const finishRound = require("./finish-round");
 
 const tableName = process.env.tableName;
 
@@ -36,7 +37,19 @@ exports.handler = async (event) => {
     };
     await Dynamo.write(data, tableName);
     const { tableId } = data;
-    await updatePlayers({ tableId });
+
+    const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
+    const playersThatHaveThrownCard = players.filter(
+      ({ cardThrown }) => cardThrown !== null
+    );
+
+    const hasEveryoneThrownCard =
+      players.length === playersThatHaveThrownCard.length;
+
+    await updatePlayers({ players });
+    if (hasEveryoneThrownCard) {
+      await finishRound(players);
+    }
     console.log(`${cardThrown} card Thrown added`);
     return Responses._200({ message: "got a message" });
   } catch (error) {

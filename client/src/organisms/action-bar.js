@@ -6,8 +6,6 @@ import styled from "@emotion/styled";
 import { DEFAULT_WINS, cardColours } from "../constants";
 import AppBar from "@material-ui/core/AppBar";
 import BidWin from "../organisms/bid-win";
-import RefreshIcon from "@material-ui/icons/Refresh";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 

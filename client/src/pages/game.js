@@ -24,7 +24,7 @@ function Game({
   });
   const onEveryonePlayed = () => {};
   const history = useHistory();
-  const refreshTimer = useRef(null);
+  const timer = useRef(null);
 
   const {
     currentUser,
@@ -129,44 +129,26 @@ function Game({
     );
   };
 
-  const refreshHandler = useCallback(
-    async (e) => {
-      let ws = await socket.getInstance();
-      if (ws.readyState === WebSocket.CLOSED) {
-        ws = await socket.getInstance(true);
-        const oldConnectionId = localStorage.getItem("connectionID");
-        ws.send(
-          JSON.stringify({
-            action: "reCreateConnection",
-            message: { oldConnectionId },
-          })
-        );
-        return;
-      }
+  const refreshHandler = useCallback(async (e) => {
+    let ws = await socket.getInstance();
+    if (ws.readyState === WebSocket.CLOSED) {
+      ws = await socket.getInstance(true);
+      const oldConnectionId = localStorage.getItem("connectionID");
       ws.send(
         JSON.stringify({
-          action: "refreshData",
-          message: "",
+          action: "reCreateConnection",
+          message: { oldConnectionId },
         })
       );
-      // check if refresh was called by user interaction
-      if (e) {
-        refreshTimer.current = setTimeout(() => {
-          setShowAlert({
-            message: `You are offline, check your network and try again in 5 seconds`,
-            severity: "error",
-          });
-        }, 1500);
-      }
-    },
-    [setShowAlert]
-  );
-
-  const clearRefreshTimer = () => {
-    setTimeout(() => {
-      clearInterval(refreshTimer.current);
-    }, 0);
-  };
+      return;
+    }
+    ws.send(
+      JSON.stringify({
+        action: "refreshData",
+        message: "",
+      })
+    );
+  }, []);
 
   useEffect(() => {
     if (!socket.hasInstance()) {
@@ -178,7 +160,6 @@ function Game({
     }
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {
-        clearRefreshTimer();
         const { players = [], action } = JSON.parse(event.data);
         if (action === "sendCloseSession") {
           ws.close();
@@ -186,8 +167,6 @@ function Game({
           window.location.reload();
           return;
         }
-        setUsers(players);
-        setScores(getScores(players));
         if (action === "sendRecreateConnection") {
           const [{ ID: newConnectionId }] = players.filter(
             ({ oldConnectionId }) => oldConnectionId === currentUserId
@@ -203,43 +182,25 @@ function Game({
             message: `Round winner is ${thisRoundWinner}`,
             severity: "success",
           });
+
+          timer.current = setTimeout(() => {
+            setUsers(players);
+            setScores(getScores(players));
+          }, 1700);
+        } else {
+          setUsers(players);
+          setScores(getScores(players));
         }
       };
     });
-    if (hasEveryoneThrownCard && Number(currentUser.sequenceNumber) === 1) {
-      finishRound(currentUser);
-    }
-
-    if (
-      currentUser.shouldShowFinishLevel &&
-      Number(currentUser.sequenceNumber) === 1
-    ) {
-      finishLevel(currentUser);
-    }
-
-    if (
-      !currentUser.hasLevelStarted &&
-      Number(currentUser.sequenceNumber) === 1
-    ) {
-      distributeCards(currentUser);
-    }
 
     window.addEventListener("popstate", (e) => {
       // Nope, go back to your page
       history.go(1);
     });
 
-    // window.onbeforeunload = function () {
-    //   setShowAlert({
-    //     message:
-    //       "Don't refresh your page, page refresh will log you out of your game.",
-    //     severity: "error",
-    //   });
-    //   return "You will be logged out of the game, do you want to continue ? ";
-    // };
-
     return () => {
-      clearRefreshTimer();
+      clearTimeout(timer.current);
     };
   }, [
     history,
@@ -294,32 +255,6 @@ function getScores(players) {
   }));
 }
 
-async function finishLevel(currentUser) {
-  const ws = await socket.getInstance();
-  ws.send(
-    JSON.stringify({
-      action: "finishLevel",
-      message: { tableId: currentUser.tableId },
-    })
-  );
-  ReactGA.event({
-    category: "Game",
-    action: "Finish Level",
-    value: currentUser.lastLevel,
-  });
-}
-async function finishRound(currentUser) {
-  setTimeout(async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "finishRound",
-        message: { tableId: currentUser.tableId },
-      })
-    );
-  }, 1000);
-}
-
 async function startGame(currentUser) {
   const ws = await socket.getInstance();
   ws.send(
@@ -332,16 +267,6 @@ async function startGame(currentUser) {
     category: "Button",
     action: "Start Game",
   });
-}
-
-async function distributeCards(currentUser) {
-  const ws = await socket.getInstance();
-  ws.send(
-    JSON.stringify({
-      action: "distributeCards",
-      message: { tableId: currentUser.tableId },
-    })
-  );
 }
 
 async function sendMessage() {

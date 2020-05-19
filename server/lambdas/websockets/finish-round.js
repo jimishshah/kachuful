@@ -2,6 +2,7 @@ const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
 const getNewSequenceNumber = require("../../helpers/get-new-sequence-number");
 const Responses = require("../common/api-responses");
+const finishLevel = require("./finish-level");
 
 const tableName = process.env.tableName;
 
@@ -26,6 +27,13 @@ exports.handler = async (event) => {
     message: { tableId },
   } = JSON.parse(event.body);
   const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
+  const response = await finishRound(players);
+  return response;
+};
+
+module.exports = finishRound;
+
+async function finishRound(players) {
   const data = players.map(
     ({
       ID,
@@ -69,12 +77,23 @@ exports.handler = async (event) => {
     }
     return updatedPlayer;
   });
-  await Dynamo.batchWrite(updatedPlayers, tableName);
 
-  await updatePlayers({ action: "sendFinishRound", players: updatedPlayers });
+  const shouldShowFinishLevel = Boolean(
+    updatedPlayers.filter(({ shouldShowFinishLevel }) =>
+      Boolean(shouldShowFinishLevel)
+    ).length
+  );
+
+  if (shouldShowFinishLevel) {
+    await finishLevel(updatedPlayers);
+  } else {
+    await Dynamo.batchWrite(updatedPlayers, tableName);
+
+    await updatePlayers({ action: "sendFinishRound", players: updatedPlayers });
+  }
 
   return Responses._200({ message: "got a message" });
-};
+}
 
 function getWinningPlayer(data) {
   const winningTrumpThrower = getWinningPlayerByColour(
