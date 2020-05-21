@@ -2,6 +2,7 @@ const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
 const Responses = require("../common/api-responses");
 const distributeCards = require("./distribute-cards");
+const logger = require("../common/logger");
 
 const tableName = process.env.tableName;
 
@@ -25,9 +26,18 @@ async function finishLevel(players) {
       Number(expectedWins) === Number(currentWins)
         ? Number(expectedWins) + 10
         : 0;
+    logger({
+      message: "finish-level.js: 30",
+      debug_type: "WRONG_SCORE",
+      expectedWins,
+      currentWins,
+      thisLevelScore,
+      result: Number(expectedWins) === Number(currentWins),
+    });
     const updatedPlayer = {
       ...player,
-      scoreCard: [...player.scoreCard, thisLevelScore],
+      oldPlayerDetails: { ...player.oldPlayerDetails },
+      scoreCard: [...player.oldPlayerDetails.scoreCard, thisLevelScore],
       wins: { expectedWins: 99, currentWins: 99 },
       hasLevelStarted: false,
       shouldShowFinishLevel: false,

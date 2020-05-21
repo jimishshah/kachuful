@@ -3,6 +3,7 @@ const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
 const getPlayerWithMessage = require("../common/get-player-with-message");
 const finishRound = require("./finish-round");
+const logger = require("../common/logger");
 
 const tableName = process.env.tableName;
 
@@ -31,21 +32,26 @@ exports.handler = async (event) => {
     );
 
     const data = {
-      ...player,
+      oldPlayerDetails: { ...player },
       cardThrown,
       cardsInHand: newCardsInHand,
     };
-    await Dynamo.write(data, tableName);
-    const { tableId } = data;
+    await Dynamo.update([data], tableName);
+    const { tableId } = data.oldPlayerDetails;
 
     const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
-    const playersThatHaveThrownCard = players.filter(
-      ({ cardThrown }) => cardThrown !== null
+    const playersThatHaveThrownCard = players.filter(({ cardThrown }) =>
+      Boolean(cardThrown)
     );
 
     const hasEveryoneThrownCard =
       players.length === playersThatHaveThrownCard.length;
 
+    logger({
+      message: "throw-card.js: 51",
+      debug_type: "STALE_CARD",
+      players,
+    });
     await updatePlayers({ players });
     if (hasEveryoneThrownCard) {
       await finishRound(players);

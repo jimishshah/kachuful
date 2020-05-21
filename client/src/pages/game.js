@@ -25,6 +25,7 @@ function Game({
   const onEveryonePlayed = () => {};
   const history = useHistory();
   const timer = useRef(null);
+  const disableStartButton = useRef(false);
 
   const {
     currentUser,
@@ -150,14 +151,31 @@ function Game({
     );
   }, []);
 
+  const startGame = async (currentUser) => {
+    if (!disableStartButton.current) {
+      disableStartButton.current = true;
+      const ws = await socket.getInstance();
+      ws.send(
+        JSON.stringify({
+          action: "startGame",
+          message: { tableId: currentUser.tableId },
+        })
+      );
+      ReactGA.event({
+        category: "Button",
+        action: "Start Game",
+      });
+    }
+  };
+
   useEffect(() => {
     if (!socket.hasInstance()) {
       history.push("/judgement");
       return;
     }
-    if (users.length === 0) {
-      refreshHandler();
-    }
+    // if (users.length === 0) {
+    //   refreshHandler();
+    // }
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {
         const { players = [], action } = JSON.parse(event.data);
@@ -253,20 +271,6 @@ function getScores(players) {
     playerName,
     scoreCard,
   }));
-}
-
-async function startGame(currentUser) {
-  const ws = await socket.getInstance();
-  ws.send(
-    JSON.stringify({
-      action: "startGame",
-      message: { tableId: currentUser.tableId },
-    })
-  );
-  ReactGA.event({
-    category: "Button",
-    action: "Start Game",
-  });
 }
 
 async function sendMessage() {

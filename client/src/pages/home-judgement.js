@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { useHistory, useParams } from "react-router-dom";
@@ -20,73 +20,85 @@ function HomeJudgement({ setConnectionId, connectionId }) {
   const history = useHistory();
   const [playerName, setPlayerName] = useState("");
   const { tableId } = useParams();
+  const disableSubmitButton = useRef(false);
+  const disabledResumeGameButton = useRef(false);
+  const disabledendOldGameButton = useRef(false);
   const joinTheTable = async (e) => {
     e.preventDefault();
-    const ws = await socket.getInstance(true);
-    ws.send(
-      JSON.stringify({
-        message: "",
-        action: "getConnectionId",
-      })
-    );
-    ReactGA.event({
-      category: "Button",
-      action: "Create / Join Game",
-    });
-    ws.onmessage = async function (event) {
-      const { connectionID } = JSON.parse(event.data);
-      setConnectionId(connectionID);
-      localStorage.setItem("connectionID", connectionID);
-      if (Boolean(playerName)) {
-        ws.send(
-          JSON.stringify({
-            message: { playerName: playerName.slice(0, 6), tableId },
-            action: "sendName",
-          })
-        );
-        history.push("/judgement/game");
-      }
-    };
+    if (!disableSubmitButton.current) {
+      disableSubmitButton.current = true;
+      const ws = await socket.getInstance(true);
+      ws.send(
+        JSON.stringify({
+          message: "",
+          action: "getConnectionId",
+        })
+      );
+      ReactGA.event({
+        category: "Button",
+        action: "Create / Join Game",
+      });
+      ws.onmessage = async function (event) {
+        const { connectionID } = JSON.parse(event.data);
+        setConnectionId(connectionID);
+        localStorage.setItem("connectionID", connectionID);
+        if (Boolean(playerName)) {
+          ws.send(
+            JSON.stringify({
+              message: { playerName: playerName.slice(0, 6), tableId },
+              action: "sendName",
+            })
+          );
+          history.push("/judgement/game");
+        }
+      };
+    }
   };
 
   const resumeGame = async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "reCreateConnection",
-        message: { oldConnectionId: connectionId },
-      })
-    );
-    ReactGA.event({
-      category: "Button",
-      action: "Resume Game",
-    });
-    history.push("/judgement/game");
+    if (!disabledResumeGameButton.current) {
+      disabledResumeGameButton.current = true;
+      const ws = await socket.getInstance();
+      ws.send(
+        JSON.stringify({
+          action: "reCreateConnection",
+          message: { oldConnectionId: connectionId },
+        })
+      );
+      ReactGA.event({
+        category: "Button",
+        action: "Resume Game",
+      });
+      history.push("/judgement/game");
+    }
   };
 
   const endOldGame = async () => {
-    const ws = await socket.getInstance();
-    ws.send(
-      JSON.stringify({
-        action: "endGame",
-        message: { connectionID: connectionId },
-      })
-    );
-    ws.send(
-      JSON.stringify({
-        action: "endGame",
-        message: { connectionID: "thisConnection" },
-      })
-    );
-    localStorage.removeItem("connectionID");
-    ws.close();
-    setConnectionId(null);
-    ReactGA.event({
-      category: "Button",
-      action: "End old Game",
-    });
-    const redirectUrl = tableId ? `/judgement/${tableId}` : "/judgement";
-    history.push(redirectUrl);
+    if (!disabledendOldGameButton.current) {
+      disabledendOldGameButton.current = true;
+      const ws = await socket.getInstance();
+      ws.send(
+        JSON.stringify({
+          action: "endGame",
+          message: { connectionID: connectionId },
+        })
+      );
+      ws.send(
+        JSON.stringify({
+          action: "endGame",
+          message: { connectionID: "thisConnection" },
+        })
+      );
+      localStorage.removeItem("connectionID");
+      ws.close();
+      setConnectionId(null);
+      ReactGA.event({
+        category: "Button",
+        action: "End old Game",
+      });
+      const redirectUrl = tableId ? `/judgement/${tableId}` : "/judgement";
+      history.push(redirectUrl);
+    }
   };
 
   return (

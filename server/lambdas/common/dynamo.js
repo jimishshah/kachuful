@@ -69,6 +69,42 @@ const Dynamo = {
       return data;
     }
   },
+  async update(data, TableName) {
+    if (data.length > 0) {
+      const updates = data.map((Item) => {
+        const { oldPlayerDetails, ...otherItemData } = Item;
+        const { ID } = oldPlayerDetails;
+        const UpdateExpressionArray = Object.keys(otherItemData).map(
+          (attributeName, index) => `${attributeName} = :x${index}`
+        );
+        const ExpressionAttributeValues = Object.values(otherItemData).reduce(
+          (acc, attributeValue, index) => {
+            const value = {
+              [`:x${index}`]: attributeValue,
+            };
+            return { ...acc, ...value };
+          },
+          {}
+        );
+        const params = {
+          TableName,
+          Key: {
+            ID,
+          },
+          UpdateExpression: `set ${UpdateExpressionArray.join(", ")}`,
+          ExpressionAttributeValues,
+        };
+        return documentClient.update(params).promise();
+      });
+      return Promise.all(updates);
+
+      // if (!res) {
+      //   throw Error(`There was an error udpating data in table ${TableName}`);
+      // }
+
+      // return data;
+    }
+  },
 
   async delete(ID, TableName) {
     const params = {

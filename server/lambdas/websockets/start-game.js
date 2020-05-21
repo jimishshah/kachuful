@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
 
     const editedPlayers = players.map((player, index) => ({
-      ...player,
+      oldPlayerDetails: { ...player },
       sequenceNumber: index + 1,
       hasGameStarted: true,
     }));

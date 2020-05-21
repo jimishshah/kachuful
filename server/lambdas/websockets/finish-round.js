@@ -3,6 +3,7 @@ const updatePlayers = require("../common/update-players");
 const getNewSequenceNumber = require("../../helpers/get-new-sequence-number");
 const Responses = require("../common/api-responses");
 const finishLevel = require("./finish-level");
+const logger = require("../common/logger");
 
 const tableName = process.env.tableName;
 
@@ -34,6 +35,11 @@ exports.handler = async (event) => {
 module.exports = finishRound;
 
 async function finishRound(players) {
+  logger({
+    message: "finish-round.js: 39",
+    debug_type: "STALE_CARD",
+    players,
+  });
   const data = players.map(
     ({
       ID,
@@ -55,8 +61,8 @@ async function finishRound(players) {
   const totalPlayers = players.length;
   const updatedPlayers = players.map((player) => {
     let updatedPlayer = {
-      ...player,
-      cardThrown: null,
+      oldPlayerDetails: { ...player },
+      cardThrown: false,
       lastRoundWinner: false,
       sequenceNumber: getNewSequenceNumber(
         totalPlayers,
@@ -64,6 +70,7 @@ async function finishRound(players) {
         Number(player.sequenceNumber)
       ),
       shouldShowFinishLevel: player.cardsInHand.length > 0 ? false : true,
+      wins: { ...player.wins },
     };
     if (player.ID === winningPlayerID) {
       updatedPlayer = {
@@ -77,19 +84,33 @@ async function finishRound(players) {
     }
     return updatedPlayer;
   });
-
+  logger({
+    message: "finish-round.js: 86",
+    debug_type: "STALE_CARD",
+    updatedPlayers,
+  });
   const shouldShowFinishLevel = Boolean(
     updatedPlayers.filter(({ shouldShowFinishLevel }) =>
       Boolean(shouldShowFinishLevel)
     ).length
   );
-
   if (shouldShowFinishLevel) {
     await finishLevel(updatedPlayers);
   } else {
-    await Dynamo.batchWrite(updatedPlayers, tableName);
+    const cardThrownNotSetToFalse = updatedPlayers.filter(({ cardThrown }) =>
+      Boolean(cardThrown)
+    );
+    if (cardThrownNotSetToFalse.length > 0) {
+      logger({
+        message: "finish-round.js: 101",
+        debug_type: "STALE_CARD_TRIGGERED",
+        updatedPlayers,
+      });
+    }
 
-    await updatePlayers({ action: "sendFinishRound", players: updatedPlayers });
+    await Dynamo.update(updatedPlayers, tableName);
+    const { tableId } = updatedPlayers[0].oldPlayerDetails;
+    await updatePlayers({ action: "sendFinishRound", tableId });
   }
 
   return Responses._200({ message: "got a message" });

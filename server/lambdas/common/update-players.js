@@ -1,5 +1,6 @@
 const Dynamo = require("./dynamo");
 const WebSocket = require("./web-socket-message");
+const logger = require("../common/logger");
 
 const tableName = process.env.tableName;
 async function updatePlayers({
@@ -11,6 +12,11 @@ async function updatePlayers({
   if (!players) {
     ({ Items: players } = await Dynamo.scan(tableName, "tableId", tableId));
   }
+  logger({
+    message: "update-players.js: 15",
+    debug_type: "STALE_CARD",
+    players,
+  });
   //send connected users list to all the users
   const messages = players
     .filter(({ isDisconnected }) => !Boolean(isDisconnected))

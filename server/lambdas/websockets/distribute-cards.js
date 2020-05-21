@@ -28,10 +28,10 @@ module.exports = distributeCards;
 async function distributeCards(intialPlayers) {
   const { players } = getPlayers(intialPlayers);
 
-  await Dynamo.batchWrite(players, tableName);
-  const { lastLevel } = players[0];
-  const action = lastLevel > 1 ? "sendFinishRound" : null;
-  await updatePlayers({ players, action });
+  await Dynamo.update(players, tableName);
+  const { lastLevel, tableId } = players[0].oldPlayerDetails;
+  const action = Boolean(lastLevel) ? "sendFinishRound" : null;
+  await updatePlayers({ action, tableId });
   return Responses._200({ message: "got a message" });
 }
 
@@ -40,12 +40,7 @@ function getPlayers(intialPlayers) {
     const cardDeck = getCardsDeck(intialPlayers.length);
     return intialPlayers.reduce(
       (acc, currRecord) => {
-        const {
-          playerName,
-          ID: connectionID,
-          lastLevel,
-          lastTrumpColour,
-        } = currRecord;
+        const { lastLevel, lastTrumpColour } = currRecord.oldPlayerDetails;
         const { remainingCardDeck } = acc;
         const numberOfCardsToDistribute = getNumberOfCardsToDistribute(
           lastLevel
@@ -57,12 +52,11 @@ function getPlayers(intialPlayers) {
         );
         const player = {
           ...currRecord,
-          playerName,
-          ID: connectionID,
           lastLevel: numberOfCardsToDistribute,
           lastTrumpColour: currentTrumpColour,
           cardsInHand,
           hasLevelStarted: true,
+          oldPlayerDetails: { ...currRecord.oldPlayerDetails },
         };
         return {
           players: [...acc.players, player],
