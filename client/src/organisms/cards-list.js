@@ -16,11 +16,18 @@ const StyledH4 = styled.h4`
   margin-bottom: 0;
 `;
 function CardsList({ cards, clickHandler = () => {}, title }) {
+  console.log({ cards });
   return (
     <CardsContainer bgcolor="primary.main" color="primary.contrastText" p={2}>
       <StyledGrid container spacing={1}>
         {cards.map(({ number, type, badge }, index) => (
-          <StyledGrid item xs key={`${number}-${type}-${cards.length}`}>
+          <StyledGrid
+            item
+            xs
+            key={`${number}-${type}-${Math.floor(Math.random() * 1000) + 1}-${
+              Math.floor(Math.random() * 1000) + 1
+            }`}
+          >
             <Card
               text={number}
               type={type}
