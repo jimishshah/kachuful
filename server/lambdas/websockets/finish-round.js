@@ -95,22 +95,18 @@ async function finishRound(players) {
     ).length
   );
   if (shouldShowFinishLevel) {
-    await finishLevel(updatedPlayers);
+    await finishLevel(updatedPlayers, players);
   } else {
-    const cardThrownNotSetToFalse = updatedPlayers.filter(({ cardThrown }) =>
-      Boolean(cardThrown)
-    );
-    if (cardThrownNotSetToFalse.length > 0) {
-      logger({
-        message: "finish-round.js: 101",
-        debug_type: "STALE_CARD_TRIGGERED",
-        updatedPlayers,
-      });
-    }
-
     await Dynamo.update(updatedPlayers, tableName);
-    const { tableId } = updatedPlayers[0].oldPlayerDetails;
-    await updatePlayers({ action: "sendFinishRound", tableId });
+    const playersToUpdate = updatedPlayers.map((player) => ({
+      ...player.oldPlayerDetails,
+      ...player,
+    }));
+    await updatePlayers({
+      action: "sendFinishRound",
+      players: playersToUpdate,
+      playerStateBeforeRoundFinished: players,
+    });
   }
 
   return Responses._200({ message: "got a message" });

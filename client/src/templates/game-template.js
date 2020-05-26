@@ -46,15 +46,13 @@ function GameTemplate({
   sendMessage,
   bidWins,
   throwCard,
-  startGame,
+  startGameButton,
   showAlert,
   scores,
   clearShowAlert,
   hostPlayer,
-  openDialog,
-  openDialogHandler,
-  closeDialogHandler,
-  refreshHandler,
+  helpDialog,
+  toggleHelpDialog,
   drawer,
   toggleDrawer,
   messageUs,
@@ -63,8 +61,6 @@ function GameTemplate({
   const actionBarProps = {
     bidWins,
     currentUser,
-    openDialogHandler,
-    refreshHandler,
     toggleDrawer,
   };
 
@@ -72,7 +68,7 @@ function GameTemplate({
     drawer,
     toggleDrawer,
     leaveTheTable,
-    openDialogHandler,
+    toggleHelpDialog,
     messageUs,
   };
 
@@ -115,7 +111,7 @@ function GameTemplate({
                     <StyledButton
                       variant="contained"
                       color="primary"
-                      onClick={() => startGame(currentUser)}
+                      {...startGameButton}
                     >
                       Start Game
                     </StyledButton>
@@ -183,8 +179,6 @@ function GameTemplate({
                   <ScoreCard scores={scores} />
                 </StyledGrid>
               </StyledGrid>
-
-              <ActionBar {...actionBarProps} />
               <StyledSnackbar
                 anchorOrigin={{
                   vertical: "bottom",
@@ -201,14 +195,14 @@ function GameTemplate({
               </StyledSnackbar>
               <Dialog
                 fullScreen
-                open={openDialog}
-                onClose={closeDialogHandler}
+                open={helpDialog}
+                onClose={toggleHelpDialog}
                 TransitionComponent={Transition}
               >
                 <IconButton
                   edge="start"
                   color="inherit"
-                  onClick={closeDialogHandler}
+                  onClick={toggleHelpDialog}
                   aria-label="close"
                 >
                   <CancelIcon />
@@ -216,6 +210,7 @@ function GameTemplate({
                 <GameRules />
               </Dialog>
               <MenuDrawer {...menuDrawerProps} />
+              <ActionBar {...actionBarProps} />
             </>
           )}
         </>

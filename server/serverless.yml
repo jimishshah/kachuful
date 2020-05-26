@@ -67,11 +67,6 @@ functions:
     events:
       - websocket:
           route: sendName
-  websocket-distributeCards:
-    handler: lambdas/websockets/distribute-cards.handler
-    events:
-      - websocket:
-          route: distributeCards
   websocket-bidWins:
     handler: lambdas/websockets/bid-wins.handler
     events:
@@ -82,21 +77,11 @@ functions:
     events:
       - websocket:
           route: throwCard
-  websocket-finishRound:
-    handler: lambdas/websockets/finish-round.handler
-    events:
-      - websocket:
-          route: finishRound
   websocket-startGame:
     handler: lambdas/websockets/start-game.handler
     events:
       - websocket:
           route: startGame
-  websocket-finishLevel:
-    handler: lambdas/websockets/finish-level.handler
-    events:
-      - websocket:
-          route: finishLevel
   websocket-endGame:
     handler: lambdas/websockets/end-game.handler
     events:

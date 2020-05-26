@@ -25,13 +25,21 @@ exports.handler = async (event) => {
 
 module.exports = distributeCards;
 
-async function distributeCards(intialPlayers) {
+async function distributeCards(intialPlayers, playerStateBeforeRoundFinished) {
   const { players } = getPlayers(intialPlayers);
 
   await Dynamo.update(players, tableName);
-  const { lastLevel, tableId } = players[0].oldPlayerDetails;
-  const action = Boolean(lastLevel) ? "sendFinishRound" : null;
-  await updatePlayers({ action, tableId });
+  const { lastLevel } = players[0].oldPlayerDetails;
+  const action = lastLevel ? "sendFinishRound" : null;
+  const playersToUpdate = players.map((player) => ({
+    ...player.oldPlayerDetails,
+    ...player,
+  }));
+  await updatePlayers({
+    action,
+    players: playersToUpdate,
+    playerStateBeforeRoundFinished,
+  });
   return Responses._200({ message: "got a message" });
 }
 

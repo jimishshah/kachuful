@@ -13,7 +13,6 @@ exports.handler = async (event) => {
     } = event.requestContext;
     let {
       messageBody: { oldConnectionId },
-      player: newPlayerRow,
     } = await getPlayerWithMessage(event);
 
     const oldPlayerRow = await Dynamo.get(oldConnectionId, tableName);

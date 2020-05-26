@@ -24,7 +24,7 @@ export default function MenuDrawer({
   drawer,
   toggleDrawer,
   leaveTheTable,
-  openDialogHandler,
+  toggleHelpDialog,
   messageUs,
 }) {
   const classes = useStyles();
@@ -39,7 +39,7 @@ export default function MenuDrawer({
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        <ListItem button key={"Help"} onClick={openDialogHandler}>
+        <ListItem button key={"Help"} onClick={toggleHelpDialog}>
           <ListItemIcon>
             <HelpOutlineIcon />
           </ListItemIcon>

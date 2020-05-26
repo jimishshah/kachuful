@@ -17,11 +17,6 @@ exports.handler = async (event) => {
 
     messages.push(body.message);
 
-    const data = {
-      ...record,
-      messages,
-    };
-
     try {
       await WebSocket.send({
         domainName,

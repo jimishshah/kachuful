@@ -1,5 +1,4 @@
 const Dynamo = require("../common/dynamo");
-const updatePlayers = require("../common/update-players");
 const Responses = require("../common/api-responses");
 const distributeCards = require("./distribute-cards");
 const logger = require("../common/logger");
@@ -17,7 +16,7 @@ exports.handler = async (event) => {
 
 module.exports = finishLevel;
 
-async function finishLevel(players) {
+async function finishLevel(players, playerStateBeforeRoundFinished) {
   const updatedPlayers = players.map((player) => {
     const {
       wins: { expectedWins, currentWins },
@@ -45,6 +44,6 @@ async function finishLevel(players) {
     return updatedPlayer;
   });
 
-  await distributeCards(updatedPlayers);
+  await distributeCards(updatedPlayers, playerStateBeforeRoundFinished);
   return Responses._200({ message: "got a message" });
 }

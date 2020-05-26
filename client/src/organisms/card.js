@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { cardColours } from "../constants";
 import Typography from "@material-ui/core/Typography";
 import Badge from "@material-ui/core/Badge";
+import useButton from "../hooks/use-button";
 
 const StyledPaper = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(1)}px;
@@ -23,15 +24,17 @@ const StyledTypography = styled(Typography)`
 
 function Card({ text, type, badge, onClick = () => {} }) {
   const clickHandler = () => {
-    onClick({ type, number: text });
+    return onClick({ type, number: text });
   };
+
+  const clickHandlerButton = useButton(clickHandler);
   return (
     <Badge
       badgeContent={badge ? badge.substring(0, 2).toUpperCase() : "..."}
       color="secondary"
       invisible={badge ? false : true}
     >
-      <StyledPaper onClick={clickHandler}>
+      <StyledPaper {...clickHandlerButton}>
         {type ? (
           <strong>{text}</strong>
         ) : (

@@ -18,8 +18,8 @@ exports.handler = async (event) => {
     const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
     await Dynamo.delete(connectionID, tableName);
     const newPlayers = players.filter((player) => player.ID !== connectionID);
-    const updatedPlayers = await updateSequence(newPlayers);
-    await updatePlayers({ players: updatedPlayers });
+    await updateSequence(newPlayers);
+    await updatePlayers({ tableId });
     return Responses._200({ message: "sendPlayers" });
   } catch (e) {
     console.log(e);
@@ -31,7 +31,10 @@ async function updateSequence(players) {
     .sort((a, b) =>
       Number(a.sequenceNumber) > Number(b.sequenceNumber) ? 1 : -1
     )
-    .map((player, index) => ({ ...player, sequenceNumber: index + 1 }));
-  await Dynamo.batchWrite(updatedPlayers, tableName);
+    .map((player, index) => ({
+      sequenceNumber: index + 1,
+      oldPlayerDetails: { ...player },
+    }));
+  await Dynamo.update(updatedPlayers, tableName);
   return updatedPlayers;
 }

@@ -1,6 +1,5 @@
 const Responses = require("../common/api-responses");
 const Dynamo = require("../common/dynamo");
-const updatePlayers = require("../common/update-players");
 const distributeCards = require("./distribute-cards");
 const tableName = process.env.tableName;
 

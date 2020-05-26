@@ -26,13 +26,7 @@ const StyledImg = styled.img`
   background-color: white;
   padding: 5px;
 `;
-function ActionBar({
-  bidWins,
-  currentUser,
-  openDialogHandler,
-  refreshHandler,
-  toggleDrawer,
-}) {
+function ActionBar({ bidWins, currentUser, toggleDrawer }) {
   return (
     <StyledAppBar position="fixed" color="primary">
       <Container maxWidth="sm">
@@ -51,14 +45,6 @@ function ActionBar({
                   <MenuIcon onClick={toggleDrawer("left", true)} />
                 </IconButton>
               </Box>
-              {/* <Box pr={2} pt={2}>
-                <Button variant="contained" color="secondary">
-                  <RefreshIcon
-                    onClick={refreshHandler}
-                    title="refresh button"
-                  />
-                </Button>
-              </Box> */}
               {currentUser.hasLevelStarted && (
                 <Box pr={2} pt={1} textAlign="center">
                   <StyledImg

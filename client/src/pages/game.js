@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import GameTemplate from "../templates/game-template";
 import socket from "../socket";
 import { useHistory } from "react-router-dom";
 import { DEFAULT_WINS } from "../constants";
 import ReactGA from "react-ga";
+import useButton from "../hooks/use-button";
+import useToggle from "../hooks/use-toggle";
+import usePlayerData from "../hooks/use-player-data";
 
 function Game({
   connectionId: currentUserId,
@@ -15,17 +18,15 @@ function Game({
   setScores,
   setConnectionId,
 }) {
-  const [openDialog, setOpenDialog] = useState(false);
+  const [helpDialog, toggleHelpDialogHandler] = useToggle(false);
   const [drawer, setDrawer] = useState({
     top: false,
     left: false,
     bottom: false,
     right: false,
   });
-  const onEveryonePlayed = () => {};
   const history = useHistory();
   const timer = useRef(null);
-  const disableStartButton = useRef(false);
 
   const {
     currentUser,
@@ -35,7 +36,7 @@ function Game({
     intiatorCardType,
     usersWhoHaveNotPlayedTheBid,
     myCardsWithSameType,
-  } = getMyData(users, currentUserId);
+  } = usePlayerData(users, currentUserId);
   const hasEveryoneThrownCard =
     users.length === playersThatHaveThrownCard.length;
 
@@ -75,7 +76,7 @@ function Game({
   const throwCard = async (cardThrown) => {
     if (currentUser.wins.expectedWins === DEFAULT_WINS) {
       setShowAlert({ message: "Please submit your bid", severity: "error" });
-      return;
+      return true;
     }
     // am i in sequence 1
     // what is the colour of sequence 1
@@ -99,20 +100,20 @@ function Game({
           message: { cardThrown },
         })
       );
+      return;
     }
+    return true;
   };
 
-  const openDialogHandler = () => {
-    ReactGA.event({
-      category: "Menu",
-      action: "Help",
-    });
-    setOpenDialog(true);
+  const toggleHelpDialog = () => {
+    if (helpDialog) {
+      ReactGA.event({
+        category: "Menu",
+        action: "Help",
+      });
+    }
+    toggleHelpDialogHandler();
   };
-  const closeDialogHandler = () => {
-    setOpenDialog(false);
-  };
-
   const bidWins = async (myBid) => {
     if (myBid < 0 || myBid > currentUser.cardsInHand.length) {
       setShowAlert({
@@ -130,42 +131,18 @@ function Game({
     );
   };
 
-  const refreshHandler = useCallback(async (e) => {
-    let ws = await socket.getInstance();
-    if (ws.readyState === WebSocket.CLOSED) {
-      ws = await socket.getInstance(true);
-      const oldConnectionId = localStorage.getItem("connectionID");
-      ws.send(
-        JSON.stringify({
-          action: "reCreateConnection",
-          message: { oldConnectionId },
-        })
-      );
-      return;
-    }
+  const startGame = async () => {
+    const ws = await socket.getInstance();
     ws.send(
       JSON.stringify({
-        action: "refreshData",
-        message: "",
+        action: "startGame",
+        message: { tableId: currentUser.tableId },
       })
     );
-  }, []);
-
-  const startGame = async (currentUser) => {
-    if (!disableStartButton.current) {
-      disableStartButton.current = true;
-      const ws = await socket.getInstance();
-      ws.send(
-        JSON.stringify({
-          action: "startGame",
-          message: { tableId: currentUser.tableId },
-        })
-      );
-      ReactGA.event({
-        category: "Button",
-        action: "Start Game",
-      });
-    }
+    ReactGA.event({
+      category: "Button",
+      action: "Start Game",
+    });
   };
 
   useEffect(() => {
@@ -173,9 +150,6 @@ function Game({
       history.push("/judgement");
       return;
     }
-    // if (users.length === 0) {
-    //   refreshHandler();
-    // }
     socket.getInstance().then((ws) => {
       ws.onmessage = function (event) {
         const { players = [], action } = JSON.parse(event.data);
@@ -205,6 +179,12 @@ function Game({
             setUsers(players);
             setScores(getScores(players));
           }, 1700);
+
+          const { playerStateBeforeRoundFinished = [] } = JSON.parse(
+            event.data
+          );
+          setUsers(playerStateBeforeRoundFinished);
+          setScores(getScores(playerStateBeforeRoundFinished));
         } else {
           setUsers(players);
           setScores(getScores(players));
@@ -218,7 +198,7 @@ function Game({
     });
 
     return () => {
-      clearTimeout(timer.current);
+      // clearTimeout(timer.current);
     };
   }, [
     history,
@@ -227,29 +207,27 @@ function Game({
     setShowAlert,
     setScores,
     setUsers,
-    refreshHandler,
     setConnectionId,
     users.length,
     currentUserId,
   ]);
 
+  const startGameButton = useButton(startGame);
+
   const props = {
     currentUser,
     users,
-    onEveryonePlayed,
     leaveTheTable,
     sendMessage,
     bidWins,
     throwCard,
-    startGame,
+    startGameButton,
     showAlert,
     scores,
     clearShowAlert,
     hostPlayer,
-    openDialog,
-    openDialogHandler,
-    closeDialogHandler,
-    refreshHandler,
+    helpDialog,
+    toggleHelpDialog,
     drawer,
     toggleDrawer,
     messageUs,
@@ -281,40 +259,6 @@ async function sendMessage() {
       action: "message",
     })
   );
-}
-
-function getMyData(users, currentUserId) {
-  const [currentUser = { cardsInHand: [] }] = users.filter(
-    (user) => user.ID === currentUserId
-  );
-  const [hostPlayer = { playerName: "" }] = users.filter(
-    (user) => user.isHost === true
-  );
-  const playersThatHaveThrownCard = users.filter(
-    ({ cardThrown }) => cardThrown !== null
-  );
-  const usersWhoThrewCards = users.filter((user) => Boolean(user.cardThrown));
-  const usersWhoHaveNotPlayedTheBid = users.filter(
-    (user) => user.wins.expectedWins === DEFAULT_WINS
-  );
-  const [initiator] = users.filter((user) => user.sequenceNumber === 1);
-  let intiatorCardType = null;
-  let myCardsWithSameType = [];
-  if (initiator && initiator.cardThrown && initiator.cardThrown.type) {
-    ({ type: intiatorCardType } = initiator.cardThrown);
-    myCardsWithSameType = currentUser.cardsInHand.filter(
-      ({ type }) => type === intiatorCardType
-    );
-  }
-  return {
-    currentUser,
-    hostPlayer,
-    playersThatHaveThrownCard,
-    usersWhoThrewCards,
-    intiatorCardType,
-    usersWhoHaveNotPlayedTheBid,
-    myCardsWithSameType,
-  };
 }
 
 function canIThrowThisCard({

@@ -52,9 +52,10 @@ exports.handler = async (event) => {
       debug_type: "STALE_CARD",
       players,
     });
-    await updatePlayers({ players });
     if (hasEveryoneThrownCard) {
       await finishRound(players);
+    } else {
+      await updatePlayers({ players });
     }
     console.log(`${cardThrown} card Thrown added`);
     return Responses._200({ message: "got a message" });
