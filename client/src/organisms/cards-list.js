@@ -16,7 +16,6 @@ const StyledH4 = styled.h4`
   margin-bottom: 0;
 `;
 function CardsList({ cards, clickHandler = () => {}, title }) {
-  console.log({ cards });
   return (
     <CardsContainer bgcolor="primary.main" color="primary.contrastText" p={2}>
       <StyledGrid container spacing={1}>
