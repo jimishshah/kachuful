@@ -55,7 +55,7 @@ function HomeJudgement({ setConnectionId, connectionId }) {
     ws.send(
       JSON.stringify({
         action: "reCreateConnection",
-        message: { oldConnectionId: connectionId },
+        message: { oldConnectionId: connectionId, shouldRefresh: true },
       })
     );
     ReactGA.event({

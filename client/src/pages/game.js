@@ -7,17 +7,9 @@ import ReactGA from "react-ga";
 import useButton from "../hooks/use-button";
 import useToggle from "../hooks/use-toggle";
 import usePlayerData from "../hooks/use-player-data";
+import useSocket from "../hooks/use-socket";
 
-function Game({
-  connectionId: currentUserId,
-  users = [],
-  setUsers,
-  showAlert,
-  setShowAlert,
-  scores,
-  setScores,
-  setConnectionId,
-}) {
+function Game({ connectionId: currentUserId, setConnectionId }) {
   const [helpDialog, toggleHelpDialogHandler] = useToggle(false);
   const [drawer, setDrawer] = useState({
     top: false,
@@ -25,23 +17,101 @@ function Game({
     bottom: false,
     right: false,
   });
+  const [users, setUsers] = useState([]);
+
+  const [showAlert, setShowAlert] = useState({});
   const history = useHistory();
   const timer = useRef(null);
 
   const {
     currentUser,
     hostPlayer,
-    playersThatHaveThrownCard,
     usersWhoThrewCards,
     intiatorCardType,
     usersWhoHaveNotPlayedTheBid,
     myCardsWithSameType,
+    scores,
   } = usePlayerData(users, currentUserId);
-  const hasEveryoneThrownCard =
-    users.length === playersThatHaveThrownCard.length;
 
-  const leaveTheTable = async () => {
-    const ws = await socket.getInstance();
+  const noSocketHandler = () => history.push("/judgement");
+
+  const onSocketMessageHandler = (event, ws) => {
+    const { players = [], action } = JSON.parse(event.data);
+    switch (action) {
+      case "sendPong":
+        return;
+      case "sendFinishRound":
+        const [{ playerName: thisRoundWinner }] = players.filter(
+          ({ lastRoundWinner }) => lastRoundWinner === true
+        );
+        setShowAlert({
+          message: `Round winner is ${thisRoundWinner}`,
+          severity: "success",
+        });
+
+        timer.current = setTimeout(() => {
+          setUsers(players);
+        }, 1700);
+
+        const { playerStateBeforeRoundFinished = [] } = JSON.parse(event.data);
+        setUsers(playerStateBeforeRoundFinished);
+        return;
+      case "sendRecreateConnection":
+        const [{ ID: newConnectionId }] = players.filter(
+          ({ oldConnectionId }) => oldConnectionId === currentUserId
+        );
+        setConnectionId(newConnectionId);
+        localStorage.setItem("connectionID", newConnectionId);
+        setUsers(players);
+        return;
+      case "sendCloseSession":
+        ws.close();
+        const { shouldRefresh } = JSON.parse(event.data);
+        if (shouldRefresh) {
+          history.push("/judgement");
+          window.location.reload();
+        }
+        return;
+      default:
+        setUsers(players);
+    }
+  };
+
+  const reCreateConnectionHandler = (ws) => {
+    ws.send(
+      JSON.stringify({
+        action: "reCreateConnection",
+        message: {
+          oldConnectionId: localStorage.getItem("connectionID"),
+          shouldRefresh: false,
+        },
+      })
+    );
+  };
+
+  const offlineHandler = () => {
+    setShowAlert({
+      message: `Reconnecting...check your network`,
+      severity: "error",
+      duration: "600000",
+    });
+  };
+  const onlineHandler = () => {
+    setShowAlert({
+      message: `Connected. You are back`,
+      severity: "success",
+    });
+  };
+
+  const ws = useSocket({
+    onMessageHandler: onSocketMessageHandler,
+    reCreateConnectionHandler,
+    noSocketHandler,
+    offlineHandler,
+    onlineHandler,
+  });
+
+  const leaveTheTable = () => {
     ws.send(
       JSON.stringify({
         action: "endGame",
@@ -73,7 +143,7 @@ function Game({
     setDrawer({ ...drawer, [anchor]: open });
   };
 
-  const throwCard = async (cardThrown) => {
+  const throwCard = (cardThrown) => {
     if (currentUser.wins.expectedWins === DEFAULT_WINS) {
       setShowAlert({ message: "Please submit your bid", severity: "error" });
       return true;
@@ -93,7 +163,6 @@ function Game({
         myCardsWithSameType,
       })
     ) {
-      const ws = await socket.getInstance();
       ws.send(
         JSON.stringify({
           action: "throwCard",
@@ -131,8 +200,7 @@ function Game({
     );
   };
 
-  const startGame = async () => {
-    const ws = await socket.getInstance();
+  const startGame = () => {
     ws.send(
       JSON.stringify({
         action: "startGame",
@@ -150,67 +218,12 @@ function Game({
       history.push("/judgement");
       return;
     }
-    socket.getInstance().then((ws) => {
-      ws.onmessage = function (event) {
-        const { players = [], action } = JSON.parse(event.data);
-        if (action === "sendCloseSession") {
-          ws.close();
-          history.push("/judgement");
-          window.location.reload();
-          return;
-        }
-        if (action === "sendRecreateConnection") {
-          const [{ ID: newConnectionId }] = players.filter(
-            ({ oldConnectionId }) => oldConnectionId === currentUserId
-          );
-          setConnectionId(newConnectionId);
-          localStorage.setItem("connectionID", newConnectionId);
-        }
-        if (action === "sendFinishRound") {
-          const [{ playerName: thisRoundWinner }] = players.filter(
-            ({ lastRoundWinner }) => lastRoundWinner === true
-          );
-          setShowAlert({
-            message: `Round winner is ${thisRoundWinner}`,
-            severity: "success",
-          });
 
-          timer.current = setTimeout(() => {
-            setUsers(players);
-            setScores(getScores(players));
-          }, 1700);
-
-          const { playerStateBeforeRoundFinished = [] } = JSON.parse(
-            event.data
-          );
-          setUsers(playerStateBeforeRoundFinished);
-          setScores(getScores(playerStateBeforeRoundFinished));
-        } else {
-          setUsers(players);
-          setScores(getScores(players));
-        }
-      };
-    });
-
-    window.addEventListener("popstate", (e) => {
+    window.addEventListener("popstate", () => {
       // Nope, go back to your page
       history.go(1);
     });
-
-    return () => {
-      // clearTimeout(timer.current);
-    };
-  }, [
-    history,
-    currentUser,
-    hasEveryoneThrownCard,
-    setShowAlert,
-    setScores,
-    setUsers,
-    setConnectionId,
-    users.length,
-    currentUserId,
-  ]);
+  }, [history]);
 
   const startGameButton = useButton(startGame);
 
@@ -218,7 +231,6 @@ function Game({
     currentUser,
     users,
     leaveTheTable,
-    sendMessage,
     bidWins,
     throwCard,
     startGameButton,
@@ -242,23 +254,6 @@ function messageUs() {
     category: "Button",
     action: "Send Feedback",
   });
-}
-
-function getScores(players) {
-  return players.map(({ playerName, scoreCard }) => ({
-    playerName,
-    scoreCard,
-  }));
-}
-
-async function sendMessage() {
-  const ws = await socket.getInstance();
-  ws.send(
-    JSON.stringify({
-      message: "my first message",
-      action: "message",
-    })
-  );
 }
 
 function canIThrowThisCard({

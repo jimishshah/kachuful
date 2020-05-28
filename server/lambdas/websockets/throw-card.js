@@ -31,6 +31,7 @@ exports.handler = async (event) => {
       }
     );
 
+    // dont run this code if the round is finished
     const data = {
       oldPlayerDetails: { ...player },
       cardThrown,

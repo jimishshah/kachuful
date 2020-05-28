@@ -12,7 +12,7 @@ exports.handler = async (event) => {
       stage,
     } = event.requestContext;
     let {
-      messageBody: { oldConnectionId },
+      messageBody: { oldConnectionId, shouldRefresh },
     } = await getPlayerWithMessage(event);
 
     const oldPlayerRow = await Dynamo.get(oldConnectionId, tableName);
@@ -44,7 +44,11 @@ exports.handler = async (event) => {
         domainName,
         stage,
         connectionID: oldConnectionId,
-        message: JSON.stringify({ players, action: "sendCloseSession" }),
+        message: JSON.stringify({
+          players,
+          action: "sendCloseSession",
+          shouldRefresh,
+        }),
       });
     }
     return Responses._200({ message: "connected" });

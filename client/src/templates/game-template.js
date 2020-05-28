@@ -43,7 +43,6 @@ function GameTemplate({
   currentUser,
   users,
   leaveTheTable,
-  sendMessage,
   bidWins,
   throwCard,
   startGameButton,
@@ -119,7 +118,7 @@ function GameTemplate({
                     <Typography variant="subtitle1" gutterBottom>
                       {Boolean(hostPlayer.playerName)
                         ? `Waiting for ${hostPlayer.playerName} to start the game`
-                        : "Loading..."}
+                        : "Loading...2"}
                     </Typography>
                   )}
                 </StyledGrid>
@@ -185,7 +184,7 @@ function GameTemplate({
                   horizontal: "center",
                 }}
                 open={Boolean(showAlert.message)}
-                autoHideDuration={6000}
+                autoHideDuration={showAlert.duration || 6000}
                 onClose={clearShowAlert}
                 message={showAlert.severity}
               >

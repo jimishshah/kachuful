@@ -10,6 +10,7 @@ export default function (users, currentUserId) {
     intiatorCardType: null,
     usersWhoHaveNotPlayedTheBid: [],
     myCardsWithSameType: [],
+    scores: [],
   });
   useEffect(() => {
     const [currentUser = { cardsInHand: [] }] = users.filter(
@@ -42,7 +43,15 @@ export default function (users, currentUserId) {
       intiatorCardType,
       usersWhoHaveNotPlayedTheBid,
       myCardsWithSameType,
+      scores: getScores(users),
     });
   }, [users, currentUserId]);
   return state;
+}
+
+function getScores(players) {
+  return players.map(({ playerName, scoreCard }) => ({
+    playerName,
+    scoreCard,
+  }));
 }

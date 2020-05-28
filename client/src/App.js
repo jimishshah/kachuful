@@ -44,19 +44,9 @@ function App() {
     localStorage.getItem("connectionID")
   );
 
-  const [users, setUsers] = useState([]);
-  const [showAlert, setShowAlert] = useState({});
-  const [scores, setScores] = useState([]);
-
   const props = {
     connectionId,
     setConnectionId,
-    users,
-    setUsers,
-    showAlert,
-    setShowAlert,
-    scores,
-    setScores,
   };
   return (
     <MuiThemeProvider theme={defaultTheme}>
