@@ -26,6 +26,9 @@ const StyledGrid = styled(Grid)`
   flex-grow: 0;
   text-align: center;
 `;
+const MyCardsContainer = styled(StyledGrid)(({ disabled }) => ({
+  pointerEvents: disabled ? "none" : "inherit",
+}));
 
 const StyledButton = styled(Button)`
   width: 100%;
@@ -55,6 +58,7 @@ function GameTemplate({
   drawer,
   toggleDrawer,
   messageUs,
+  shouldDisableMyCards,
 }) {
   const linkToShare = `${linkBase}/judgement/${currentUser.tableId}?utm_source=app&utm_medium=whatsapp&utm_campaign=invite`;
   const actionBarProps = {
@@ -91,7 +95,11 @@ function GameTemplate({
                   <StyledGrid item xs={12}>
                     {renderCardsThrownInCurrentRound(users)}
                   </StyledGrid>
-                  <StyledGrid item xs={12}>
+                  <MyCardsContainer
+                    item
+                    xs={12}
+                    disabled={shouldDisableMyCards}
+                  >
                     {currentUser.cardsInHand.length > 0 && (
                       <CardsList
                         title="My Cards"
@@ -99,7 +107,7 @@ function GameTemplate({
                         cards={currentUser.cardsInHand}
                       />
                     )}
-                  </StyledGrid>
+                  </MyCardsContainer>
                 </StyledGrid>
               </StyledGrid>
             )}

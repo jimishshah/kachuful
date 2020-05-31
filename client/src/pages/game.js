@@ -11,6 +11,7 @@ import useSocket from "../hooks/use-socket";
 
 function Game({ connectionId: currentUserId, setConnectionId }) {
   const [helpDialog, toggleHelpDialogHandler] = useToggle(false);
+  const [shouldDisableMyCards, disableMyCardsHandler] = useState(false);
   const [drawer, setDrawer] = useState({
     top: false,
     left: false,
@@ -55,6 +56,7 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
 
         const { playerStateBeforeRoundFinished = [] } = JSON.parse(event.data);
         setUsers(playerStateBeforeRoundFinished);
+        disableMyCardsHandler(false);
         return;
       case "sendRecreateConnection":
         const [{ ID: newConnectionId }] = players.filter(
@@ -169,6 +171,7 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
           message: { cardThrown },
         })
       );
+      disableMyCardsHandler(true);
       return;
     }
     return true;
@@ -243,6 +246,7 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
     drawer,
     toggleDrawer,
     messageUs,
+    shouldDisableMyCards,
   };
   return <GameTemplate {...props} />;
 }
