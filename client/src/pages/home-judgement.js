@@ -106,6 +106,10 @@ function HomeJudgement({ setConnectionId, connectionId }) {
                   variant="outlined"
                   label="Enter your name"
                   size="small"
+                  inputProps={{
+                    maxLength: 6,
+                  }}
+                  helperText="* Maximum 6 characters"
                   onChange={(e) => setPlayerName(e.target.value)}
                 />
               </Grid>

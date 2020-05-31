@@ -45,12 +45,6 @@ export default function MenuDrawer({
           </ListItemIcon>
           <ListItemText primary={"Help"} />
         </ListItem>
-        <ListItem button key={"Exit Game"} onClick={leaveTheTable}>
-          <ListItemIcon>
-            <ExitToAppIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Exit Game"} />
-        </ListItem>
         <ListItem button key={"Message us"} onClick={messageUs}>
           <ListItemIcon>
             <ChatIcon />
@@ -61,9 +55,15 @@ export default function MenuDrawer({
               target="_blank"
               color="inherit"
             >
-              Send Feedback
+              Contact Us
             </Link>
           </ListItemText>
+        </ListItem>
+        <ListItem button key={"Exit Game"} onClick={leaveTheTable}>
+          <ListItemIcon>
+            <ExitToAppIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Exit Game"} />
         </ListItem>
       </List>
     </div>

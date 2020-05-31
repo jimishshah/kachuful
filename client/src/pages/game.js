@@ -51,7 +51,7 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
 
         timer.current = setTimeout(() => {
           setUsers(players);
-        }, 1700);
+        }, 3000);
 
         const { playerStateBeforeRoundFinished = [] } = JSON.parse(event.data);
         setUsers(playerStateBeforeRoundFinished);
