@@ -9,7 +9,7 @@ import CardsList from "../organisms/cards-list";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Snackbar from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
+import MuiAlert from "@material-ui/lab/Alert";
 import CopyToClipboard from "react-copy-to-clipboard";
 import ProgressSteps from "../organisms/progress-steps";
 import GameRules from "../organisms/game-rules";
@@ -21,6 +21,10 @@ import { WhatsappShareButton, WhatsappIcon } from "react-share";
 import ActionBar from "../organisms/action-bar";
 import MenuDrawer from "../organisms/menu-drawer";
 import ReactGA from "react-ga";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
@@ -193,7 +197,12 @@ function GameTemplate({
                 }}
                 open={Boolean(showAlert.message)}
                 autoHideDuration={showAlert.duration || 6000}
-                onClose={clearShowAlert}
+                onClose={(event, reason) => {
+                  if (reason === "clickaway") {
+                    return;
+                  }
+                  clearShowAlert();
+                }}
                 message={showAlert.severity}
               >
                 <Alert onClose={clearShowAlert} severity={showAlert.severity}>

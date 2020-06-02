@@ -117,14 +117,18 @@ const Dynamo = {
     return documentClient.delete(params).promise();
   },
 
-  async scan(TableName, columnId, columnValue) {
+  async query(TableName, IndexName, columnId, columnValue) {
     const params = {
       TableName,
-      FilterExpression: `${columnId} = :columnValue and playerName <> :null`,
-      ExpressionAttributeValues: { ":columnValue": columnValue, ":null": null },
+      IndexName,
+      KeyConditionExpression: `${columnId} = :columnId`,
+      ExpressionAttributeValues: {
+        ":columnId": columnValue,
+      },
     };
+    console.log({ params });
 
-    return documentClient.scan(params).promise();
+    return documentClient.query(params).promise();
   },
 };
 module.exports = Dynamo;

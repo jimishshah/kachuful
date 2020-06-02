@@ -3,6 +3,8 @@ const WebSocket = require("./web-socket-message");
 const logger = require("../common/logger");
 
 const tableName = process.env.tableName;
+const indexName = process.env.indexName;
+
 async function updatePlayers({
   action = "sendPlayers",
   tableId,
@@ -11,7 +13,12 @@ async function updatePlayers({
 }) {
   let players = intialPlayers;
   if (!players) {
-    ({ Items: players } = await Dynamo.scan(tableName, "tableId", tableId));
+    ({ Items: players } = await Dynamo.query(
+      tableName,
+      indexName,
+      "tableId",
+      tableId
+    ));
   }
   logger({
     message: "update-players.js: 15",

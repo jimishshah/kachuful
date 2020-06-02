@@ -15,7 +15,7 @@ exports.handler = async (event) => {
       date: new Date().toGMTString(),
       domainName,
       stage,
-      tableId: null,
+      tableId: "blank",
       playerName: false,
       avatarLink: null,
       cardThrown: null,

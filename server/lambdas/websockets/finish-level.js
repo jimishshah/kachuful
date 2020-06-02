@@ -4,12 +4,18 @@ const distributeCards = require("./distribute-cards");
 const logger = require("../common/logger");
 
 const tableName = process.env.tableName;
+const indexName = process.env.indexName;
 
 exports.handler = async (event) => {
   const {
     message: { tableId },
   } = JSON.parse(event.body);
-  const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
+  const { Items: players } = await Dynamo.query(
+    tableName,
+    indexName,
+    "tableId",
+    tableId
+  );
   const response = await finishLevel(players);
   return response;
 };

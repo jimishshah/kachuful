@@ -4,14 +4,16 @@ const updatePlayers = require("../common/update-players");
 const Responses = require("../common/api-responses");
 
 const tableName = process.env.tableName;
+const indexName = process.env.indexName;
 
 exports.handler = async (event) => {
   try {
     const {
       message: { tableId },
     } = JSON.parse(event.body);
-    const { Items: intialPlayers } = await Dynamo.scan(
+    const { Items: intialPlayers } = await Dynamo.query(
       tableName,
+      indexName,
       "tableId",
       tableId
     );

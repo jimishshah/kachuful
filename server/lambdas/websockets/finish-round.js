@@ -6,6 +6,7 @@ const finishLevel = require("./finish-level");
 const logger = require("../common/logger");
 
 const tableName = process.env.tableName;
+const indexName = process.env.indexName;
 
 const cardPriorities = {
   A: 13,
@@ -27,7 +28,12 @@ exports.handler = async (event) => {
   const {
     message: { tableId },
   } = JSON.parse(event.body);
-  const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
+  const { Items: players } = await Dynamo.query(
+    tableName,
+    indexName,
+    "tableId",
+    tableId
+  );
   const response = await finishRound(players);
   return response;
 };

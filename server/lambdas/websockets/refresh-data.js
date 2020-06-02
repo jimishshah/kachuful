@@ -4,12 +4,19 @@ const getPlayerWithMessage = require("../common/get-player-with-message");
 const Dynamo = require("../common/dynamo");
 
 const tableName = process.env.tableName;
+const indexName = process.env.indexName;
+
 exports.handler = async (event) => {
   try {
     const {
       player: { tableId, domainName, stage, ID: connectionID },
     } = await getPlayerWithMessage(event);
-    const records = await Dynamo.scan(tableName, "tableId", tableId);
+    const records = await Dynamo.query(
+      tableName,
+      indexName,
+      "tableId",
+      tableId
+    );
     const players = records.Items.map((player) => player);
 
     await WebSocket.send({

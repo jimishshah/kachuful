@@ -7,6 +7,7 @@ provider:
   region: eu-west-1
   environment:
     tableName: ${self:custom.tableName}
+    indexName: ${self:custom.indexName}
     IS_OFFLINE: true
   iamRoleStatements:
     - Effect: Allow
@@ -16,6 +17,7 @@ provider:
 
 custom:
   tableName: Kachuful
+  indexName: PlayersByTableId_GS1
   dynamodb:
     stages:
       - dev
@@ -97,9 +99,18 @@ resources:
         AttributeDefinitions:
           - AttributeName: ID
             AttributeType: S
+          - AttributeName: tableId
+            AttributeType: S
         KeySchema:
           - AttributeName: ID
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: ${self:custom.indexName}
+            KeySchema:
+              - AttributeName: tableId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
 
 plugins:

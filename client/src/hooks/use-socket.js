@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import socket from "../socket";
 export default function useSocket({
   onMessageHandler,
@@ -10,6 +10,7 @@ export default function useSocket({
   const [webSocket, setWebSocket] = useState();
   const [isOnline, setIsOnline] = useState(true);
   const [wasSocketCloseClean, setWasSocketCloseClean] = useState(true);
+  const timeInterval = useRef(false);
 
   useEffect(() => {
     if (!socket.hasInstance()) {
@@ -39,8 +40,9 @@ export default function useSocket({
           reCreateConnectionHandler(ws);
           onlineHandler();
         });
-      } else {
+      } else if (!isOnline) {
         onlineHandler();
+        setIsOnline(true);
       }
     };
 
@@ -49,13 +51,18 @@ export default function useSocket({
       setIsOnline(false);
     };
     if (webSocket) {
-      window.addEventListener("offline", hasGoneOffline);
-      window.addEventListener("online", hasGoneOnline);
+      timeInterval.current = setInterval(async () => {
+        try {
+          await fetch("/test.html", { cache: "no-store" });
+          hasGoneOnline();
+        } catch (e) {
+          hasGoneOffline();
+        }
+      }, 2000);
     }
 
     return () => {
-      window.removeEventListener("offline", hasGoneOffline);
-      window.removeEventListener("online", hasGoneOnline);
+      clearInterval(timeInterval.current);
     };
   }, [
     webSocket,

@@ -2,13 +2,19 @@ const Responses = require("../common/api-responses");
 const Dynamo = require("../common/dynamo");
 const distributeCards = require("./distribute-cards");
 const tableName = process.env.tableName;
+const indexName = process.env.indexName;
 
 exports.handler = async (event) => {
   try {
     const {
       message: { tableId },
     } = JSON.parse(event.body);
-    const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
+    const { Items: players } = await Dynamo.query(
+      tableName,
+      indexName,
+      "tableId",
+      tableId
+    );
 
     const editedPlayers = players.map((player, index) => ({
       oldPlayerDetails: { ...player },

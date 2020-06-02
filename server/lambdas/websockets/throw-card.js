@@ -6,6 +6,7 @@ const finishRound = require("./finish-round");
 const logger = require("../common/logger");
 
 const tableName = process.env.tableName;
+const indexName = process.env.indexName;
 
 exports.handler = async (event) => {
   try {
@@ -40,7 +41,12 @@ exports.handler = async (event) => {
     await Dynamo.update([data], tableName);
     const { tableId } = data.oldPlayerDetails;
 
-    const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
+    const { Items: players } = await Dynamo.query(
+      tableName,
+      indexName,
+      "tableId",
+      tableId
+    );
     const playersThatHaveThrownCard = players.filter(({ cardThrown }) =>
       Boolean(cardThrown)
     );

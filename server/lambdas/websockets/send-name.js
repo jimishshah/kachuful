@@ -4,6 +4,7 @@ const updatePlayers = require("../common/update-players");
 const getPlayerWithMessage = require("../common/get-player-with-message");
 
 const tableName = process.env.tableName;
+const indexName = process.env.indexName;
 
 exports.handler = async (event) => {
   try {
@@ -39,7 +40,7 @@ exports.handler = async (event) => {
 
 async function checkIsValidTableId(tableId) {
   if (!tableId) return false;
-  const records = await Dynamo.scan(tableName, "tableId", tableId);
+  const records = await Dynamo.query(tableName, indexName, "tableId", tableId);
   const usersWithGameStarted = records.Items.filter(({ hasGameStarted }) =>
     Boolean(hasGameStarted)
   );

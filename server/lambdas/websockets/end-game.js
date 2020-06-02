@@ -3,6 +3,7 @@ const Dynamo = require("../common/dynamo");
 const updatePlayers = require("../common/update-players");
 
 const tableName = process.env.tableName;
+const indexName = process.env.indexName;
 
 exports.handler = async (event) => {
   try {
@@ -15,7 +16,12 @@ exports.handler = async (event) => {
         ? thisConnectionID
         : initialConnectionID;
     const { tableId } = await Dynamo.get(connectionID, tableName);
-    const { Items: players } = await Dynamo.scan(tableName, "tableId", tableId);
+    const { Items: players } = await Dynamo.query(
+      tableName,
+      indexName,
+      "tableId",
+      tableId
+    );
     await Dynamo.delete(connectionID, tableName);
     const newPlayers = players.filter((player) => player.ID !== connectionID);
     await updateSequence(newPlayers);
