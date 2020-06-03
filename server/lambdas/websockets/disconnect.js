@@ -7,7 +7,11 @@ exports.handler = async (event) => {
     const { connectionId: connectionID } = event.requestContext;
     const data = await Dynamo.get(connectionID, tableName);
     if (!data.playerName) await Dynamo.delete(connectionID, tableName);
-    else await Dynamo.write({ ...data, isDisconnected: true }, tableName);
+    else
+      await Dynamo.update(
+        [{ oldPlayerDetails: { ...data }, isDisconnected: true }],
+        tableName
+      );
     return Responses._200({ message: "sendPlayers" });
   } catch (e) {
     console.log(e);
