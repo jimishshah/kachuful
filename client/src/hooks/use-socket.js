@@ -32,7 +32,7 @@ export default function useSocket({
 
   useEffect(() => {
     const hasGoneOnline = () => {
-      if (!isOnline && !wasSocketCloseClean) {
+      if (!wasSocketCloseClean) {
         socket.getInstance(true).then((ws) => {
           setWebSocket(ws);
           setIsOnline(true);
