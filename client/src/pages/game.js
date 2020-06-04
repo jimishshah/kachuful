@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import GameTemplate from "../templates/game-template";
-import socket from "../socket";
 import { useHistory } from "react-router-dom";
 import { DEFAULT_WINS } from "../constants";
 import ReactGA from "react-ga";
@@ -56,7 +55,6 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
 
         const { playerStateBeforeRoundFinished = [] } = JSON.parse(event.data);
         setUsers(playerStateBeforeRoundFinished);
-        disableMyCardsHandler(false);
         return;
       case "sendRecreateConnection":
         const [{ ID: newConnectionId }] = players.filter(
@@ -194,7 +192,6 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
       });
       return;
     }
-    const ws = await socket.getInstance();
     ws.send(
       JSON.stringify({
         action: "bidWins",
@@ -217,16 +214,15 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
   };
 
   useEffect(() => {
-    if (!socket.hasInstance()) {
-      history.push("/judgement");
-      return;
-    }
-
     window.addEventListener("popstate", () => {
       // Nope, go back to your page
       history.go(1);
     });
   }, [history]);
+
+  useEffect(() => {
+    disableMyCardsHandler(false);
+  }, [users]);
 
   const startGameButton = useButton(startGame);
 

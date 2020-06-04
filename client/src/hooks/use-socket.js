@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import socket from "../socket";
 export default function useSocket({
   onMessageHandler,
@@ -8,9 +8,6 @@ export default function useSocket({
   onlineHandler,
 }) {
   const [webSocket, setWebSocket] = useState();
-  const [isOnline, setIsOnline] = useState(true);
-  const [wasSocketCloseClean, setWasSocketCloseClean] = useState(true);
-  const timeInterval = useRef(false);
 
   useEffect(() => {
     if (!socket.hasInstance()) {
@@ -23,54 +20,22 @@ export default function useSocket({
 
       ws.onclose = (event) => {
         if (!event.wasClean) {
-          setWasSocketCloseClean(false);
+          offlineHandler();
+          socket.getInstance(true).then((ws) => {
+            setWebSocket(ws);
+            reCreateConnectionHandler(ws);
+            onlineHandler();
+          });
         }
       };
       setWebSocket(ws);
     });
-  });
-
-  useEffect(() => {
-    const hasGoneOnline = () => {
-      if (!wasSocketCloseClean) {
-        socket.getInstance(true).then((ws) => {
-          setWebSocket(ws);
-          setIsOnline(true);
-          setWasSocketCloseClean(true);
-          reCreateConnectionHandler(ws);
-          onlineHandler();
-        });
-      } else if (!isOnline) {
-        onlineHandler();
-        setIsOnline(true);
-      }
-    };
-
-    const hasGoneOffline = () => {
-      offlineHandler();
-      setIsOnline(false);
-    };
-    if (webSocket) {
-      timeInterval.current = setInterval(async () => {
-        try {
-          await fetch("/test.html", { cache: "no-store" });
-          hasGoneOnline();
-        } catch (e) {
-          hasGoneOffline();
-        }
-      }, 2000);
-    }
-
-    return () => {
-      clearInterval(timeInterval.current);
-    };
   }, [
-    webSocket,
-    isOnline,
-    reCreateConnectionHandler,
-    wasSocketCloseClean,
-    onlineHandler,
+    noSocketHandler,
     offlineHandler,
+    reCreateConnectionHandler,
+    onlineHandler,
+    onMessageHandler,
   ]);
   return webSocket;
 }
