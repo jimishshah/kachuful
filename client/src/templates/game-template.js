@@ -42,6 +42,10 @@ const StyledSnackbar = styled(Snackbar)`
   bottom: 90px;
 `;
 
+const LinkContainer = styled(Box)`
+  word-wrap: break-word;
+`;
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -140,9 +144,9 @@ function GameTemplate({
                     game, players are not allowed to join once the game is
                     started. Only Host can start the game.
                   </Typography>
-                  <Box bgcolor="grey.300" p={1} mb={1}>
+                  <LinkContainer bgcolor="grey.300" p={1} mb={1}>
                     {linkToShare}
-                  </Box>
+                  </LinkContainer>
                   <CopyToClipboard text={linkToShare}>
                     <StyledButton
                       variant="contained"
