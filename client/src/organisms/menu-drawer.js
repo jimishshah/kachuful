@@ -10,6 +10,11 @@ import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ChatIcon from "@material-ui/icons/Chat";
 import Link from "@material-ui/core/Link";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import InstagramIcon from "@material-ui/icons/Instagram";
+import Divider from "@material-ui/core/Divider";
+import logo from "../images/logo.png";
+import styled from "@emotion/styled";
 
 const useStyles = makeStyles({
   list: {
@@ -19,6 +24,12 @@ const useStyles = makeStyles({
     width: "auto",
   },
 });
+
+const StyledListItem = styled(ListItem)`
+  background-color: ${({ theme }) => theme.palette.primary.main};
+  margin-top: -8px;
+  justify-content: center;
+`;
 
 export default function MenuDrawer({
   drawer,
@@ -39,6 +50,9 @@ export default function MenuDrawer({
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
+        <StyledListItem button key={"logo"}>
+          <img src={logo} width="150" alt="judment game logo" />
+        </StyledListItem>
         <ListItem button key={"Help"} onClick={toggleHelpDialog}>
           <ListItemIcon>
             <HelpOutlineIcon />
@@ -64,6 +78,26 @@ export default function MenuDrawer({
             <ExitToAppIcon />
           </ListItemIcon>
           <ListItemText primary={"Exit Game"} />
+        </ListItem>
+        <Divider />
+        <ListItem button key={"Follow us"}>
+          <ListItemIcon></ListItemIcon>
+          <ListItemText>
+            <Link
+              href="https://www.facebook.com/thecardgames"
+              target="_blank"
+              color="inherit"
+            >
+              <FacebookIcon fontSize="large" color="secondary" />
+              <Link
+                href="https://www.instagram.com/thecardgames/"
+                target="_blank"
+                color="inherit"
+              >
+                <InstagramIcon fontSize="large" color="secondary" />
+              </Link>
+            </Link>
+          </ListItemText>
         </ListItem>
       </List>
     </div>

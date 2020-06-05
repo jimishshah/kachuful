@@ -89,11 +89,10 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
     );
   };
 
-  const offlineHandler = () => {
+  const offlineHandler = (message) => {
     setShowAlert({
-      message: `Reconnecting...check your network`,
+      message: message || `Reconnecting...check your network`,
       severity: "error",
-      duration: "600000",
     });
   };
   const onlineHandler = () => {
@@ -116,7 +115,8 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
       JSON.stringify({
         action: "endGame",
         message: { connectionID: "thisConnection" },
-      })
+      }),
+      false
     );
     localStorage.removeItem("connectionID");
     ws.close();
