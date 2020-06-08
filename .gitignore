@@ -27,3 +27,4 @@ yarn-error.log*
 client/.serverless/serverless-state.json
 server/coverage
 client/coverage
+client/android-app
