@@ -25,6 +25,14 @@ resources:
         WebsiteConfiguration:
           IndexDocument: index.html
           ErrorDocument: index.html
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - \*
+              AllowedHeaders:
+                - Content-Length
+              AllowedMethods:
+                - GET
     S3AccessPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
