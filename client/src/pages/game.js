@@ -215,8 +215,7 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
 
   useEffect(() => {
     window.addEventListener("popstate", () => {
-      // Nope, go back to your page
-      history.go(1);
+      window.location.reload();
     });
   }, [history]);
 

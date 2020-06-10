@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -7,10 +7,11 @@ import Game from "./pages/game";
 import styled from "@emotion/styled";
 import { StylesProvider } from "@material-ui/core/styles";
 import HomeJudgement from "./pages/home-judgement";
-import GameMock from "./pages/game-mock";
 import ReactGA from "react-ga";
 import { createBrowserHistory } from "history";
-import Home from "./pages/home";
+
+const GameMock = React.lazy(() => import("./pages/game-mock"));
+const Home = React.lazy(() => import("./pages/home"));
 
 const trackingId = "UA-164323461-1"; // Replace with your Google Analytics tracking ID
 // ReactGA.initialize(trackingId, {
@@ -59,7 +60,9 @@ function App() {
             renders the first one that matches the current URL. */}
                 <Switch>
                   <Route path="/judgement/game-mock">
-                    <GameMock {...props} />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <GameMock {...props} />
+                    </Suspense>
                   </Route>
                   <Route path="/judgement/game">
                     <Game {...props} />
@@ -68,7 +71,9 @@ function App() {
                     <HomeJudgement {...props} />
                   </Route>
                   <Route path="/">
-                    <Home />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <Home />
+                    </Suspense>
                   </Route>
                 </Switch>
               </div>

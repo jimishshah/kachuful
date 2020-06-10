@@ -25,7 +25,9 @@
     "build": "react-scripts build",
     "test": "env NODE_ENV='test' react-scripts test",
     "test:coverage": "yarn test --coverage --watchAll=false",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-twa": "cd ./android-app && bubblewrap init --manifest https://thecardgames.net/manifest.json && bubblewrap build",
+    "push-apk-to-device": "~/Library/Android/sdk/platform-tools/adb install android-app/app-release-signed.apk"
   },
   "eslintConfig": {
     "extends": "react-app"

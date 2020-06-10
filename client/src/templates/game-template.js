@@ -134,7 +134,7 @@ function GameTemplate({
                     <Typography variant="subtitle1" gutterBottom>
                       {Boolean(hostPlayer.playerName)
                         ? `Waiting for ${hostPlayer.playerName} to start the game`
-                        : "Loading...2"}
+                        : "Loading..."}
                     </Typography>
                   )}
                 </StyledGrid>

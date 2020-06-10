@@ -25,6 +25,14 @@ resources:
         WebsiteConfiguration:
           IndexDocument: index.html
           ErrorDocument: index.html
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - \*
+              AllowedHeaders:
+                - Content-Length
+              AllowedMethods:
+                - GET
     S3AccessPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
@@ -83,6 +91,7 @@ resources:
             DefaultTTL: 0
             MaxTTL: 0
             MinTTL: 0
+            Compress: true
             ForwardedValues:
               QueryString: "false"
               Cookies:
