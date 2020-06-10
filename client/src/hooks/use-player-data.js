@@ -11,6 +11,8 @@ export default function (users, currentUserId) {
     usersWhoHaveNotPlayedTheBid: [],
     myCardsWithSameType: [],
     scores: [],
+    cardsThrown: [],
+    cardsInHand: [],
   });
   useEffect(() => {
     const [currentUser = { cardsInHand: [] }] = users.filter(
@@ -35,6 +37,31 @@ export default function (users, currentUserId) {
         ({ type }) => type === intiatorCardType
       );
     }
+    const cardsThrown = users
+      .sort((a, b) => (a.sequenceNumber > b.sequenceNumber ? 1 : -1))
+      .map(({ cardThrown, playerName, sequenceNumber }) =>
+        cardThrown
+          ? { ...cardThrown, badge: playerName }
+          : {
+              number: `${sequenceNumber}. Waiting for ${playerName}`,
+            }
+      );
+
+    const scores = getScores(users)
+      .map(({ playerName, scoreCard: initialScoreCard }) => {
+        const totalScore = initialScoreCard.reduce(
+          (acc, curr) => acc + curr,
+          0
+        );
+        const scoreCard = [...initialScoreCard].reverse();
+        return {
+          playerName,
+          scoreCard,
+          totalScore,
+        };
+      })
+      .sort((a, b) => (a.totalScore < b.totalScore ? 1 : -1));
+
     setState({
       currentUser,
       hostPlayer,
@@ -43,7 +70,9 @@ export default function (users, currentUserId) {
       intiatorCardType,
       usersWhoHaveNotPlayedTheBid,
       myCardsWithSameType,
-      scores: getScores(users),
+      scores,
+      cardsThrown,
+      cardsInHand: currentUser.cardsInHand,
     });
   }, [users, currentUserId]);
   return state;

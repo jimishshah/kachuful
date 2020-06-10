@@ -33,13 +33,6 @@ function ActionBar({ bidWins, currentUser, toggleDrawer }) {
         <StyledAppBar position="fixed" color="primary">
           <Container maxWidth="sm">
             <BoxContainer display="flex">
-              {/* <Box pr={2} pt={2}>
-          <PowerSettingsNewRoundedIcon
-            variant="outlined"
-            color="secondary"
-            onClick={leaveTheTable}
-          />
-        </Box> */}
               <Box pr={2} pt={1.1}>
                 <IconButton color="inherit">
                   <MenuIcon onClick={toggleDrawer("left", true)} />
@@ -56,9 +49,6 @@ function ActionBar({ bidWins, currentUser, toggleDrawer }) {
                   </Typography>
                 </Box>
               )}
-              {/* <Button variant="contained" color="primary" onClick={sendMessage}>
-          Send message
-        </Button> */}
               {currentUser.wins.currentWins === DEFAULT_WINS &&
                 currentUser.hasLevelStarted && (
                   <Box flexGrow={1}>

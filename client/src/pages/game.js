@@ -31,6 +31,8 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
     usersWhoHaveNotPlayedTheBid,
     myCardsWithSameType,
     scores,
+    cardsThrown,
+    cardsInHand,
   } = usePlayerData(users, currentUserId);
 
   const noSocketHandler = () => history.push("/judgement");
@@ -242,6 +244,8 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
     toggleDrawer,
     messageUs,
     shouldDisableMyCards,
+    cardsThrown,
+    cardsInHand,
   };
   return <GameTemplate {...props} />;
 }

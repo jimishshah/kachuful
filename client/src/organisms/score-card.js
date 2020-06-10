@@ -15,23 +15,11 @@ const StoreCardContainer = styled.div`
 
 const StyledTableCell = styled(TableCell)`
   font-weight: bold;
-  min-width: 48px;
+  min-width: 55px;
 `;
 
-function ScoreCard({ scores: initialScores }) {
-  const [firstPlayer] = initialScores;
-
-  const scores = initialScores
-    .map(({ playerName, scoreCard: initialScoreCard }) => {
-      const totalScore = initialScoreCard.reduce((acc, curr) => acc + curr, 0);
-      const scoreCard = [...initialScoreCard].reverse();
-      return {
-        playerName,
-        scoreCard,
-        totalScore,
-      };
-    })
-    .sort((a, b) => (a.totalScore < b.totalScore ? 1 : -1));
+function ScoreCard({ scores }) {
+  const [firstPlayer] = scores;
 
   return (
     <>

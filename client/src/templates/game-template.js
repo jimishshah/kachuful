@@ -67,6 +67,8 @@ function GameTemplate({
   toggleDrawer,
   messageUs,
   shouldDisableMyCards,
+  cardsThrown,
+  cardsInHand,
 }) {
   const linkToShare = `${linkBase}/judgement/${currentUser.tableId}?utm_source=app&utm_medium=whatsapp&utm_campaign=invite`;
   const actionBarProps = {
@@ -101,18 +103,18 @@ function GameTemplate({
               <StyledGrid item xs={9}>
                 <StyledGrid container spacing={3}>
                   <StyledGrid item xs={12}>
-                    {renderCardsThrownInCurrentRound(users)}
+                    <CardsList cards={cardsThrown} title="Play Table" />;
                   </StyledGrid>
                   <MyCardsContainer
                     item
                     xs={12}
                     disabled={shouldDisableMyCards}
                   >
-                    {currentUser.cardsInHand.length > 0 && (
+                    {cardsInHand.length > 0 && (
                       <CardsList
                         title="My Cards"
                         clickHandler={throwCard}
-                        cards={currentUser.cardsInHand}
+                        cards={cardsInHand}
                       />
                     )}
                   </MyCardsContainer>
@@ -239,19 +241,6 @@ function GameTemplate({
       )}
     </>
   );
-}
-
-function renderCardsThrownInCurrentRound(users) {
-  const cards = users
-    .sort((a, b) => (a.sequenceNumber > b.sequenceNumber ? 1 : -1))
-    .map(({ cardThrown, playerName, sequenceNumber }) =>
-      cardThrown
-        ? { ...cardThrown, badge: playerName }
-        : {
-            number: `${sequenceNumber}. Waiting for ${playerName}`,
-          }
-    );
-  return <CardsList cards={cards} title="Play Table" />;
 }
 
 export default GameTemplate;
