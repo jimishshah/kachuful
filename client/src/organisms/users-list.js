@@ -9,19 +9,21 @@ const StyledGrid = styled(Grid)`
   flex-grow: 0;
 `;
 function UsersList({ users }) {
-  return users.map((user) => {
-    const badgeText =
-      user.wins.expectedWins === DEFAULT_WINS
-        ? "..."
-        : `${user.wins.currentWins}/${user.wins.expectedWins}`;
-    return (
-      <StyledGrid item xs key={user.ID}>
-        <Badge color="primary" badgeContent={badgeText} showZero>
-          <Avatar>{user.playerName.slice(0, 2).toUpperCase()}</Avatar>
-        </Badge>
-      </StyledGrid>
-    );
-  });
+  return users.map(
+    ({ playerName, wins: { currentWins, expectedWins }, ID }) => {
+      const badgeText =
+        expectedWins === DEFAULT_WINS
+          ? "..."
+          : `${currentWins}/${expectedWins}`;
+      return (
+        <StyledGrid item xs key={ID}>
+          <Badge color="primary" badgeContent={badgeText} showZero>
+            <Avatar>{playerName.slice(0, 2).toUpperCase()}</Avatar>
+          </Badge>
+        </StyledGrid>
+      );
+    }
+  );
 }
 
 export default UsersList;

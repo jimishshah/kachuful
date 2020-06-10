@@ -26,7 +26,15 @@ const StyledImg = styled.img`
   background-color: white;
   padding: 5px;
 `;
-function ActionBar({ bidWins, currentUser, toggleDrawer }) {
+function ActionBar({
+  bidWins,
+  currentUser: {
+    hasLevelStarted,
+    lastTrumpColour,
+    wins: { currentWins },
+  },
+  toggleDrawer,
+}) {
   return (
     <StyledAppBar position="fixed" color="primary">
       <Container maxWidth="sm">
@@ -38,23 +46,22 @@ function ActionBar({ bidWins, currentUser, toggleDrawer }) {
                   <MenuIcon onClick={toggleDrawer("left", true)} />
                 </IconButton>
               </Box>
-              {currentUser.hasLevelStarted && (
+              {hasLevelStarted && (
                 <Box pr={2} pt={1} textAlign="center">
                   <StyledImg
-                    src={cardColours[currentUser.lastTrumpColour]}
-                    alt={currentUser.lastTrumpColour}
+                    src={cardColours[lastTrumpColour]}
+                    alt={lastTrumpColour}
                   />
                   <Typography variant="caption" display="block">
                     Trump
                   </Typography>
                 </Box>
               )}
-              {currentUser.wins.currentWins === DEFAULT_WINS &&
-                currentUser.hasLevelStarted && (
-                  <Box flexGrow={1}>
-                    <BidWin bidWins={bidWins} />
-                  </Box>
-                )}
+              {currentWins === DEFAULT_WINS && hasLevelStarted && (
+                <Box flexGrow={1}>
+                  <BidWin bidWins={bidWins} />
+                </Box>
+              )}
             </BoxContainer>
           </Container>
         </StyledAppBar>
