@@ -8,7 +8,7 @@ import usePlayerData from "./use-player-data";
 import useSocket from "./use-socket";
 import socket from "../socket";
 
-function Game({ currentUserId, setConnectionId }) {
+function Game({ currentUserId, setConnectionId, gameMock }) {
   const [helpDialog, toggleHelpDialogHandler] = useToggle(false);
   const [shouldDisableMyCards, disableMyCardsHandler] = useState(false);
   const [drawer, setDrawer] = useState({

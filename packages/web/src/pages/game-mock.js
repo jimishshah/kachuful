@@ -37,6 +37,7 @@ function GameMock() {
     drawer,
     toggleDrawer,
   };
+  console.log(gameTemplateProps);
 
   return (
     <>

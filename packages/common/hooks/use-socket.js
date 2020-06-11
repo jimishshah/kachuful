@@ -15,7 +15,7 @@ export default function useSocket({
         reCreateConnectionHandler(ws);
         offlineHandler("Your network is unstable, try again");
       }),
-    [reCreateConnectionHandler, offlineHandler]
+    [reCreateConnectionHandler, offlineHandler, socket]
   );
   const returnValue = {
     send: (message, shouldExpectResponse = true) => {
@@ -45,6 +45,6 @@ export default function useSocket({
       };
       setWebSocket(ws);
     });
-  }, [noSocketHandler, onMessageHandler, createNewConnection]);
+  }, [noSocketHandler, onMessageHandler, createNewConnection, socket]);
   return returnValue;
 }

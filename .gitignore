@@ -9,7 +9,7 @@ node_modules
 /coverage
 
 # production
-packages/client/build
+packages/web/build
 
 # misc
 .DS_Store
@@ -24,7 +24,7 @@ yarn-error.log*
 
 
 .dynamodb
-packages/client/.serverless/serverless-state.json
+packages/web/.serverless/serverless-state.json
 packages/server/coverage
-packages/client/coverage
-packages/client/android-app
+packages/web/coverage
+packages/web/android-app
