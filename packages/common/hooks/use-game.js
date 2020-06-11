@@ -1,8 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { DEFAULT_WINS } from "../";
+import { DEFAULT_WINS } from "../constants";
 import ReactGA from "react-ga";
-import { useButton, useToggle, usePlayerData, useSocket } from "../";
+import useButton from "./use-button";
+import useToggle from "./use-toggle";
+import usePlayerData from "./use-player-data";
+import useSocket from "./use-socket";
 import socket from "../socket";
 
 function Game({ currentUserId, setConnectionId }) {
