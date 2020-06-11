@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { userMock } from "../json/userMock";
-import GameTemplate from "../templates/game-template";
+import GameTemplate from "./game";
 
 function GameMock() {
   const users = userMock;

@@ -3,7 +3,7 @@ import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import styled from "@emotion/styled";
-import { DEFAULT_WINS, cardColours } from "../constants";
+import { DEFAULT_WINS, cardColours } from "@kachuful/common";
 import AppBar from "@material-ui/core/AppBar";
 import BidWin from "../organisms/bid-win";
 import IconButton from "@material-ui/core/IconButton";

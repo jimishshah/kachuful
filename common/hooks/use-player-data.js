@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { DEFAULT_WINS } from "../constants";
 
-export default function (users, currentUserId) {
+export default function (users, currentUserId, DEFAULT_WINS) {
   const [state, setState] = useState({
     currentUser: { cardsInHand: [] },
     hostPlayer: { playerName: "" },

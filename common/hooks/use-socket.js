@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import socket from "../socket";
 export default function useSocket({
+  socket,
   onMessageHandler,
   reCreateConnectionHandler = () => {},
   noSocketHandler = () => {},

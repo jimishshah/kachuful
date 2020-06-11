@@ -1,233 +1,58 @@
-import React, { useEffect, useState, useRef } from "react";
-import GameTemplate from "../templates/game-template";
-import { useHistory } from "react-router-dom";
-import { DEFAULT_WINS } from "../constants";
+import React from "react";
+import styled from "@emotion/styled";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import UsersList from "../organisms/users-list";
+import ScoreCard from "../organisms/score-card";
+import { linkBase } from "@kachuful/common";
+import CardsList from "../organisms/cards-list";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import CopyToClipboard from "react-copy-to-clipboard";
+import ProgressSteps from "../organisms/progress-steps";
+import GameRules from "../organisms/game-rules";
+import Dialog from "@material-ui/core/Dialog";
+import Slide from "@material-ui/core/Slide";
+import CancelIcon from "@material-ui/icons/Cancel";
+import IconButton from "@material-ui/core/IconButton";
+import { WhatsappShareButton, WhatsappIcon } from "react-share";
+import ActionBar from "../organisms/action-bar";
+import MenuDrawer from "../organisms/menu-drawer";
 import ReactGA from "react-ga";
-import useButton from "../hooks/use-button";
-import useToggle from "../hooks/use-toggle";
-import usePlayerData from "../hooks/use-player-data";
-import useSocket from "../hooks/use-socket";
+import { useGame } from "@kachuful/common";
 
-function Game({ connectionId: currentUserId, setConnectionId }) {
-  const [helpDialog, toggleHelpDialogHandler] = useToggle(false);
-  const [shouldDisableMyCards, disableMyCardsHandler] = useState(false);
-  const [drawer, setDrawer] = useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-  });
-  const [users, setUsers] = useState([]);
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
-  const [showAlert, setShowAlert] = useState({});
-  const history = useHistory();
-  const timer = useRef(null);
+const StyledGrid = styled(Grid)`
+  flex-grow: 0;
+  text-align: center;
+`;
+const MyCardsContainer = styled(StyledGrid)(({ disabled }) => ({
+  pointerEvents: disabled ? "none" : "inherit",
+}));
 
+const StyledButton = styled(Button)`
+  width: 100%;
+`;
+
+const StyledSnackbar = styled(Snackbar)`
+  bottom: 90px;
+`;
+
+const LinkContainer = styled(Box)`
+  word-wrap: break-word;
+`;
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+function GameTemplate({ connectionId: currentUserId, setConnectionId }) {
   const {
-    currentUser,
-    hostPlayer,
-    usersWhoThrewCards,
-    intiatorCardType,
-    usersWhoHaveNotPlayedTheBid,
-    myCardsWithSameType,
-    scores,
-    cardsThrown,
-    cardsInHand,
-  } = usePlayerData(users, currentUserId);
-
-  const noSocketHandler = () => history.push("/judgement");
-
-  const onSocketMessageHandler = (event, ws) => {
-    const { players = [], action } = JSON.parse(event.data);
-    switch (action) {
-      case "sendPong":
-        return;
-      case "sendFinishRound":
-        const [{ playerName: thisRoundWinner }] = players.filter(
-          ({ lastRoundWinner }) => lastRoundWinner === true
-        );
-        setShowAlert({
-          message: `Round winner is ${thisRoundWinner}`,
-          severity: "success",
-        });
-
-        timer.current = setTimeout(() => {
-          setUsers(players);
-        }, 3000);
-
-        const { playerStateBeforeRoundFinished = [] } = JSON.parse(event.data);
-        setUsers(playerStateBeforeRoundFinished);
-        return;
-      case "sendRecreateConnection":
-        const [{ ID: newConnectionId }] = players.filter(
-          ({ oldConnectionId }) => oldConnectionId === currentUserId
-        );
-        setConnectionId(newConnectionId);
-        localStorage.setItem("connectionID", newConnectionId);
-        setUsers(players);
-        return;
-      case "sendCloseSession":
-        ws.close();
-        const { shouldRefresh } = JSON.parse(event.data);
-        if (shouldRefresh) {
-          history.push("/judgement");
-          window.location.reload();
-        }
-        return;
-      default:
-        setUsers(players);
-    }
-  };
-
-  const reCreateConnectionHandler = (ws) => {
-    ws.send(
-      JSON.stringify({
-        action: "reCreateConnection",
-        message: {
-          oldConnectionId: localStorage.getItem("connectionID"),
-          shouldRefresh: false,
-        },
-      })
-    );
-  };
-
-  const offlineHandler = (message) => {
-    setShowAlert({
-      message: message || `Reconnecting...check your network`,
-      severity: "error",
-    });
-  };
-  const onlineHandler = () => {
-    setShowAlert({
-      message: `Connected. You are back`,
-      severity: "success",
-    });
-  };
-
-  const ws = useSocket({
-    onMessageHandler: onSocketMessageHandler,
-    reCreateConnectionHandler,
-    noSocketHandler,
-    offlineHandler,
-    onlineHandler,
-  });
-
-  const leaveTheTable = () => {
-    ws.send(
-      JSON.stringify({
-        action: "endGame",
-        message: { connectionID: "thisConnection" },
-      }),
-      false
-    );
-    localStorage.removeItem("connectionID");
-    ws.close();
-    setConnectionId(null);
-    ReactGA.event({
-      category: "Menu",
-      action: "Exit Game",
-    });
-    history.push("/judgement");
-  };
-
-  const clearShowAlert = () => {
-    setShowAlert({});
-  };
-
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-
-    setDrawer({ ...drawer, [anchor]: open });
-  };
-
-  const throwCard = (cardThrown) => {
-    if (currentUser.wins.expectedWins === DEFAULT_WINS) {
-      setShowAlert({ message: "Please submit your bid", severity: "error" });
-      return true;
-    }
-    // am i in sequence 1
-    // what is the colour of sequence 1
-    // do i have that colour
-    //
-    if (
-      canIThrowThisCard({
-        cardThrown,
-        usersWhoHaveNotPlayedTheBid,
-        currentUser,
-        usersWhoThrewCards,
-        intiatorCardType,
-        setShowAlert,
-        myCardsWithSameType,
-      })
-    ) {
-      ws.send(
-        JSON.stringify({
-          action: "throwCard",
-          message: { cardThrown },
-        })
-      );
-      disableMyCardsHandler(true);
-      return;
-    }
-    return true;
-  };
-
-  const toggleHelpDialog = () => {
-    if (helpDialog) {
-      ReactGA.event({
-        category: "Menu",
-        action: "Help",
-      });
-    }
-    toggleHelpDialogHandler();
-  };
-  const bidWins = async (myBid) => {
-    if (myBid < 0 || myBid > currentUser.cardsInHand.length) {
-      setShowAlert({
-        message: `Your bid should be between 0 and ${currentUser.cardsInHand.length}`,
-        severity: "error",
-      });
-      return;
-    }
-    ws.send(
-      JSON.stringify({
-        action: "bidWins",
-        message: { myBid },
-      })
-    );
-  };
-
-  const startGame = () => {
-    ws.send(
-      JSON.stringify({
-        action: "startGame",
-        message: { tableId: currentUser.tableId },
-      })
-    );
-    ReactGA.event({
-      category: "Button",
-      action: "Start Game",
-    });
-  };
-
-  useEffect(() => {
-    window.addEventListener("popstate", () => {
-      window.location.reload();
-    });
-  }, [history]);
-
-  useEffect(() => {
-    disableMyCardsHandler(false);
-  }, [users]);
-
-  const startGameButton = useButton(startGame);
-
-  const props = {
     currentUser,
     users,
     leaveTheTable,
@@ -246,64 +71,178 @@ function Game({ connectionId: currentUserId, setConnectionId }) {
     shouldDisableMyCards,
     cardsThrown,
     cardsInHand,
+  } = useGame({ currentUserId, setConnectionId });
+  const linkToShare = `${linkBase}/judgement/${currentUser.tableId}?utm_source=app&utm_medium=whatsapp&utm_campaign=invite`;
+  const actionBarProps = {
+    bidWins,
+    currentUser,
+    toggleDrawer,
   };
-  return <GameTemplate {...props} />;
+
+  const menuDrawerProps = {
+    drawer,
+    toggleDrawer,
+    leaveTheTable,
+    toggleHelpDialog,
+    messageUs,
+  };
+
+  const { hasGameStarted } = currentUser;
+  return (
+    <>
+      {!hasGameStarted && currentUser.playerName && (
+        <ProgressSteps activeStep={1} isCreate={currentUser.isHost} />
+      )}
+      {currentUser.playerName ? (
+        <>
+          <StyledGrid container spacing={3}>
+            <StyledGrid item xs={3}>
+              <StyledGrid container spacing={3}>
+                <UsersList users={users} />
+              </StyledGrid>
+            </StyledGrid>
+            {hasGameStarted && (
+              <StyledGrid item xs={9}>
+                <StyledGrid container spacing={3}>
+                  <StyledGrid item xs={12}>
+                    <CardsList cards={cardsThrown} title="Play Table" />;
+                  </StyledGrid>
+                  <MyCardsContainer
+                    item
+                    xs={12}
+                    disabled={shouldDisableMyCards}
+                  >
+                    {cardsInHand.length > 0 && (
+                      <CardsList
+                        title="My Cards"
+                        clickHandler={throwCard}
+                        cards={cardsInHand}
+                      />
+                    )}
+                  </MyCardsContainer>
+                </StyledGrid>
+              </StyledGrid>
+            )}
+            {!hasGameStarted && (
+              <>
+                <StyledGrid item xs={9}>
+                  {currentUser.isHost ? (
+                    <StyledButton
+                      variant="contained"
+                      color="primary"
+                      {...startGameButton}
+                    >
+                      Start Game
+                    </StyledButton>
+                  ) : (
+                    <Typography variant="subtitle1" gutterBottom>
+                      {Boolean(hostPlayer.playerName)
+                        ? `Waiting for ${hostPlayer.playerName} to start the game`
+                        : "Loading..."}
+                    </Typography>
+                  )}
+                </StyledGrid>
+                <StyledGrid item xs={12}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Share the link below and invite your friends to join your
+                    game, players are not allowed to join once the game is
+                    started. Only Host can start the game.
+                  </Typography>
+                  <LinkContainer bgcolor="grey.300" p={1} mb={1}>
+                    {linkToShare}
+                  </LinkContainer>
+                  <CopyToClipboard text={linkToShare}>
+                    <StyledButton
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        ReactGA.event({
+                          category: "Button",
+                          action: "Copy Link",
+                        });
+                      }}
+                    >
+                      Copy Link
+                    </StyledButton>
+                  </CopyToClipboard>
+                  {currentUser.tableId && (
+                    <Box p={1} mb={1}>
+                      <Typography variant="subtitle2" gutterBottom>
+                        Send on:{" "}
+                      </Typography>
+                      <WhatsappShareButton
+                        title="Join our game"
+                        url={linkToShare}
+                      >
+                        <WhatsappIcon
+                          size={45}
+                          round={true}
+                          onClick={() => {
+                            ReactGA.event({
+                              category: "Button",
+                              action: "Whatsapp share",
+                            });
+                          }}
+                        />
+                      </WhatsappShareButton>
+                    </Box>
+                  )}
+                </StyledGrid>
+              </>
+            )}
+          </StyledGrid>
+          {hasGameStarted && (
+            <>
+              <StyledGrid container spacing={3}>
+                <StyledGrid item xs={12}>
+                  <ScoreCard scores={scores} />
+                </StyledGrid>
+              </StyledGrid>
+              <StyledSnackbar
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                open={Boolean(showAlert.message)}
+                autoHideDuration={showAlert.duration || 6000}
+                onClose={(event, reason) => {
+                  if (reason === "clickaway") {
+                    return;
+                  }
+                  clearShowAlert();
+                }}
+                message={showAlert.severity}
+              >
+                <Alert onClose={clearShowAlert} severity={showAlert.severity}>
+                  {showAlert.message}
+                </Alert>
+              </StyledSnackbar>
+              <Dialog
+                fullScreen
+                open={helpDialog}
+                onClose={toggleHelpDialog}
+                TransitionComponent={Transition}
+              >
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={toggleHelpDialog}
+                  aria-label="close"
+                >
+                  <CancelIcon />
+                </IconButton>
+                <GameRules />
+              </Dialog>
+              <MenuDrawer {...menuDrawerProps} />
+              <ActionBar {...actionBarProps} />
+            </>
+          )}
+        </>
+      ) : (
+        "Loading....."
+      )}
+    </>
+  );
 }
 
-export default Game;
-
-function messageUs() {
-  ReactGA.event({
-    category: "Button",
-    action: "Send Feedback",
-  });
-}
-
-function canIThrowThisCard({
-  cardThrown,
-  usersWhoHaveNotPlayedTheBid,
-  currentUser,
-  usersWhoThrewCards,
-  intiatorCardType,
-  setShowAlert,
-  myCardsWithSameType,
-}) {
-  // if everyone have not placed the bid
-  if (usersWhoHaveNotPlayedTheBid.length > 0) {
-    setShowAlert({
-      message: "Wait for everyone to bid",
-      severity: "info",
-    });
-    return false;
-  }
-  // if i have already thrown the card
-  if (currentUser.cardThrown) {
-    setShowAlert({
-      message: "You have already thrown the card",
-      severity: "info",
-    });
-    return false;
-  }
-  // if I am initiator
-  if (currentUser.sequenceNumber === 1) return true;
-  // if its not my turn
-  if (usersWhoThrewCards.length + 1 < Number(currentUser.sequenceNumber)) {
-    setShowAlert({
-      message: "Wait for your turn to throw the card",
-      severity: "info",
-    });
-    return false;
-  }
-  // if i am throwing same card type as initiator
-  if (intiatorCardType === cardThrown.type) return true;
-
-  // if i have no other option
-  if (intiatorCardType !== cardThrown.type && myCardsWithSameType.length === 0)
-    return true;
-
-  setShowAlert({
-    message: "You can not throw this card",
-    severity: "info",
-  });
-  return false;
-}
+export default GameTemplate;

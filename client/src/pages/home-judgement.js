@@ -3,13 +3,13 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { useHistory, useParams } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import socket from "../socket";
+import { socket } from "@kachuful/common";
 import styled from "@emotion/styled";
 import ProgressSteps from "../organisms/progress-steps";
 import GameRules from "../organisms/game-rules";
 import Box from "@material-ui/core/Box";
 import ReactGA from "react-ga";
-import useButton from "../hooks/use-button";
+import { useButton } from "@kachuful/common";
 
 const StyledTextField = styled(TextField)`
   width: 100%;

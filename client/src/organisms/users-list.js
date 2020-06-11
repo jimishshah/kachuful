@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import styled from "@emotion/styled";
-import { DEFAULT_WINS } from "../constants";
+import { DEFAULT_WINS } from "@kachuful/common";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
