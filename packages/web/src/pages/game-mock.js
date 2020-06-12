@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import { userMock } from "../json/userMock";
-import GameTemplate from "./game";
+import GameTemplate from "../organisms/game-template";
+import { DEFAULT_WINS, usePlayerData } from "@kachuful/common";
 
 function GameMock() {
   const users = userMock;
-  const [currentUser] = users.filter((user) => user.ID === 1);
+  const {
+    currentUser,
+    hostPlayer,
+    usersWhoThrewCards,
+    intiatorCardType,
+    usersWhoHaveNotPlayedTheBid,
+    myCardsWithSameType,
+    scores,
+    cardsThrown,
+    cardsInHand,
+  } = usePlayerData(users, 1, DEFAULT_WINS);
   const [drawer, setDrawer] = useState({
     left: false,
   });
@@ -20,24 +31,25 @@ function GameMock() {
     setDrawer({ ...drawer, left: open });
   };
   const gameTemplateProps = {
-    currentUser,
     users,
     leaveTheTable: () => {
       console.log("leave table called");
     },
-    sendMessage: () => {},
-    distributeCards: () => {},
     bidWins: () => {},
     throwCard: () => {},
-    finishRound: () => {
-      console.log("finish round clicked");
-    },
-    scores: [{ playerName: "jimish", scoreCard: [10, 15, 17, 18, 19, 20, 21] }],
     showAlert: {},
     drawer,
     toggleDrawer,
+    currentUser,
+    hostPlayer,
+    usersWhoThrewCards,
+    intiatorCardType,
+    usersWhoHaveNotPlayedTheBid,
+    myCardsWithSameType,
+    scores,
+    cardsThrown,
+    cardsInHand,
   };
-  console.log(gameTemplateProps);
 
   return (
     <>
