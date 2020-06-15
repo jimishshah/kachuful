@@ -28,3 +28,4 @@ packages/web/.serverless/serverless-state.json
 packages/server/coverage
 packages/web/coverage
 packages/web/android-app
+packages/mobile/__generated__

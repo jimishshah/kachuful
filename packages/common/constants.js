@@ -2,12 +2,20 @@ import ClubLogo from "./svg/club.svg";
 import DiamondLogo from "./svg/diamond.svg";
 import SpadeLogo from "./svg/spade.svg";
 import HeartLogo from "./svg/heart.svg";
+import ClubLogoPng from "./svg/club.png";
+import DiamondLogoPng from "./svg/diamond.png";
+import SpadeLogoPng from "./svg/spade.png";
+import HeartLogoPng from "./svg/heart.png";
 
 export const cardColours = {
   club: ClubLogo,
   diamond: DiamondLogo,
   spade: SpadeLogo,
   heart: HeartLogo,
+  clubPng: ClubLogoPng,
+  diamondPng: DiamondLogoPng,
+  spadePng: SpadeLogoPng,
+  heartPng: HeartLogoPng,
 };
 
 export const DEFAULT_WINS = 99;
