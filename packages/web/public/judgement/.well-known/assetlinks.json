@@ -1,10 +1,12 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "net.thecardgames.twa",
-    "sha256_cert_fingerprints": [
-      "BD:B2:E7:C5:A7:42:A2:F6:26:B0:77:93:58:13:7F:B4:CC:DC:AE:39:24:4D:0C:D3:3C:63:85:3D:71:49:90:53"
-    ]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "net.thecardgames.twa",
+      "sha256_cert_fingerprints": [
+        "B3:3C:37:E6:9B:35:EE:71:46:56:C2:37:04:A5:8A:AF:7D:7E:91:1C:D0:FA:93:D5:04:9E:A0:0B:D4:CB:4D:F7"
+      ]
+    }
   }
-}]
+]
