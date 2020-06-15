@@ -56,7 +56,7 @@ function BidWin({ bidWins }) {
     e.preventDefault();
 
     if (Boolean(bid)) {
-      bidWins(bid);
+      bidWins(Number(bid));
       setBid("");
     }
   };
