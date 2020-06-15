@@ -7,6 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableContainer from "@material-ui/core/TableContainer";
 import styled from "@emotion/styled";
 import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
 const StoreCardContainer = styled.div`
   width: 100%;
@@ -22,7 +23,7 @@ function ScoreCard({ scores }) {
   const [firstPlayer] = scores;
 
   return (
-    <>
+    <Typography>
       {firstPlayer && (
         <StoreCardContainer data-testid="score-card">
           <h3>Score Card</h3>
@@ -56,7 +57,7 @@ function ScoreCard({ scores }) {
           </TableContainer>
         </StoreCardContainer>
       )}
-    </>
+    </Typography>
   );
 }
 

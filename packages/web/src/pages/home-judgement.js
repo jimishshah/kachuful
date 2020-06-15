@@ -10,6 +10,7 @@ import GameRules from "../organisms/game-rules";
 import Box from "@material-ui/core/Box";
 import ReactGA from "react-ga";
 import { useButton } from "@kachuful/common";
+import Typography from "@material-ui/core/Typography";
 
 const StyledTextField = styled(TextField)`
   width: 100%;
@@ -95,7 +96,7 @@ function HomeJudgement({ setConnectionId, connectionId }) {
   const resumeGameButton = useButton(resumeGame);
 
   return (
-    <>
+    <Typography>
       {!connectionId ? (
         <>
           <ProgressSteps activeStep={0} isCreate={tableId ? false : true} />
@@ -131,7 +132,7 @@ function HomeJudgement({ setConnectionId, connectionId }) {
         </>
       ) : (
         <>
-          <Box pt={4} mb={1}>
+          <Box pt={4} mb={1} textAlign="center">
             <h4>
               You did not end your previous game, What do you want to do ?
             </h4>
@@ -156,7 +157,7 @@ function HomeJudgement({ setConnectionId, connectionId }) {
           </Box>
         </>
       )}
-    </>
+    </Typography>
   );
 }
 export default HomeJudgement;

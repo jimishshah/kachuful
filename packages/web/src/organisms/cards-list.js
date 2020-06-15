@@ -3,6 +3,7 @@ import { Box } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import styled from "@emotion/styled";
 import Card from "./card";
+import Typography from "@material-ui/core/Typography";
 
 const CardsContainer = styled(Box)`
   text-align: center;
@@ -36,7 +37,9 @@ function CardsList({ cards, clickHandler = () => {}, title }) {
           </StyledGrid>
         ))}
       </StyledGrid>
-      <StyledH4>{title}</StyledH4>
+      <Typography>
+        <StyledH4>{title}</StyledH4>
+      </Typography>
     </CardsContainer>
   );
 }

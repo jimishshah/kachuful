@@ -103,7 +103,7 @@ function GameTemplate({
               <StyledGrid item xs={9}>
                 <StyledGrid container spacing={3}>
                   <StyledGrid item xs={12}>
-                    <CardsList cards={cardsThrown} title="Play Table" />;
+                    <CardsList cards={cardsThrown} title="Play Table" />
                   </StyledGrid>
                   <MyCardsContainer
                     item
@@ -147,7 +147,7 @@ function GameTemplate({
                     started. Only Host can start the game.
                   </Typography>
                   <LinkContainer bgcolor="grey.300" p={1} mb={1}>
-                    {linkToShare}
+                    <Typography>{linkToShare}</Typography>
                   </LinkContainer>
                   <CopyToClipboard text={linkToShare}>
                     <StyledButton
