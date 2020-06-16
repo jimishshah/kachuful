@@ -13,15 +13,15 @@ export default function useSocket({
       socket.getInstance(true).then((ws) => {
         setWebSocket(ws);
         reCreateConnectionHandler(ws);
-        offlineHandler("Your network is unstable, try again");
       }),
-    [reCreateConnectionHandler, offlineHandler, socket]
+    [reCreateConnectionHandler, socket]
   );
   const returnValue = {
     send: (message, shouldExpectResponse = true) => {
       if (shouldExpectResponse) {
         hasGotMessageAfterSend.current = setTimeout(() => {
           createNewConnection();
+          offlineHandler("Network unstable, Try again in 5 secs");
         }, 1500);
       }
       return webSocket.send(message);

@@ -59,6 +59,7 @@ function Game({ currentUserId, setConnectionId }) {
         setUsers(playerStateBeforeRoundFinished);
         return;
       case "sendRecreateConnection":
+        clearTimeout(timer.current);
         const [{ ID: newConnectionId }] = players.filter(
           ({ oldConnectionId }) => oldConnectionId === currentUserId
         );
