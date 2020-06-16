@@ -1,0 +1,53 @@
+{
+  "name": "kachuful",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "@kachuful/common": "1.0.0",
+    "@material-ui/core": "^4.9.10",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.50",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "emotion-theming": "^10.0.27",
+    "react": "^16.13.0",
+    "react-copy-to-clipboard": "^5.0.2",
+    "react-dom": "^16.13.0",
+    "react-ga": "^2.7.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.0",
+    "react-share": "^4.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "env NODE_ENV='test' react-scripts test",
+    "test:coverage": "yarn test --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "build-twa": "cd ./android-app && bubblewrap init --manifest https://thecardgames.net/manifest.json && bubblewrap build",
+    "push-apk-to-device": "~/Library/Android/sdk/platform-tools/adb install android-app/app-release-signed.apk"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "jest-websocket-mock": "^2.0.2",
+    "mock-socket": "^9.0.3",
+    "serverless-s3-sync": "^1.12.0"
+  }
+}
