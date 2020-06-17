@@ -15,6 +15,9 @@ import InstagramIcon from "@material-ui/icons/Instagram";
 import Divider from "@material-ui/core/Divider";
 import logo from "../images/logo.png";
 import styled from "@emotion/styled";
+import GooglePlayStoreLogo from "../images/google-play-badge.png";
+import AppleStoreLogo from "../images/apple-store-logo.png";
+import ReactGA from "react-ga";
 
 const useStyles = makeStyles({
   list: {
@@ -59,11 +62,18 @@ export default function MenuDrawer({
           </ListItemIcon>
           <ListItemText primary={"Help"} />
         </ListItem>
-        <ListItem button key={"Message us"} onClick={messageUs}>
+        <ListItem button key={"Contact us"} onClick={messageUs}>
           <ListItemIcon>
             <ChatIcon />
           </ListItemIcon>
-          <ListItemText>
+          <ListItemText
+            onClick={() =>
+              ReactGA.event({
+                category: "Menu",
+                action: "Contact Us",
+              })
+            }
+          >
             <Link
               href="https://m.me/110348247329359?fbclid=IwAR3XTGmmGvw3RRKzv--41FAQjJ75q0KJhfGM54LBUBWMz372DZ6FQn6x_x8"
               target="_blank"
@@ -80,19 +90,65 @@ export default function MenuDrawer({
           <ListItemText primary={"Exit Game"} />
         </ListItem>
         <Divider />
+        <ListItem button key={"Download App"}>
+          <ListItemText
+            onClick={() =>
+              ReactGA.event({
+                category: "Menu",
+                action: "Android App Link",
+              })
+            }
+          >
+            <Link
+              href="https://play.google.com/store/apps/details?id=net.thecardgames.twa"
+              target="_blank"
+              color="inherit"
+            >
+              <img
+                src={GooglePlayStoreLogo}
+                width="150"
+                alt="Google player store logo"
+              />
+            </Link>
+          </ListItemText>
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            onClick={() =>
+              ReactGA.event({
+                category: "Menu",
+                action: "Apple store Link",
+              })
+            }
+          >
+            <img src={AppleStoreLogo} width="150" alt="Apple store logo" />
+          </ListItemText>
+        </ListItem>
+        <Divider />
         <ListItem button key={"Follow us"}>
-          <ListItemIcon></ListItemIcon>
           <ListItemText>
             <Link
               href="https://www.facebook.com/thecardgames"
               target="_blank"
               color="inherit"
+              onClick={() =>
+                ReactGA.event({
+                  category: "Menu",
+                  action: "Facebook Link",
+                })
+              }
             >
               <FacebookIcon fontSize="large" color="secondary" />
               <Link
                 href="https://www.instagram.com/thecardgames/"
                 target="_blank"
                 color="inherit"
+                onClick={() =>
+                  ReactGA.event({
+                    category: "Menu",
+                    action: "Instagram Link",
+                  })
+                }
               >
                 <InstagramIcon fontSize="large" color="secondary" />
               </Link>
