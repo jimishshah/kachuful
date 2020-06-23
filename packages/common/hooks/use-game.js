@@ -63,8 +63,8 @@ function Game({ currentUserId, setConnectionId }) {
         const [{ ID: newConnectionId }] = players.filter(
           ({ oldConnectionId }) => oldConnectionId === currentUserId
         );
-        setConnectionId(newConnectionId);
         localStorage.setItem("connectionID", newConnectionId);
+        setConnectionId(newConnectionId);
         setUsers(players);
         return;
       case "sendCloseSession":
