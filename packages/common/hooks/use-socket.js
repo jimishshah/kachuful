@@ -9,7 +9,7 @@ export default function useSocket({
   const [webSocket, setWebSocket] = useState();
   const hasGotMessageAfterSend = useRef();
   const checkConnection = useRef();
-  const [isOffline, setIsOffline] = useState(false);
+  const isOffline = useRef(false);
   const createNewConnection = useCallback(
     () =>
       socket.getInstance(true).then((ws) => {
@@ -56,17 +56,17 @@ export default function useSocket({
         const signal = controller.signal;
 
         setTimeout(() => controller.abort(), 1600);
-        await fetch("/test.html", {
+        await fetch("/test.json", {
           cache: "no-cache",
           method: "GET",
           signal,
         });
-        if (isOffline) {
+        if (isOffline.current) {
+          isOffline.current = false;
           await createNewConnection();
-          setIsOffline(false);
         }
       } catch {
-        setIsOffline(true);
+        isOffline.current = true;
         offlineHandler("Reconnecting....");
       }
     }, 1000);
