@@ -20,14 +20,13 @@ exports.handler = async (event) => {
     const isHost = !tableId;
     tableId =
       tableId || (Date.now() + Math.random()).toString().replace(".", "-");
-
     const data = {
-      ...player,
+      oldPlayerDetails: { ...player },
       isHost,
       tableId,
       playerName,
     };
-    await Dynamo.write(data, tableName);
+    await Dynamo.update([data], tableName);
 
     await updatePlayers({ tableId });
     console.log(`${playerName} added`);
