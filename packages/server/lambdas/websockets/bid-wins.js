@@ -12,14 +12,14 @@ exports.handler = async (event) => {
     const { myBid } = body.message;
 
     const data = {
-      ...record,
+      oldPlayerDetails: { ...record },
       wins: {
         expectedWins: myBid,
         currentWins: 0,
       },
     };
     const { tableId } = record;
-    await Dynamo.write(data, tableName);
+    await Dynamo.update([data], tableName);
     await updatePlayers({ tableId });
     console.log(`${myBid} Bid added`);
     return Responses._200({ message: "got a message" });
