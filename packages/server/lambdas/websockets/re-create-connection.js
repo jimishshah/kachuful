@@ -14,47 +14,49 @@ exports.handler = async (event) => {
       stage,
     } = event.requestContext;
     let {
-      messageBody: { oldConnectionId, shouldRefresh },
+      messageBody: { oldConnectionId },
     } = await getPlayerWithMessage(event);
 
     const oldPlayerRow = await Dynamo.get(oldConnectionId, tableName);
-    const updatedPlayerRow = {
-      ...oldPlayerRow,
-      ID: newConnectionId,
-      oldConnectionId,
-      isDisconnected: false,
-    };
+    if (oldPlayerRow.tableId) {
+      const updatedPlayerRow = {
+        ...oldPlayerRow,
+        ID: newConnectionId,
+        oldConnectionId,
+        isDisconnected: false,
+      };
 
-    await Promise.all([
-      Dynamo.delete(oldConnectionId, tableName),
-      Dynamo.write(updatedPlayerRow, tableName),
-    ]);
+      await Promise.all([
+        Dynamo.delete(oldConnectionId, tableName),
+        Dynamo.write(updatedPlayerRow, tableName),
+      ]);
 
-    const { tableId } = oldPlayerRow;
+      const { tableId } = oldPlayerRow;
 
-    logger({
-      message: "re- create-conneciton.js: 51",
-      debug_type: "RECREATE_CONNECTION_LOADDING",
-      newConnectionId,
-      event,
-      oldConnectionId,
-      oldPlayerRow,
-      updatedPlayerRow,
-      tableId,
-    });
-    const records = await Dynamo.query(
-      tableName,
-      indexName,
-      "tableId",
-      tableId
-    );
-    const players = records.Items.map((player) => player);
-    await WebSocket.send({
-      domainName,
-      stage,
-      connectionID: newConnectionId,
-      message: JSON.stringify({ players, action: "sendRecreateConnection" }),
-    });
+      logger({
+        message: "re- create-conneciton.js: 51",
+        debug_type: "RECREATE_CONNECTION_LOADDING",
+        newConnectionId,
+        event,
+        oldConnectionId,
+        oldPlayerRow,
+        updatedPlayerRow,
+        tableId,
+      });
+      const records = await Dynamo.query(
+        tableName,
+        indexName,
+        "tableId",
+        tableId
+      );
+      const players = records.Items.map((player) => player);
+      await WebSocket.send({
+        domainName,
+        stage,
+        connectionID: newConnectionId,
+        message: JSON.stringify({ players, action: "sendRecreateConnection" }),
+      });
+    }
     return Responses._200({ message: "connected" });
   } catch (e) {
     console.log(e);
