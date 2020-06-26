@@ -248,6 +248,7 @@ function Game({ currentUserId, setConnectionId }) {
     shouldDisableMyCards,
     cardsThrown,
     cardsInHand,
+    reCreateConnectionManuallyHandler: ws.createNewConnection,
   };
 }
 

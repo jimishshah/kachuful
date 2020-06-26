@@ -69,6 +69,7 @@ function GameTemplate({
   shouldDisableMyCards,
   cardsThrown,
   cardsInHand,
+  reCreateConnectionManuallyHandler,
 }) {
   const linkToShare = `${linkBase}/judgement/${currentUser.tableId}?utm_source=app&utm_medium=whatsapp&utm_campaign=invite`;
   const actionBarProps = {
@@ -83,6 +84,7 @@ function GameTemplate({
     leaveTheTable,
     toggleHelpDialog,
     messageUs,
+    reCreateConnectionManuallyHandler,
   };
 
   const { hasGameStarted } = currentUser;

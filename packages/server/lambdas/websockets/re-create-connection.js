@@ -44,19 +44,6 @@ exports.handler = async (event) => {
       connectionID: newConnectionId,
       message: JSON.stringify({ players, action: "sendRecreateConnection" }),
     });
-
-    if (!oldPlayerRow.isDisconnected) {
-      await WebSocket.send({
-        domainName,
-        stage,
-        connectionID: oldConnectionId,
-        message: JSON.stringify({
-          players,
-          action: "sendCloseSession",
-          shouldRefresh,
-        }),
-      });
-    }
     return Responses._200({ message: "connected" });
   } catch (e) {
     console.log(e);

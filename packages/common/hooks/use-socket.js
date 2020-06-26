@@ -8,25 +8,25 @@ export default function useSocket({
 }) {
   const [webSocket, setWebSocket] = useState();
   const hasGotMessageAfterSend = useRef();
-  const createNewConnection = useCallback(
-    () =>
-      socket.getInstance(true).then((ws) => {
-        setWebSocket(ws);
-        reCreateConnectionHandler(ws);
-      }),
-    [reCreateConnectionHandler, socket]
-  );
+  const createNewConnection = useCallback(() => {
+    webSocket.close();
+    socket.getInstance(true).then((ws) => {
+      setWebSocket(ws);
+      reCreateConnectionHandler(ws);
+      offlineHandler("Network unstable, Try again in 5 secs");
+    });
+  }, [reCreateConnectionHandler, socket, webSocket, offlineHandler]);
   const returnValue = {
     send: (message, shouldExpectResponse = true) => {
       if (shouldExpectResponse) {
         hasGotMessageAfterSend.current = setTimeout(() => {
           createNewConnection();
-          offlineHandler("Network unstable, Try again in 5 secs");
         }, 1500);
       }
       return webSocket.send(message);
     },
     close: () => webSocket.close(),
+    createNewConnection,
   };
   useEffect(() => {
     if (!socket.hasInstance()) {
@@ -39,6 +39,7 @@ export default function useSocket({
       };
 
       ws.onclose = (event) => {
+        console.log("closing");
         if (!event.wasClean) {
           createNewConnection();
         }
