@@ -4,6 +4,7 @@ const Dynamo = require("../common/dynamo");
 const getPlayerWithMessage = require("../common/get-player-with-message");
 const tableName = process.env.tableName;
 const indexName = process.env.indexName;
+const logger = require("../common/logger");
 
 exports.handler = async (event) => {
   try {
@@ -31,6 +32,16 @@ exports.handler = async (event) => {
 
     const { tableId } = oldPlayerRow;
 
+    logger({
+      message: "re- create-conneciton.js: 51",
+      debug_type: "RECREATE_CONNECTION_LOADDING",
+      newConnectionId,
+      event,
+      oldConnectionId,
+      oldPlayerRow,
+      updatedPlayerRow,
+      tableId,
+    });
     const records = await Dynamo.query(
       tableName,
       indexName,
@@ -44,19 +55,6 @@ exports.handler = async (event) => {
       connectionID: newConnectionId,
       message: JSON.stringify({ players, action: "sendRecreateConnection" }),
     });
-
-    if (!oldPlayerRow.isDisconnected) {
-      await WebSocket.send({
-        domainName,
-        stage,
-        connectionID: oldConnectionId,
-        message: JSON.stringify({
-          players,
-          action: "sendCloseSession",
-          shouldRefresh,
-        }),
-      });
-    }
     return Responses._200({ message: "connected" });
   } catch (e) {
     console.log(e);

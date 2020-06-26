@@ -40,6 +40,7 @@ export default function MenuDrawer({
   leaveTheTable,
   toggleHelpDialog,
   messageUs,
+  reCreateConnectionManuallyHandler,
 }) {
   const classes = useStyles();
 
@@ -62,6 +63,16 @@ export default function MenuDrawer({
           </ListItemIcon>
           <ListItemText primary={"Help"} />
         </ListItem>
+        {/* <ListItem
+          button
+          key={"Reconnect"}
+          onClick={reCreateConnectionManuallyHandler}
+        >
+          <ListItemIcon>
+            <HelpOutlineIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Reconnect"} />
+        </ListItem> */}
         <ListItem button key={"Contact us"} onClick={messageUs}>
           <ListItemIcon>
             <ChatIcon />

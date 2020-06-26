@@ -10,15 +10,14 @@ export default function useSocket({
   const hasGotMessageAfterSend = useRef();
   const checkConnection = useRef();
   const isOffline = useRef(false);
-  const createNewConnection = useCallback(
-    () =>
-      socket.getInstance(true).then((ws) => {
-        setWebSocket(ws);
-        reCreateConnectionHandler(ws);
-        offlineHandler("Network unstable, Try again in 3 secs");
-      }),
-    [reCreateConnectionHandler, socket, offlineHandler]
-  );
+  const createNewConnection = useCallback(() => {
+    webSocket.close();
+    socket.getInstance(true).then((ws) => {
+      setWebSocket(ws);
+      reCreateConnectionHandler(ws);
+      offlineHandler("Network unstable, Try again in 3 secs");
+    });
+  }, [reCreateConnectionHandler, socket, offlineHandler, webSocket]);
   const returnValue = {
     send: (message, shouldExpectResponse = true) => {
       if (shouldExpectResponse) {
@@ -29,6 +28,7 @@ export default function useSocket({
       return webSocket.send(message);
     },
     close: () => webSocket.close(),
+    createNewConnection,
   };
   useEffect(() => {
     if (!socket.hasInstance()) {
@@ -41,6 +41,7 @@ export default function useSocket({
       };
 
       ws.onclose = (event) => {
+        console.log("closing");
         if (!event.wasClean) {
           createNewConnection();
         }
