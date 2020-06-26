@@ -15,7 +15,7 @@ export default function useSocket({
     socket.getInstance(true).then((ws) => {
       setWebSocket(ws);
       reCreateConnectionHandler(ws);
-      offlineHandler("Network unstable, Try again in 3 secs");
+      offlineHandler("Connected", "success");
     });
   }, [reCreateConnectionHandler, socket, offlineHandler, webSocket]);
   const returnValue = {

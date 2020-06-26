@@ -92,10 +92,10 @@ function Game({ currentUserId, setConnectionId }) {
     );
   };
 
-  const offlineHandler = (message) => {
+  const offlineHandler = (message, severity = "error") => {
     setShowAlert({
       message: message || `Reconnecting...check your network`,
-      severity: "error",
+      severity,
     });
   };
   const onlineHandler = () => {
