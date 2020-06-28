@@ -67,14 +67,6 @@ function Game({ currentUserId, setConnectionId }) {
         setConnectionId(newConnectionId);
         setUsers(players);
         return;
-      case "sendCloseSession":
-        ws.close();
-        const { shouldRefresh } = JSON.parse(event.data);
-        if (shouldRefresh) {
-          history.push("/judgement");
-          window.location.reload();
-        }
-        return;
       default:
         setUsers(players);
     }
