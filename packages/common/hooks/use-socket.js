@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import { useDebouncedCallback } from "use-debounce";
+
 export default function useSocket({
   socket,
   onMessageHandler,
@@ -10,6 +12,7 @@ export default function useSocket({
   const hasGotMessageAfterSend = useRef();
   const checkConnection = useRef();
   const isOffline = useRef(false);
+
   const createNewConnection = useCallback(() => {
     webSocket.close();
     socket.getInstance(true).then((ws) => {
@@ -18,11 +21,17 @@ export default function useSocket({
       offlineHandler("Connected", "success");
     });
   }, [reCreateConnectionHandler, socket, offlineHandler, webSocket]);
+
+  const [debouncedCreateNewConnection] = useDebouncedCallback(
+    createNewConnection,
+    // delay in ms
+    1000
+  );
   const returnValue = {
     send: (message, shouldExpectResponse = true) => {
       if (shouldExpectResponse) {
         hasGotMessageAfterSend.current = setTimeout(async () => {
-          await createNewConnection();
+          await debouncedCreateNewConnection();
         }, 1500);
       }
       return webSocket.send(message);
@@ -43,12 +52,12 @@ export default function useSocket({
       ws.onclose = (event) => {
         console.log("closing");
         if (!event.wasClean) {
-          createNewConnection();
+          debouncedCreateNewConnection();
         }
       };
       setWebSocket(ws);
     });
-  }, [noSocketHandler, onMessageHandler, createNewConnection, socket]);
+  }, [noSocketHandler, onMessageHandler, debouncedCreateNewConnection, socket]);
 
   useEffect(() => {
     checkConnection.current = setInterval(async () => {
@@ -64,7 +73,7 @@ export default function useSocket({
         });
         if (isOffline.current) {
           isOffline.current = false;
-          await createNewConnection();
+          await debouncedCreateNewConnection();
         }
       } catch {
         isOffline.current = true;
@@ -73,6 +82,6 @@ export default function useSocket({
     }, 1000);
 
     return () => clearInterval(checkConnection.current);
-  }, [createNewConnection, isOffline, offlineHandler]);
+  }, [debouncedCreateNewConnection, isOffline, offlineHandler]);
   return returnValue;
 }

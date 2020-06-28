@@ -17,7 +17,16 @@ exports.handler = async (event) => {
       messageBody: { oldConnectionId },
     } = await getPlayerWithMessage(event);
 
-    const oldPlayerRow = await Dynamo.get(oldConnectionId, tableName);
+    let oldPlayerRow;
+    oldPlayerRow = await Dynamo.get(oldConnectionId, tableName);
+    // there is some kind of bug which i dont understand
+    // sometimes old id is not available but new id is available
+    // so if no results available for old id try new id
+    // this probably happens if second recreate connection is called with new id as old id
+    if (!oldPlayerRow.tableId) {
+      oldPlayerRow = await Dynamo.get(newConnectionId, tableName);
+    }
+
     if (oldPlayerRow.tableId) {
       const updatedPlayerRow = {
         ...oldPlayerRow,
