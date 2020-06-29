@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import { useDebouncedCallback } from "use-debounce";
+
 export default function useSocket({
   socket,
   onMessageHandler,
@@ -8,19 +10,28 @@ export default function useSocket({
 }) {
   const [webSocket, setWebSocket] = useState();
   const hasGotMessageAfterSend = useRef();
+  const checkConnection = useRef();
+  const isOffline = useRef(false);
+
   const createNewConnection = useCallback(() => {
     webSocket.close();
     socket.getInstance(true).then((ws) => {
       setWebSocket(ws);
       reCreateConnectionHandler(ws);
-      offlineHandler("Network unstable, Try again in 5 secs");
+      offlineHandler("Connected", "success");
     });
-  }, [reCreateConnectionHandler, socket, webSocket, offlineHandler]);
+  }, [reCreateConnectionHandler, socket, offlineHandler, webSocket]);
+
+  const [debouncedCreateNewConnection] = useDebouncedCallback(
+    createNewConnection,
+    // delay in ms
+    1000
+  );
   const returnValue = {
     send: (message, shouldExpectResponse = true) => {
       if (shouldExpectResponse) {
-        hasGotMessageAfterSend.current = setTimeout(() => {
-          createNewConnection();
+        hasGotMessageAfterSend.current = setTimeout(async () => {
+          await debouncedCreateNewConnection();
         }, 1500);
       }
       return webSocket.send(message);
@@ -41,11 +52,36 @@ export default function useSocket({
       ws.onclose = (event) => {
         console.log("closing");
         if (!event.wasClean) {
-          createNewConnection();
+          debouncedCreateNewConnection();
         }
       };
       setWebSocket(ws);
     });
-  }, [noSocketHandler, onMessageHandler, createNewConnection, socket]);
+  }, [noSocketHandler, onMessageHandler, debouncedCreateNewConnection, socket]);
+
+  useEffect(() => {
+    checkConnection.current = setInterval(async () => {
+      try {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        setTimeout(() => controller.abort(), 1600);
+        await fetch("/test.json", {
+          cache: "no-cache",
+          method: "GET",
+          signal,
+        });
+        if (isOffline.current) {
+          isOffline.current = false;
+          await debouncedCreateNewConnection();
+        }
+      } catch {
+        isOffline.current = true;
+        offlineHandler("Reconnecting....");
+      }
+    }, 1000);
+
+    return () => clearInterval(checkConnection.current);
+  }, [debouncedCreateNewConnection, isOffline, offlineHandler]);
   return returnValue;
 }

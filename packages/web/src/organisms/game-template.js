@@ -198,25 +198,7 @@ function GameTemplate({
                   <ScoreCard scores={scores} />
                 </StyledGrid>
               </StyledGrid>
-              <StyledSnackbar
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "center",
-                }}
-                open={Boolean(showAlert.message)}
-                autoHideDuration={showAlert.duration || 6000}
-                onClose={(event, reason) => {
-                  if (reason === "clickaway") {
-                    return;
-                  }
-                  clearShowAlert();
-                }}
-                message={showAlert.severity}
-              >
-                <Alert onClose={clearShowAlert} severity={showAlert.severity}>
-                  {showAlert.message}
-                </Alert>
-              </StyledSnackbar>
+
               <Dialog
                 fullScreen
                 open={helpDialog}
@@ -237,6 +219,25 @@ function GameTemplate({
               <ActionBar {...actionBarProps} />
             </>
           )}
+          <StyledSnackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            open={Boolean(showAlert.message)}
+            autoHideDuration={showAlert.duration || 6000}
+            onClose={(event, reason) => {
+              if (reason === "clickaway") {
+                return;
+              }
+              clearShowAlert();
+            }}
+            message={showAlert.severity}
+          >
+            <Alert onClose={clearShowAlert} severity={showAlert.severity}>
+              {showAlert.message}
+            </Alert>
+          </StyledSnackbar>
         </>
       ) : (
         "Loading....."

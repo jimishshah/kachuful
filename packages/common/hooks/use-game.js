@@ -63,17 +63,9 @@ function Game({ currentUserId, setConnectionId }) {
         const [{ ID: newConnectionId }] = players.filter(
           ({ oldConnectionId }) => oldConnectionId === currentUserId
         );
-        setConnectionId(newConnectionId);
         localStorage.setItem("connectionID", newConnectionId);
+        setConnectionId(newConnectionId);
         setUsers(players);
-        return;
-      case "sendCloseSession":
-        ws.close();
-        const { shouldRefresh } = JSON.parse(event.data);
-        if (shouldRefresh) {
-          history.push("/judgement");
-          window.location.reload();
-        }
         return;
       default:
         setUsers(players);
@@ -92,10 +84,10 @@ function Game({ currentUserId, setConnectionId }) {
     );
   };
 
-  const offlineHandler = (message) => {
+  const offlineHandler = (message, severity = "error") => {
     setShowAlert({
       message: message || `Reconnecting...check your network`,
-      severity: "error",
+      severity,
     });
   };
   const onlineHandler = () => {
