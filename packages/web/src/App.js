@@ -14,11 +14,10 @@ const GameMock = React.lazy(() => import("./pages/game-mock"));
 const Home = React.lazy(() => import("./pages/home"));
 
 const trackingId = "UA-164323461-1"; // Replace with your Google Analytics tracking ID
-// ReactGA.initialize(trackingId, {
-//   debug: true,
-//   gaOptions: { cookieFlags: "max-age=7200;secure;samesite=none" },
-// });
-ReactGA.initialize(trackingId);
+ReactGA.initialize(trackingId, {
+  gaOptions: { cookieFlags: "max-age=7200;secure;samesite=none" },
+});
+// ReactGA.initialize(trackingId);
 
 const history = createBrowserHistory();
 history.listen((location) => {
