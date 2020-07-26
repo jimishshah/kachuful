@@ -11,5 +11,12 @@ export default function (onClickHandler) {
         if (result) disableButton.current = false;
       }
     },
+    onPress: async () => {
+      if (!disableButton.current) {
+        disableButton.current = true;
+        const result = await onClickHandler();
+        if (result) disableButton.current = false;
+      }
+    },
   };
 }

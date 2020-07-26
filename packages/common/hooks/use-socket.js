@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
+// import { linkBase } from "@kachuful/common";
 
 export default function useSocket({
   socket,
@@ -11,7 +12,7 @@ export default function useSocket({
   const [webSocket, setWebSocket] = useState();
   const hasGotMessageAfterSend = useRef();
   const checkConnection = useRef();
-  const isOffline = useRef(false);
+  // const isOffline = useRef(false);
 
   const createNewConnection = useCallback(() => {
     webSocket.close();
@@ -25,20 +26,23 @@ export default function useSocket({
   const [debouncedCreateNewConnection] = useDebouncedCallback(
     createNewConnection,
     // delay in ms
-    1000
+    1200
   );
-  const returnValue = {
-    send: (message, shouldExpectResponse = true) => {
-      if (shouldExpectResponse) {
-        hasGotMessageAfterSend.current = setTimeout(async () => {
-          await debouncedCreateNewConnection();
-        }, 1500);
-      }
-      return webSocket.send(message);
-    },
-    close: () => webSocket.close(),
-    createNewConnection,
-  };
+  const returnValue = useMemo(
+    () => ({
+      send: (message, shouldExpectResponse = true) => {
+        if (shouldExpectResponse) {
+          hasGotMessageAfterSend.current = setTimeout(async () => {
+            await debouncedCreateNewConnection();
+          }, 1500);
+        }
+        return webSocket.send(message);
+      },
+      close: () => webSocket.close(),
+      createNewConnection,
+    }),
+    [createNewConnection, debouncedCreateNewConnection, webSocket]
+  );
   useEffect(() => {
     if (!socket.hasInstance()) {
       return noSocketHandler();
@@ -61,27 +65,42 @@ export default function useSocket({
 
   useEffect(() => {
     checkConnection.current = setInterval(async () => {
-      try {
-        const controller = new AbortController();
-        const signal = controller.signal;
-
-        setTimeout(() => controller.abort(), 1600);
-        await fetch("/test.json", {
-          cache: "no-cache",
-          method: "GET",
-          signal,
-        });
-        if (isOffline.current) {
-          isOffline.current = false;
-          await debouncedCreateNewConnection();
-        }
-      } catch {
-        isOffline.current = true;
-        offlineHandler("Reconnecting....");
-      }
-    }, 1000);
+      returnValue.send(
+        JSON.stringify({
+          action: "message",
+          message: "ping",
+        }),
+        true
+      );
+    }, 30000);
 
     return () => clearInterval(checkConnection.current);
-  }, [debouncedCreateNewConnection, isOffline, offlineHandler]);
+  }, [returnValue]);
+
+  // useEffect(() => {
+  //   checkConnection.current = setInterval(async () => {
+  //     try {
+  //       const controller = new AbortController();
+  //       const signal = controller.signal;
+
+  //       setTimeout(() => controller.abort(), 1600);
+  //       await fetch(`${linkBase}/test.json`, {
+  //         cache: "no-cache",
+  //         method: "GET",
+  //         signal,
+  //         mode: "no-cors",
+  //       });
+  //       if (isOffline.current) {
+  //         isOffline.current = false;
+  //         await debouncedCreateNewConnection();
+  //       }
+  //     } catch {
+  //       isOffline.current = true;
+  //       offlineHandler("Reconnecting....");
+  //     }
+  //   }, 1000);
+
+  //   return () => clearInterval(checkConnection.current);
+  // }, [debouncedCreateNewConnection, isOffline, offlineHandler]);
   return returnValue;
 }

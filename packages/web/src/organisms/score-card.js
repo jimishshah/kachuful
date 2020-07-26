@@ -61,4 +61,4 @@ function ScoreCard({ scores }) {
   );
 }
 
-export default ScoreCard;
+export default React.memo(ScoreCard);

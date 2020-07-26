@@ -70,4 +70,4 @@ function ActionBar({
   );
 }
 
-export default ActionBar;
+export default React.memo(ActionBar);

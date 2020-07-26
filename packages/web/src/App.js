@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -9,6 +9,7 @@ import { StylesProvider } from "@material-ui/core/styles";
 import HomeJudgement from "./pages/home-judgement";
 import ReactGA from "react-ga";
 import { createBrowserHistory } from "history";
+import useApp from "@kachuful/common/controllers/use-app";
 
 const GameMock = React.lazy(() => import("./pages/game-mock"));
 const Home = React.lazy(() => import("./pages/home"));
@@ -40,14 +41,7 @@ const StyledContainer = styled(Container)`
 `;
 
 function App() {
-  const [connectionId, setConnectionId] = useState(
-    localStorage.getItem("connectionID")
-  );
-
-  const props = {
-    connectionId,
-    setConnectionId,
-  };
+  const props = useApp();
   return (
     <MuiThemeProvider theme={defaultTheme}>
       <ThemeProvider theme={defaultTheme}>

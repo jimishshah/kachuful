@@ -20,7 +20,7 @@ function CardsList({ cards, clickHandler = () => {}, title }) {
   return (
     <CardsContainer bgcolor="primary.main" color="primary.contrastText" p={2}>
       <StyledGrid container spacing={1}>
-        {cards.map(({ number, type, badge }, index) => (
+        {cards.map(({ number, type, badge, playerName }, index) => (
           <StyledGrid
             item
             xs
@@ -33,6 +33,7 @@ function CardsList({ cards, clickHandler = () => {}, title }) {
               type={type}
               badge={badge}
               onClick={clickHandler}
+              playerName={playerName}
             />
           </StyledGrid>
         ))}
@@ -44,4 +45,4 @@ function CardsList({ cards, clickHandler = () => {}, title }) {
   );
 }
 
-export default CardsList;
+export default React.memo(CardsList);

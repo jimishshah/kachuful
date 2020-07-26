@@ -1,57 +1,33 @@
+import "react-native-gesture-handler";
 import React from "react";
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
 import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
-import Card from "./components/card";
-import CardsList from "./components/cards-list";
-import Avatar from "./components/avatar";
-import StyleGuideDivider from "./components/styleguide-divider";
-import ScoreCard from "./components/score-card";
-import ActionBar from "./components/action-bar";
-
-const fontSize = 14;
-const paddingVertical = 6;
+import HomeJudgement from "./components/home-judgement";
+import { NativeRouter, Route, Link, Switch } from "react-router-native";
+import Game from "./components/game";
+import useApp from "@kachuful/common/controllers/use-app";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
     Rubik_400Regular,
   });
-  console.log(fontsLoaded);
+
+  const props = useApp();
+
   return (
     fontsLoaded && (
-      <ScrollView style={styles.container}>
-        <ActionBar />
-
-        <CardsList title="Play Table">
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-          <Card text="K" type="clubPng" badge="KK" />
-        </CardsList>
-        <StyleGuideDivider />
-        <Avatar />
-        <StyleGuideDivider />
-        <ScoreCard />
-        <StyleGuideDivider />
-      </ScrollView>
+      <NativeRouter>
+        <Switch>
+          <Route path="/judgement/game">
+            <Game {...props} />
+          </Route>
+          <Route path="/judgement/:tableId?">
+            <HomeJudgement {...props} />
+          </Route>
+          <Route path="/">
+            <HomeJudgement {...props} />
+          </Route>
+        </Switch>
+      </NativeRouter>
     )
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    fontFamily: "Rubik_400Regular",
-    fontSize,
-    paddingVertical,
-    paddingTop: 24,
-    paddingBottom: 24,
-  },
-});

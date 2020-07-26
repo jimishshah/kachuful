@@ -3,7 +3,6 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import styled from "@emotion/styled";
-import { DEFAULT_WINS } from "@kachuful/common";
 
 const StyledGrid = styled(Grid)`
   flex-grow: 0;
@@ -11,10 +10,7 @@ const StyledGrid = styled(Grid)`
 function UsersList({ users }) {
   return users.map(
     ({ playerName, wins: { currentWins, expectedWins }, ID }) => {
-      const badgeText =
-        expectedWins === DEFAULT_WINS
-          ? "..."
-          : `${currentWins}/${expectedWins}`;
+      const badgeText = playerName;
       return (
         <StyledGrid item xs key={ID}>
           <Badge color="primary" badgeContent={badgeText} showZero>
@@ -26,4 +22,4 @@ function UsersList({ users }) {
   );
 }
 
-export default UsersList;
+export default React.memo(UsersList);

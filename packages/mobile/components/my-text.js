@@ -6,27 +6,34 @@ import {
   Rubik_700Bold,
 } from "@expo-google-fonts/rubik";
 
-const fontSize = 14;
-export function MyTextRegular({ children }) {
+export function MyTextRegular({ children, textAlign = "center", ...rest }) {
   const [fontsLoaded] = useFonts({
     Rubik_400Regular,
   });
-  return fontsLoaded && <Text style={styles.textRegular}>{children}</Text>;
+  return (
+    fontsLoaded && (
+      <Text style={[styles.textRegular, { textAlign, ...rest }]}>
+        {children}
+      </Text>
+    )
+  );
 }
-export function MyTextBold({ children }) {
+export function MyTextBold({ children, textAlign = "center", ...rest }) {
   const [fontsLoaded] = useFonts({
     Rubik_700Bold,
   });
-  return fontsLoaded && <Text style={styles.textBold}>{children}</Text>;
+  return (
+    fontsLoaded && (
+      <Text style={[styles.textBold, { textAlign, ...rest }]}>{children}</Text>
+    )
+  );
 }
 
 const styles = StyleSheet.create({
   textRegular: {
     fontFamily: "Rubik_400Regular",
-    fontSize,
   },
   textBold: {
     fontFamily: "Rubik_700Bold",
-    fontSize,
   },
 });

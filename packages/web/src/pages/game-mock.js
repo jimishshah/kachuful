@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { userMock } from "../json/userMock";
-import GameTemplate from "../organisms/game-template";
+import GameTemplate from "./game";
 import { DEFAULT_WINS, usePlayerData } from "@kachuful/common";
 
 function GameMock() {

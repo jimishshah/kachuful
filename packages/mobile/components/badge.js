@@ -1,10 +1,16 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-function Badge({ text }) {
+function Badge({ text, color }) {
   return (
-    <View style={styles.badge}>
-      <Text style={styles.badgeText}>{text}</Text>
-    </View>
+    <>
+      {Boolean(text) && (
+        <View
+          style={[styles.badge, color === "primary" && styles.badgePrimary]}
+        >
+          <Text style={styles.badgeText}>{text}</Text>
+        </View>
+      )}
+    </>
   );
 }
 
@@ -20,6 +26,9 @@ const styles = StyleSheet.create({
     right: 0,
     marginTop: -19,
     marginRight: -44,
+  },
+  badgePrimary: {
+    backgroundColor: "#0a2463",
   },
   badgeText: {
     color: "#fff",

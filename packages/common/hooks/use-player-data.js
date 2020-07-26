@@ -38,12 +38,31 @@ export default function (users, currentUserId, DEFAULT_WINS) {
     }
     const cardsThrown = users
       .sort((a, b) => (a.sequenceNumber > b.sequenceNumber ? 1 : -1))
-      .map(({ cardThrown, playerName, sequenceNumber }) =>
-        cardThrown
-          ? { ...cardThrown, badge: playerName }
-          : {
-              number: `${sequenceNumber}. Waiting for ${playerName}`,
-            }
+      .map(
+        ({
+          cardThrown,
+          playerName,
+          sequenceNumber,
+          wins: { currentWins, expectedWins },
+        }) => {
+          return cardThrown
+            ? {
+                ...cardThrown,
+                playerName,
+                badge:
+                  expectedWins === DEFAULT_WINS
+                    ? "..."
+                    : `${currentWins}/${expectedWins}`,
+              }
+            : {
+                number: `${sequenceNumber}. Waiting for card`,
+                badge:
+                  expectedWins === DEFAULT_WINS
+                    ? "..."
+                    : `${currentWins}/${expectedWins}`,
+                playerName,
+              };
+        }
       );
 
     const scores = getScores(users)
@@ -73,7 +92,7 @@ export default function (users, currentUserId, DEFAULT_WINS) {
       cardsThrown,
       cardsInHand: currentUser.cardsInHand,
     });
-  }, [users, currentUserId]);
+  }, [users, currentUserId, DEFAULT_WINS]);
   return state;
 }
 

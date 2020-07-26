@@ -34,7 +34,7 @@ const StyledListItem = styled(ListItem)`
   justify-content: center;
 `;
 
-export default function MenuDrawer({
+function MenuDrawer({
   drawer,
   toggleDrawer,
   leaveTheTable,
@@ -186,3 +186,5 @@ export default function MenuDrawer({
     </div>
   );
 }
+
+export default React.memo(MenuDrawer);
