@@ -26,7 +26,7 @@ export default function useSocket({
   const [debouncedCreateNewConnection] = useDebouncedCallback(
     createNewConnection,
     // delay in ms
-    1200
+    200
   );
   const returnValue = useMemo(
     () => ({
@@ -34,7 +34,7 @@ export default function useSocket({
         if (shouldExpectResponse) {
           hasGotMessageAfterSend.current = setTimeout(async () => {
             await debouncedCreateNewConnection();
-          }, 1500);
+          }, 3000);
         }
         return webSocket.send(message);
       },
@@ -53,12 +53,12 @@ export default function useSocket({
         onMessageHandler(event, ws);
       };
 
-      ws.onclose = (event) => {
-        console.log("closing");
-        if (!event.wasClean) {
-          debouncedCreateNewConnection();
-        }
-      };
+      // ws.onclose = (event) => {
+      //   console.log("closing");
+      //   if (!event.wasClean) {
+      //     debouncedCreateNewConnection();
+      //   }
+      // };
       setWebSocket(ws);
     });
   }, [noSocketHandler, onMessageHandler, debouncedCreateNewConnection, socket]);
