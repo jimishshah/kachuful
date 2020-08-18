@@ -117,20 +117,12 @@
         "DistributionConfig": {
           "Origins": [
             {
-              "DomainName": "thecardgames.net.s3.amazonaws.com",
+              "DomainName": "thecardgames.net.s3-website-eu-west-1.amazonaws.com",
               "Id": "S3-thecardgames.net",
-              "S3OriginConfig": {
-                "OriginAccessIdentity": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "origin-access-identity/cloudfront/",
-                      {
-                        "Ref": "WebsiteOriginAccessIdentity"
-                      }
-                    ]
-                  ]
-                }
+              "CustomOriginConfig": {
+                "HTTPPort": 80,
+                "HTTPSPort": 443,
+                "OriginProtocolPolicy": "http-only"
               }
             }
           ],
