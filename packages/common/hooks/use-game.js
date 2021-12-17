@@ -67,6 +67,8 @@ function Game({ currentUserId, setConnectionId }) {
           const [{ ID: newConnectionId }] = players.filter(
             ({ oldConnectionId }) => oldConnectionId === currentUserId
           );
+          // here i need to check that the new connection id has table id in it
+          // send the request to delete old id
           await AsyncStorage.setItem("connectionID", newConnectionId);
           setConnectionId(newConnectionId);
           setUsers(players);

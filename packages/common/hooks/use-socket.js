@@ -16,6 +16,7 @@ export default function useSocket({
 
   const createNewConnection = useCallback(() => {
     webSocket.close();
+    // if i keep list of all the ids created in local storage here i can send all the ids as old ids so server can run the loop of all ids with the one available and replace it and delete from local storage when sendRecreateConnection message is recieved from server
     socket.getInstance(true).then((ws) => {
       setWebSocket(ws);
       reCreateConnectionHandler(ws);
@@ -33,6 +34,7 @@ export default function useSocket({
       send: (message, shouldExpectResponse = true) => {
         if (shouldExpectResponse) {
           hasGotMessageAfterSend.current = setTimeout(async () => {
+            //when the message is not received send ping pong 2-3 times before sending new connection request but will not work if the connection is dead
             await debouncedCreateNewConnection();
           }, 3000);
         }

@@ -27,7 +27,7 @@ exports.handler = async (event) => {
     };
 
     await Promise.all([
-      Dynamo.delete(oldConnectionId, tableName),
+      Dynamo.delete(oldConnectionId, tableName), // here i should not delete the old connection until i get confirmation from the client that new connection has been recieved sucessfully
       Dynamo.write(updatedPlayerRow, tableName),
     ]);
 
